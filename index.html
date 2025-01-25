@@ -327,7 +327,266 @@
         .social-media i {
             margin-right: 10px;
         }
+        /* Add these animation styles to your existing CSS */
+        /* Enhanced Game Card Hover Effects */
+.game-slot {
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
+.game-slot:hover {
+    transform: translateY(-15px) rotateX(5deg);
+    box-shadow: 0 15px 35px rgba(66, 133, 244, 0.3),
+                0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* Floating Animation for Logo */
+.logo {
+    animation: float 3s ease-in-out infinite;
+    background: linear-gradient(45deg, #4285f4, #34a853);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Improved Button Hover Effect */
+.btn-primary {
+    background: linear-gradient(45deg, #4285f4, #34a853);
+    border: none;
+    box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #34a853, #4285f4);
+    box-shadow: 0 8px 25px rgba(66, 133, 244, 0.5);
+    letter-spacing: 1px;
+}
+
+/* Game Image Hover Animation */
+.game-image {
+    transition: all 0.5s ease;
+    filter: brightness(0.9);
+}
+
+.game-slot:hover .game-image {
+    transform: scale(1.08);
+    filter: brightness(1.1);
+}
+
+/* Smooth Category Link Transitions */
+.menu-categories a {
+    background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.menu-categories a:hover {
+    border-left: 3px solid #4285f4;
+    padding-left: 20px;
+    background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
+}
+
+/* Hero Section Enhancement */
+.hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(66, 133, 244, 0.3), rgba(52, 168, 83, 0.3));
+    animation: gradientFlow 10s ease infinite;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Loading State Animation */
+.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+
+/* Glowing logo effect */
+.logo {
+    text-shadow: 0 0 10px #4285f4;
+    animation: glow 2s ease-in-out infinite;
+}
+
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 10px #4285f4; }
+    50% { text-shadow: 0 0 20px #4285f4, 0 0 30px #4285f4; }
+}
+
+/* Game slot hover effects */
+.game-slot {
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.5s ease;
+}
+
+.game-slot:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(66, 133, 244, 0.3);
+}
+
+.game-image {
+    transition: transform 0.3s ease;
+}
+
+.game-slot:hover .game-image {
+    transform: scale(1.05);
+}
+
+/* Button animations */
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn-primary:hover:before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Menu animation enhancements */
+.sliding-menu {
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+}
+
+.menu-links a {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.menu-links a:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #4285f4;
+    transition: width 0.3s ease;
+}
+
+.menu-links a:hover:after {
+    width: 100%;
+}
+
+/* Hero section particles */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+    z-index: 1;
+}
+
+/* Category badges */
+.game-slot .category {
+    background: linear-gradient(45deg, #4285f4, #34a853);
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8em;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transform: translateY(-5px);
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.game-slot:hover .category {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+/* Loading animation */
+@keyframes loadingPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.loading {
+    animation: loadingPulse 1.5s infinite;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Game grid layout animation */
+.game-container {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
     </style>
 </head>
 
@@ -342,20 +601,17 @@
             <h2>Menu</h2>
             <i class="fas fa-times menu-close" onclick="toggleMenu()"></i>
         </div>
-
         <div class="menu-search">
-            <input type="text" id="searchBar" placeholder="Search games... This feture dose not work" oninput="searchGames()">
-            <div class="search-results" id="searchResults"></div>
+            <input type="text" id="searchBar" placeholder="Search games..." oninput="searchGames()">
         </div>
 
         <div class="menu-categories">
             <h3>Categories</h3>
-            <a herf="#">This feture dose not work!</a>
-            <a href="#">Adventure</a>
-            <a href="#">Puzzle</a>
-            <a href="#">Action</a>
+            <a href="#action">Action</a>
+            <a href="#adventure">Adventure</a>
+            <a href="#puzzle">Puzzle</a>
+            <a href="#arcade">Arcade</a>
         </div>
-
         <div class="menu-links">
             <a href="#">Home</a>
             <a href="contact.html">Contact</a>
@@ -394,7 +650,7 @@
      <!-- Repeat the above game slot HTML for Games 3 to 29 -->
      <!-- Game Slot 3 -->
      <div class="game-slot">
-        <img src="{{ url_for('static', filename='images/Chat Game.jpg') }}" alt="Game 3" class="game-image">
+        <img src="images/Chat Game.jpg" alt="Game 3" class="game-image">
          <h3>Chat Game</h3>
          <p>No controls here..</p>
          <a href="nothing here "URL" " class="btn-primary">Play Now</a>
@@ -405,7 +661,7 @@
          <img src="{{ url_for('static', filename='images/Money game.jpg') }}" alt="Game 4" class="game-image">
          <h3>...</h3>
          <p>No controls here..</p>
-         <a href="..." class="btn-primary">Play Now</a>
+         <a href="[game-url]" class="btn-primary" onclick="handleGameClick(this.href, event)">Play Now</a>
      </div>
 
      <!-- Game Slot 5 -->
@@ -633,25 +889,31 @@
         <p>Made by Askansz & Moviebox C17</p>
         <p>Need help: info.pixelheavengames@gmail.com</p>
     </footer>
-
     <script>
+        // Core menu functionality
         const slidingMenu = document.getElementById('slidingMenu');
-        const searchBar = document.getElementById('searchBar');
-        const searchResults = document.getElementById('searchResults');
 
+        // Simple menu toggle
         function toggleMenu() {
             slidingMenu.classList.toggle('open');
         }
 
-        function searchGames() {
-            const query = searchBar.value.toLowerCase();
-            const results = ['...', '...', '...'];
-            searchResults.innerHTML = results
-                .filter(game => game.toLowerCase().includes(query))
-                .map(game => `<p>${game}</p>`)
-                .join('');
-        }
+        // Game loading states
+        const gameButtons = document.querySelectorAll('.btn-primary');
+        gameButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!this.href || this.href === '#') {
+                    e.preventDefault();
+                    alert('Game coming soon!');
+                    return;
+                }
+                
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                setTimeout(() => {
+                    this.innerHTML = 'Play Now';
+                }, 1500);
+            });
+        });
     </script>
 </body>
-
 </html>
