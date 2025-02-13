@@ -111,14 +111,16 @@
 
         .games-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
             gap: 2rem;
             padding: 2rem;
-            max-width: 500px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
         .game-card {
+            width: 500px;
+            height: 500px;
             background: var(--card-background);
             border-radius: 20px;
             overflow: hidden;
@@ -127,6 +129,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             transform: translateY(0);
+            margin: 0 auto;
         }
 
         .game-card:hover {
@@ -137,7 +140,7 @@
         .game-image-container {
             position: relative;
             overflow: hidden;
-            height: 220px;
+            height: 250px;
         }
 
         .game-image {
@@ -171,14 +174,17 @@
         }
 
         .game-info {
-            padding: 1.8rem;
-            position: relative;
+            height: 250px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .game-title {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             background: var(--primary-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -187,45 +193,42 @@
         .game-description {
             color: var(--text-secondary);
             line-height: 1.6;
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
         }
 
         .game-tags {
             display: flex;
             gap: 0.5rem;
             flex-wrap: wrap;
-            margin: 1rem 0;
+            margin: 0.5rem 0;
         }
 
         .tag {
             background: rgba(139, 92, 246, 0.2);
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
         }
 
         .game-footer {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 0.8rem;
         }
 
         .game-meta {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
         }
 
         .game-category {
-            align-self: flex-start;
             background: var(--primary-gradient);
             padding: 0.5rem 1rem;
             border-radius: 15px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -236,7 +239,7 @@
             background: var(--accent-color);
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
 
         .play-button {
@@ -245,7 +248,7 @@
             justify-content: center;
             align-items: center;
             gap: 0.8rem;
-            padding: 0.8rem;
+            padding: 1rem;
             background: var(--secondary-gradient);
             color: white;
             border: none;
@@ -255,6 +258,7 @@
             text-decoration: none;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+            font-size: 1.1rem;
         }
 
         .play-button:hover {
@@ -264,25 +268,23 @@
 
         @media (max-width: 1200px) {
             .games-container {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 500px);
+                justify-content: center;
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
+            .games-container {
+                grid-template-columns: 500px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .game-card, .games-container {
+                width: 100%;
+            }
             .games-container {
                 grid-template-columns: 1fr;
-            }
-            nav {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            .search-filter {
-                width: 100%;
-                flex-direction: column;
-                height: auto;
-            }
-            input, select {
-                width: 100%;
             }
         }
     </style>
@@ -312,7 +314,7 @@
             <!-- Game Card 1 -->
             <div class="game-card">
                 <div class="game-image-container">
-                    <img src="https://via.placeholder.com/400x220" alt="Pixel Runner" class="game-image">
+                    <img src="https://via.placeholder.com/500x250" alt="Pixel Runner" class="game-image">
                     <div class="game-overlay">
                         <div class="game-stats">
                             <span><i class="fas fa-star"></i> 4.8</span>
@@ -321,12 +323,14 @@
                     </div>
                 </div>
                 <div class="game-info">
-                    <h3 class="game-title">Pixel Runner</h3>
-                    <p class="game-description">Experience the thrill of endless running through beautifully crafted pixel worlds!</p>
-                    <div class="game-tags">
-                        <span class="tag">Arcade</span>
-                        <span class="tag">Pixel Art</span>
-                        <span class="tag">Runner</span>
+                    <div>
+                        <h3 class="game-title">Pixel Runner</h3>
+                        <p class="game-description">Experience the thrill of endless running through beautifully crafted pixel worlds!</p>
+                        <div class="game-tags">
+                            <span class="tag">Arcade</span>
+                            <span class="tag">Pixel Art</span>
+                            <span class="tag">Runner</span>
+                        </div>
                     </div>
                     <div class="game-footer">
                         <div class="game-meta">
@@ -340,9 +344,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Copy and modify the game-card div for more games -->
-            
         </div>
     </main>
 
