@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Geometry Dash</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            font-family: 'Arial', sans-serif;
+        }
+
+        #game {
+            width: 800px;
+            height: 400px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(0deg, #1e40af 0%, #3b82f6 100%);
+            border: 4px solid #0f172a;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+        }
+
+        #player {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #f97316 0%, #fb923c 100%);
+            position: absolute;
+            left: 50px;
+            bottom: 80px;
+            transform-origin: center;
+            display: none;
+            border: 3px solid #fdba74;
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.6);
+        }
+
+        .spike {
+            width: 0;
+            height: 0;
+            position: absolute;
+            bottom: 80px;
+            left: 800px;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid #22c55e;
+            filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.6));
+        }
+
+        #ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background: linear-gradient(0deg, #0f172a 0%, #1e293b 100%);
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+            animation: groundScroll 0.5s linear infinite;
+        }
+
+        #jumpCounter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #f97316;
+            font-size: 24px;
+            text-shadow: 0 0 8px rgba(249, 115, 22, 0.6);
+        }
+
+        #score {
+            text-align: center;
+            font-size: 32px;
+            margin: 20px;
+            color: #f97316;
+            text-shadow: 0 0 10px rgba(249, 115, 22, 0.6);
+        }
+
+        #instructions {
+            text-align: center;
+            font-size: 20px;
+            color: #3b82f6;
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+        }
+
+        #startButton {
+            padding: 15px 40px;
+            font-size: 28px;
+            background: linear-gradient(45deg, #f97316 0%, #fb923c 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(249, 115, 22, 0.4);
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        #startButton:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(249, 115, 22, 0.6);
+        }
+
+        .menu-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            gap: 20px;
+        }
+
+        .menu-screen h1 {
+            color: #f97316;
+            font-size: 48px;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(249, 115, 22, 0.8);
+        }
+
+        @keyframes groundScroll {
+            from { background-position: 0 0; }
+            to { background-position: -40px 0; }
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #f97316;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <div id="ground"></div>
+        <div id="player"></div>
+        <div id="jumpCounter">Jumps: 2</div>
+        <div id="menuScreen" class="menu-screen">
+            <h1>Geometry Dash</h1>
+            <button id="startButton">Play</button>
+        </div>
+    </div>
+    <div id="score">Score: 0</div>
+    <div id="instructions">Press SPACE to double jump!</div>
+
+    <script>
+        const player = document.getElementById('player');
+        const gameContainer = document.getElementById('game');
+        const scoreDisplay = document.getElementById('score');
+        const startButton = document.getElementById('startButton');
+        const menuScreen = document.getElementById('menuScreen');
+        const jumpCounter = document.getElementById('jumpCounter');
+        
+        let score = 0;
+        let gameActive = false;
+        let rotation = 0;
+        let obstacleSpeed = 6;
+        let obstacles = [];
+        let gameInterval;
+        let lastSpikePosition = 800;
+        let currentJumpHeight = 0;
+        let jumpVelocity = 0;
+        let jumpsRemaining = 2;
+        const jumpForce = 15.5;      // Increased jump height
+        const gravity = 0.65;        // Adjusted for smoother fall
+        const groundLevel = 80;      // Keep ground reference
+        const rotationSpeed = 4.5;   // Slightly faster rotation
+
+        function jump() {
+            if (gameActive && jumpsRemaining > 0) {
+                jumpVelocity = jumpForce;
+                jumpsRemaining--;
+                jumpCounter.textContent = `Jumps: ${jumpsRemaining}`;
+                createParticles(player.offsetLeft, player.offsetTop);
+            }
+        }
+
+        function updatePlayerPosition() {
+            // Apply improved physics
+            jumpVelocity -= gravity;
+            currentJumpHeight += jumpVelocity;
+
+            // Enhanced ground detection and rotation
+            if (currentJumpHeight <= 0) {
+                currentJumpHeight = 0;
+                jumpVelocity = 0;
+                jumpsRemaining = 2;
+                jumpCounter.textContent = `Jumps: ${jumpsRemaining}`;
+                rotation = Math.round(rotation / 90) * 90;
+            } else {
+                // Smoother air rotation with slight acceleration
+                let rotationMultiplier = 1 + (currentJumpHeight / 200);
+                rotation += rotationSpeed * rotationMultiplier;
+            }
+
+            // Apply position and rotation
+            player.style.bottom = (currentJumpHeight + groundLevel) + 'px';
+            player.style.transform = `rotate(${rotation}deg)`;
+        }
+
+        function createParticles(x, y) {
+            for (let i = 0; i < 5; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                gameContainer.appendChild(particle);
+
+                const angle = (Math.random() * Math.PI * 2);
+                const velocity = 2 + Math.random() * 3;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                let life = 1;
+
+                function animateParticle() {
+                    if (life <= 0) {
+                        particle.remove();
+                        return;
+                    }
+
+                    life -= 0.02;
+                    particle.style.left = (parseFloat(particle.style.left) + vx) + 'px';
+                    particle.style.top = (parseFloat(particle.style.top) + vy) + 'px';
+                    particle.style.opacity = life;
+
+                    requestAnimationFrame(animateParticle);
+                }
+
+                animateParticle();
+            }
+        }
+
+        function createSpike(position) {
+            const spike = document.createElement('div');
+            spike.className = 'spike';
+            spike.style.left = position + 'px';
+            gameContainer.appendChild(spike);
+            obstacles.push({
+                element: spike,
+                position: position,
+                scored: false
+            });
+        }
+
+        function createSpikePattern() {
+            const patternType = Math.floor(Math.random() * 4);
+            const basePosition = lastSpikePosition + 200;
+
+            switch(patternType) {
+                case 0:
+                    createSpike(basePosition);
+                    lastSpikePosition = basePosition;
+                    break;
+                case 1:
+                    createSpike(basePosition);
+                    createSpike(basePosition + 45);
+                    lastSpikePosition = basePosition + 45;
+                    break;
+                case 2:
+                    createSpike(basePosition);
+                    createSpike(basePosition + 45);
+                    createSpike(basePosition + 90);
+                    lastSpikePosition = basePosition + 90;
+                    break;
+                case 3:
+                    lastSpikePosition = basePosition + 100;
+                    break;
+            }
+        }
+
+        function updateObstacles() {
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obstacle = obstacles[i];
+                obstacle.position -= obstacleSpeed;
+                obstacle.element.style.left = obstacle.position + 'px';
+
+                if (!obstacle.scored && obstacle.position < player.offsetLeft - 50) {
+                    score++;
+                    scoreDisplay.textContent = 'Score: ' + score;
+                    obstacle.scored = true;
+                }
+
+                if (obstacle.position < -50) {
+                    obstacle.element.remove();
+                    obstacles.splice(i, 1);
+                }
+            }
+        }
+
+        function checkCollision(playerEl, obstacleEl) {
+            const playerRect = playerEl.getBoundingClientRect();
+            const obstacleRect = obstacleEl.getBoundingClientRect();
+            
+            const buffer = 5;
+            return !(
+                playerRect.right - buffer < obstacleRect.left + buffer || 
+                playerRect.left + buffer > obstacleRect.right - buffer || 
+                playerRect.bottom - buffer < obstacleRect.top + buffer || 
+                playerRect.top + buffer > obstacleRect.bottom - buffer
+            );
+        }
+
+        function startGame() {
+            menuScreen.style.display = 'none';
+            player.style.display = 'block';
+            gameActive = true;
+            score = 0;
+            rotation = 0;
+            currentJumpHeight = 0;
+            jumpVelocity = 0;
+            jumpsRemaining = 2;
+            lastSpikePosition = 800;
+            jumpCounter.textContent = 'Jumps: 2';
+            player.style.transform = 'rotate(0deg)';
+            scoreDisplay.textContent = 'Score: 0';
+            obstacles.forEach(obstacle => obstacle.element.remove());
+            obstacles = [];
+            gameInterval = setInterval(createSpikePattern, 1200);
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if (!gameActive) return;
+
+            updatePlayerPosition();
+            updateObstacles();
+
+            for (let obstacle of obstacles) {
+                if (checkCollision(player, obstacle.element)) {
+                    endGame();
+                    return;
+                }
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameInterval);
+            createParticles(player.offsetLeft, player.offsetTop);
+            setTimeout(() => {
+                alert('Game Over! Score: ' + score);
+                menuScreen.style.display = 'flex';
+                player.style.display = 'none';
+            }, 100);
+        }
+
+        startButton.addEventListener('click', startGame);
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space' && gameActive) {
+                event.preventDefault();
+                jump();
+            }
+        });
+    </script>
+</body>
+</html>
