@@ -9,19 +9,43 @@
             background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
             font-family: 'Arial', sans-serif;
         }
+          #game {
+              width: 1200px;
+              height: 600px;
+              margin: 0 auto;
+              position: relative;
+              overflow: hidden;
+              background: linear-gradient(0deg, #1e40af 0%, #3b82f6 100%);
+              border: 4px solid #0f172a;
+              border-radius: 10px;
+              box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+          }
 
-        #game {
-            width: 800px;
-            height: 400px;
-            margin: 0 auto;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(0deg, #1e40af 0%, #3b82f6 100%);
-            border: 4px solid #0f172a;
-            border-radius: 10px;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
-        }
+          /* Add these styles for the footer and home button */
+          .footer {
+              width: 100%;
+              padding: 20px 0;
+              background: #1a1a1a;
+              color: #f97316;
+              text-align: center;
+              margin-top: 30px;
+              border-top: 3px solid #f97316;
+          }
 
+          .home-button {
+              padding: 12px 30px;
+              font-size: 20px;
+              background: linear-gradient(45deg, #f97316 0%, #fb923c 100%);
+              color: white;
+              border: none;
+              border-radius: 20px;
+              cursor: pointer;
+              transition: all 0.3s;
+              box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+              text-transform: uppercase;
+              font-weight: bold;
+              margin: 10px;
+          }
         #player {
             width: 40px;
             height: 40px;
@@ -365,5 +389,10 @@
             }
         });
     </script>
+    <!-- Add this at the bottom of the body -->
+<footer class="footer">
+    <button class="home-button" onclick="window.location.href='/'">Home</button>
+    <p>© 2024 Geometry Dash Clone</p>
+</footer>
 </body>
 </html>
