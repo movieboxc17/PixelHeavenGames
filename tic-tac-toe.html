@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicTacToe</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iIzRDQUY1MCIgZD0iTTAgMGgyNHYyNEgweiIvPjxwYXRoIGZpbGw9IiNGRkYiIGQ9Ik0xOSA2LjQxTDE3LjU5IDUgMTIgMTAuNTkgNi40MSA1IDUgNi40MSAxMC41OSAxMiA1IDE3LjU5IDYuNDEgMTkgMTIgMTMuNDEgMTcuNTkgMTkgMTkgMTcuNTkgMTMuNDEgMTJ6Ii8+PC9zdmc+" />
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 12px 25px;
+    font-size: 18px;
+    border-radius: 25px;
+    background: rgba(76, 175, 80, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    font-family: 'Righteous', cursive;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.back-button:hover {
+    background: rgba(76, 175, 80, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+      
+        .game-settings {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .game-mode-select {
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            cursor: pointer;
+            font-family: 'Righteous', cursive;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+
+        .game-mode-select:hover {
+            background: rgba(76, 175, 80, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-mode-select option {
+            background: #2a5298;
+            color: white;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        .board-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 120px);
+            gap: 10px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell {
+            width: 120px;
+            height: 120px;
+            border: none;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 72px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .cell.x {
+            color: #007bff;
+        }
+
+        .cell.o {
+            color: #dc3545;
+        }
+
+        .cell:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .status {
+            text-align: center;
+            font-size: 32px;
+            margin: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-family: 'Righteous', cursive;
+            letter-spacing: 2px;
+        }
+
+        .reset {
+            margin-top: 20px;
+            width: 360px;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            background: #4CAF50;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-family: 'Righteous', cursive;
+        }
+
+        .reset:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-container {
+            margin-top: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .cell[data-cell]:empty:hover::before {
+            content: attr(data-hover);
+            opacity: 0.3;
+            font-family: 'Permanent Marker', cursive;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            font-family: 'Righteous', cursive;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">← Back</a>
+    <div class="game-container">
+        <div class="game-settings">
+            <select id="gameMode" class="game-mode-select">
+                <option value="pvp">Player vs Player</option>
+                <option value="easy">Player vs AI (Easy)</option>
+                <option value="medium">Player vs AI (Medium)</option>
+                <option value="hard">Player vs AI (Unbeatable)</option>
+            </select>
+        </div>
+        <div class="status" id="status">Player X's turn</div>
+        <div class="board-container">
+            <div class="board" id="board">
+                <div class="cell" data-cell data-hover="X"></div>
+                <div class="cell" data-cell data-hover="X"></div>
+                <div class="cell" data-cell data-hover="X"></div>
+                <div class="cell" data-cell data-hover="X"></div>
+                <div class="cell" data-cell data-hover="X"></div>
+                <div class="cell" data-cell data-hover="X"></div>
+                <div class="cell" data-cell data-hover="X"></div>
+                <div class="cell" data-cell data-hover="X"></div>
+                <div class="cell" data-cell data-hover="X"></div>
+            </div>
+            <button class="reset" id="resetButton">New Game</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Askansz's Games. All rights reserved.</p>
+        <p>Made with ❤️ by Askansz | 
+            <a href="https://tiktok.com/@askansz" target="_blank">TikTok</a> | 
+            <a href="https://instagram.com/askansz" target="_blank">Instagram</a> |
+            <a href="https://twitter.com/askansz" target="_blank">Twitter</a>
+        </p>
+    </div>
+
+    <script>
+        const board = document.getElementById('board');
+        const cells = document.querySelectorAll('[data-cell]');
+        const status = document.getElementById('status');
+        const resetButton = document.getElementById('resetButton');
+        const gameModeSelect = document.getElementById('gameMode');
+        let currentPlayer = 'X';
+        let gameActive = true;
+        let gameState = ['', '', '', '', '', '', '', '', ''];
+        let isAIGame = false;
+
+        const winningCombinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+
+        cells.forEach(cell => {
+            cell.addEventListener('click', handleClick);
+        });
+
+        resetButton.addEventListener('click', resetGame);
+        gameModeSelect.addEventListener('change', resetGame);
+
+        function handleClick(e) {
+            const cell = e.target;
+            const index = Array.from(cells).indexOf(cell);
+
+            if (!gameActive || gameState[index] !== '' || 
+                (isAIGame && currentPlayer === 'O')) return;
+
+            makeMove(index);
+
+            if (isAIGame && gameActive) {
+                setTimeout(() => {
+                    makeAIMove();
+                }, 500);
+            }
+        }
+
+        function makeMove(index) {
+            gameState[index] = currentPlayer;
+            cells[index].textContent = currentPlayer;
+            cells[index].classList.add(currentPlayer.toLowerCase());
+
+            if (checkWin()) {
+                gameActive = false;
+                status.textContent = `Player ${currentPlayer} wins!`;
+                return;
+            }
+
+            if (checkDraw()) {
+                gameActive = false;
+                status.textContent = "It's a draw!";
+                return;
+            }
+
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            cells.forEach(cell => {
+                if (!cell.textContent) {
+                    cell.setAttribute('data-hover', currentPlayer);
+                }
+            });
+            status.textContent = `Player ${currentPlayer}'s turn`;
+        }
+
+        function makeAIMove() {
+            const gameMode = gameModeSelect.value;
+            let move;
+
+            switch(gameMode) {
+                case 'easy':
+                    move = getRandomMove();
+                    break;
+                case 'medium':
+                    move = Math.random() < 0.5 ? getBestMove() : getRandomMove();
+                    break;
+                case 'hard':
+                    move = getBestMove();
+                    break;
+            }
+
+            if (move !== null) {
+                makeMove(move);
+            }
+        }
+
+        function getRandomMove() {
+            const availableMoves = gameState
+                .map((cell, index) => cell === '' ? index : null)
+                .filter(cell => cell !== null);
+            
+            if (availableMoves.length === 0) return null;
+            return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+        }
+
+        function getBestMove() {
+            let bestScore = -Infinity;
+            let bestMove = null;
+
+            for (let i = 0; i < gameState.length; i++) {
+                if (gameState[i] === '') {
+                    gameState[i] = 'O';
+                    let score = minimax(gameState, 0, false);
+                    gameState[i] = '';
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestMove = i;
+                    }
+                }
+            }
+            return bestMove;
+        }
+
+        function minimax(board, depth, isMaximizing) {
+            if (checkWinForMinimax('O')) return 1;
+            if (checkWinForMinimax('X')) return -1;
+            if (checkDraw()) return 0;
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'O';
+                        let score = minimax(board, depth + 1, false);
+                        board[i] = '';
+                        bestScore = Math.max(score, bestScore);
+                    }
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < board.length; i++) {
+                    if (board[i] === '') {
+                        board[i] = 'X';
+                        let score = minimax(board, depth + 1, true);
+                        board[i] = '';
+                        bestScore = Math.min(score, bestScore);
+                    }
+                }
+                return bestScore;
+            }
+        }
+
+        function checkWinForMinimax(player) {
+            return winningCombinations.some(combination => {
+                return combination.every(index => gameState[index] === player);
+            });
+        }
+
+        function checkWin() {
+            return winningCombinations.some(combination => {
+                return combination.every(index => {
+                    return gameState[index] === currentPlayer;
+                });
+            });
+        }
+
+        function checkDraw() {
+            return gameState.every(cell => cell !== '');
+        }
+
+        function resetGame() {
+            gameState = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            currentPlayer = 'X';
+            isAIGame = gameModeSelect.value !== 'pvp';
+            status.textContent = `Player ${currentPlayer}'s turn`;
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.setAttribute('data-hover', 'X');
+                cell.classList.remove('x', 'o');
+            });
+        }
+    </script>
+</body>
+</html>

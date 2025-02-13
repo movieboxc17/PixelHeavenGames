@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Retro Snake</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding-top: 50px;
+            padding-bottom: 85px;
+            background: linear-gradient(145deg, #a8b5a5, #9eab9c);
+            font-family: 'Press Start 2P', cursive;
+            color: #2a2a2a;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 30px;
+            font-size: 14px;
+            background: linear-gradient(145deg, #373737, #2a2a2a);
+            color: #9eab9c;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: 'Press Start 2P', cursive;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        canvas {
+            background-color: #2a2a2a;
+            border: 8px solid #373737;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        canvas:hover {
+            transform: scale(1.01);
+        }
+
+        #startButton {
+            padding: 12px 30px;
+            font-size: 14px;
+            background: linear-gradient(145deg, #373737, #2a2a2a);
+            color: #9eab9c;
+            border: none;
+            cursor: pointer;
+            margin: 20px 0;
+            text-transform: uppercase;
+            font-family: 'Press Start 2P', cursive;
+            transition: all 0.2s;
+        }
+
+        #startButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .score-container {
+            font-size: 16px;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #score {
+            font-weight: bold;
+            color: #373737;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 60px;
+            font-family: 'Press Start 2P', cursive;
+            color: #2a2a2a;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .footer a {
+            color: #373737;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: bold;
+        }
+
+        .footer a:hover {
+            color: #2a2a2a;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-button">← Back</a>
+    <h1>Retro Snake</h1>
+    <button id="startButton">Start Game</button>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div class="score-container">Snake Length: <span id="score">1</span></div>
+
+    <div class="footer">
+        <p>© 2025 Askansz's Games. All rights reserved.</p>
+        <p>Made with ❤️ by Askansz | 
+            <a href="https://tiktok.com/@askansz" target="_blank">TikTok</a> | 
+            <a href="https://instagram.com/askansz" target="_blank">Instagram</a> |
+            <a href="https://twitter.com/askansz" target="_blank">Twitter</a>
+        </p>
+    </div>
+
+    <script>
+        window.addEventListener("keydown", function(e) {
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+        });
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const startButton = document.getElementById('startButton');
+
+        const gridSize = 20;
+        const tileCount = 20;
+        let gameRunning = false;
+        let lastMoveTime = 0;
+        const moveDelay = 50;
+
+        let snake = [
+            {x: 10, y: 10},
+        ];
+        let food = {
+            x: Math.floor(Math.random() * (tileCount - 4) + 2),
+            y: Math.floor(Math.random() * (tileCount - 4) + 2)
+        };
+        let dx = 1;
+        let dy = 0;
+
+        clearCanvas();
+        drawSnake();
+        drawFood();
+
+        startButton.addEventListener('click', startGame);
+        document.addEventListener('keydown', handleKeyPress);
+
+        function handleKeyPress(event) {
+            if (event.keyCode === 13) {
+                startButton.click();
+                return;
+            }
+            changeDirection(event);
+        }
+
+        function startGame() {
+            if (!gameRunning) {
+                gameRunning = true;
+                startButton.textContent = 'Restart Game';
+                snake = [{x: 10, y: 10}];
+                dx = 1;
+                dy = 0;
+                scoreElement.textContent = snake.length;
+                drawGame();
+            } else {
+                resetGame();
+            }
+        }
+
+        function changeDirection(event) {
+            if (!gameRunning) return;
+            
+            const currentTime = Date.now();
+            if (currentTime - lastMoveTime < moveDelay) return;
+            
+            lastMoveTime = currentTime;
+            
+            const LEFT_KEY = 37;
+            const RIGHT_KEY = 39;
+            const UP_KEY = 38;
+            const DOWN_KEY = 40;
+            const W_KEY = 87;
+            const A_KEY = 65;
+            const S_KEY = 83;
+            const D_KEY = 68;
+
+            const keyPressed = event.keyCode;
+            const goingUp = dy === -1;
+            const goingDown = dy === 1;
+            const goingRight = dx === 1;
+            const goingLeft = dx === -1;
+
+            if ((keyPressed === LEFT_KEY || keyPressed === A_KEY) && !goingRight) {
+                dx = -1;
+                dy = 0;
+            }
+            if ((keyPressed === UP_KEY || keyPressed === W_KEY) && !goingDown) {
+                dx = 0;
+                dy = -1;
+            }
+            if ((keyPressed === RIGHT_KEY || keyPressed === D_KEY) && !goingLeft) {
+                dx = 1;
+                dy = 0;
+            }
+            if ((keyPressed === DOWN_KEY || keyPressed === S_KEY) && !goingUp) {
+                dx = 0;
+                dy = 1;
+            }
+        }
+
+        function drawGame() {
+            if (!gameRunning) return;
+            
+            moveSnake();
+            clearCanvas();
+            drawFood();
+            drawSnake();
+            
+            if (gameOver()) {
+                gameRunning = false;
+                startButton.textContent = 'Start Game';
+                alert('Game Over! Length: ' + snake.length);
+            } else {
+                setTimeout(drawGame, 150);
+            }
+        }
+
+        function clearCanvas() {
+            ctx.fillStyle = '#2a2a2a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function drawSnake() {
+            ctx.fillStyle = '#9eab9c';
+            snake.forEach(segment => {
+                ctx.fillRect(
+                    segment.x * gridSize,
+                    segment.y * gridSize,
+                    gridSize - 1,
+                    gridSize - 1
+                );
+            });
+        }
+
+        function drawFood() {
+            ctx.fillStyle = '#9eab9c';
+            ctx.fillRect(
+                food.x * gridSize,
+                food.y * gridSize,
+                gridSize - 1,
+                gridSize - 1
+            );
+        }
+
+        function moveSnake() {
+            const head = {
+                x: snake[0].x + dx,
+                y: snake[0].y + dy
+            };
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                scoreElement.textContent = snake.length;
+                generateFood();
+            } else {
+                snake.pop();
+            }
+        }
+
+        function generateFood() {
+            food = {
+                x: Math.floor(Math.random() * (tileCount - 4) + 2),
+                y: Math.floor(Math.random() * (tileCount - 4) + 2)
+            };
+            
+            while (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
+                food = {
+                    x: Math.floor(Math.random() * (tileCount - 4) + 2),
+                    y: Math.floor(Math.random() * (tileCount - 4) + 2)
+                };
+            }
+        }
+
+        function gameOver() {
+            const head = snake[0];
+            return (
+                head.x < 0 ||
+                head.x >= tileCount ||
+                head.y < 0 ||
+                head.y >= tileCount ||
+                collision()
+            );
+        }
+
+        function collision() {
+            const head = snake[0];
+            return snake.slice(1).some(segment => 
+                segment.x === head.x && segment.y === head.y
+            );
+        }
+
+        function resetGame() {
+            gameRunning = false;
+            snake = [{x: 10, y: 10}];
+            food = {
+                x: Math.floor(Math.random() * (tileCount - 4) + 2),
+                y: Math.floor(Math.random() * (tileCount - 4) + 2)
+            };
+            dx = 1;
+            dy = 0;
+            scoreElement.textContent = snake.length;
+            startButton.textContent = 'Start Game';
+            clearCanvas();
+            drawSnake();
+            drawFood();
+        }
+    </script>
+</body>
+</html>
