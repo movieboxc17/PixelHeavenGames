@@ -235,16 +235,14 @@ body {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
     animation: cardFloat 3s ease-in-out infinite;
 }
-
-.game-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
-}
-
+  .game-image {
+      width: 100%;
+      height: 250px; /* Much taller container now */
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+  }
 .game-card:hover .game-image {
     transform: scale(1.05);
 }
