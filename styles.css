@@ -17,11 +17,24 @@ body {
     height: 100%;
     background: linear-gradient(135deg, #1a1a2e, #16213e);
     display: flex;
+    flex-direction: column;
+    gap: 20px;
     justify-content: center;
     align-items: center;
     z-index: 1000;
     animation: fadeOut 1s ease-in-out forwards;
     animation-delay: 2s;
+}
+
+.loading-text {
+    font-size: 2em;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+    letter-spacing: 2px;
 }
 
 .loader-dots {
@@ -212,11 +225,30 @@ body {
 
 .game-image {
     width: 100%;
-    height: 150px;
+    height: 180px;
     object-fit: cover;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
 }
+
+.game-card:hover .game-image {
+    transform: scale(1.05);
+}
+
+.game-card {
+    /* Update existing game-card styles */
+    padding: 15px;
+    overflow: hidden; /* Ensures image stays within card boundaries */
+    display: flex;
+    flex-direction: column;
+}
+
+.game-card h3 {
+    margin: 15px 0;
+    flex-grow: 1;
+}
+
 
 .play-button {
     background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
