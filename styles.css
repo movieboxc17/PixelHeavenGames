@@ -47,6 +47,8 @@ body {
     margin-bottom: 30px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 100;
 }
 
 .header-content {
@@ -65,7 +67,7 @@ body {
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite, glow 3s ease-in-out infinite alternate;
+    animation: shine 3s linear infinite;
 }
 
 /* Navigation Menu */
@@ -124,6 +126,8 @@ body {
     margin: 20px 0;
     flex-wrap: wrap;
     padding: 0 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .category-tag {
@@ -151,6 +155,8 @@ body {
     border-radius: 20px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 1;
 }
 
 .section-title {
@@ -171,6 +177,8 @@ body {
     max-width: 1400px;
     margin: 0 auto;
     padding: 10px;
+    position: relative;
+    z-index: 1;
 }
 
 .game-row {
@@ -248,11 +256,17 @@ body {
     cursor: pointer;
     transition: all 0.3s;
     box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    z-index: 1000;
 }
 
 .back-to-top:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) rotate(360deg);
     box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.back-to-top:active {
+    transform: scale(0.9);
+    animation: clickWave 0.5s ease-out;
 }
 
 /* Footer Styles */
@@ -261,6 +275,8 @@ body {
     padding: 50px 0 20px;
     margin-top: 50px;
     backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
 }
 
 .footer-content {
@@ -336,8 +352,8 @@ body {
 }
 
 @keyframes glow {
-    from { text-shadow: 0 0 10px #ff6b6b, 0 0 20px #ff6b6b, 0 0 30px #ff8e8e; }
-    to { text-shadow: 0 0 20px #ff6b6b, 0 0 30px #ff6b6b, 0 0 40px #ff8e8e; }
+    from { text-shadow: 0 0 5px #ff6b6b, 0 0 10px #ff6b6b; }
+    to { text-shadow: 0 0 10px #ff6b6b, 0 0 15px #ff8e8e; }
 }
 
 @keyframes cardFloat {
@@ -360,4 +376,13 @@ body {
 @keyframes gradientFlow {
     0% { background-position: 0% center; }
     100% { background-position: 200% center; }
+}
+
+@keyframes clickWave {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 0 20px rgba(255, 107, 107, 0);
+    }
 }
