@@ -3,389 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PixelHeavenGames - Your Ultimate Gaming Destination</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Epic Gaming Library</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
-        :root {
-            --primary-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
-            --secondary-gradient: linear-gradient(135deg, #22c55e, #16a34a);
-            --background-color: #0f172a;
-            --card-background: #1e293b;
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --accent-color: #22c55e;
-            --hover-color: #16a34a;
-            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            --neon-glow: 0 0 10px rgba(139, 92, 246, 0.5);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
         body {
-            background-color: var(--background-color);
-            color: var(--text-primary);
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 20%),
-                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 20%);
-            min-height: 100vh;
-            padding-top: 60px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 10px;
         }
 
-        header {
-            background: rgba(30, 41, 59, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: var(--card-shadow);
-            padding: 0.5rem;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 99;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            height: 60px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: var(--primary-gradient);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            box-shadow: var(--neon-glow);
-            position: fixed;
-            top: 0.8rem;
-            left: 1rem;
-            z-index: 1000;
-            height: 40px;
-        }
-
-        .logo img {
-            width: 25px;
-            height: 25px;
-        }
-
-        .logo h1 {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-        nav {
-            max-width: 1200px;
+        .container {
+            max-width: 1024px;
             margin: 0 auto;
+        }
+
+        .game-row {
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 0.2rem;
-        }
-
-        .search-filter {
-            margin-left: auto;
-            display: flex;
-            gap: 0.5rem;
-            background: var(--primary-gradient);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            box-shadow: var(--neon-glow);
-            height: 40px;
-            align-items: center;
-        }
-
-        input, select {
-            padding: 0.5rem 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 6px;
-            outline: none;
-            background-color: rgba(30, 41, 59, 0.8);
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            min-width: 150px;
-            height: 30px;
-        }
-
-        .games-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-            max-width: 1600px;
-            margin: 0 auto;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .game-card {
-            width: 500px;
-            height: 500px;
-            background: var(--card-background);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            box-shadow: var(--card-shadow);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            transform: translateY(0);
-            margin: 0 auto;
+            width: 290px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 10px;
+            margin: 5px;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .game-image-container {
-            position: relative;
-            overflow: hidden;
-            height: 250px;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
 
         .game-image {
             width: 100%;
-            height: 100%;
+            height: 150px;
             object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .game-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.8));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            display: flex;
-            align-items: flex-end;
-            padding: 1rem;
-        }
-
-        .game-card:hover .game-overlay {
-            opacity: 1;
-        }
-        .game-stats {
-            display: flex;
-            gap: 1rem;
-            color: white;
-        }
-
-        .game-info {
-            height: 250px;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .game-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .game-description {
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .game-tags {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin: 0.5rem 0;
-        }
-
-        .tag {
-            background: rgba(139, 92, 246, 0.2);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .game-footer {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .game-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .game-category {
-            background: var(--primary-gradient);
-            padding: 0.5rem 1rem;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: var(--neon-glow);
-        }
-
-        .difficulty {
-            background: var(--accent-color);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
+            border-radius: 8px;
         }
 
         .play-button {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.8rem;
-            padding: 1rem;
-            background: var(--secondary-gradient);
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
             color: white;
             border: none;
-            border-radius: 12px;
+            padding: 8px 15px;
+            border-radius: 20px;
             cursor: pointer;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
-            font-size: 1.1rem;
+            width: 100%;
+            margin-top: 8px;
+            font-weight: bold;
+            transition: transform 0.2s;
         }
 
         .play-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+            transform: scale(1.05);
         }
 
-        @media (max-width: 1200px) {
-            .games-container {
-                grid-template-columns: repeat(2, 500px);
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .games-container {
-                grid-template-columns: 500px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .game-card, .games-container {
-                width: 100%;
-            }
-            .games-container {
-                grid-template-columns: 1fr;
-            }
+        h3 {
+            margin: 8px 0;
+            color: #ff8e8e;
+            font-size: 1em;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="https://via.placeholder.com/40" alt="PixelHeavenGames Logo">
-            <h1>PixelHeavenGames</h1>
-        </div>
-        <nav>
-            <div class="search-filter">
-                <input type="text" id="searchInput" placeholder="Search games...">
-                <select id="categoryFilter">
-                    <option value="all">All Categories</option>
-                    <option value="arcade">Arcade</option>
-                    <option value="puzzle">Puzzle</option>
-                    <option value="action">Action</option>
-                    <option value="strategy">Strategy</option>
-                </select>
-            </div>
-        </nav>
-    </header>
-
-    <main>
-        <div class="games-container">
-            <!-- Game Card 1 -->
+    <div class="container">
+        <!-- Row 1 -->
+        <div class="game-row">
             <div class="game-card">
-                <div class="game-image-container">
-                    <img src="https://via.placeholder.com/500x250" alt="Pixel Runner" class="game-image">
-                    <div class="game-overlay">
-                        <div class="game-stats">
-                            <span><i class="fas fa-star"></i> 4.8</span>
-                            <span><i class="fas fa-gamepad"></i> 10k+ Plays</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="game-info">
-                    <div>
-                        <h3 class="game-title">Pixel Runner</h3>
-                        <p class="game-description">Experience the thrill of endless running through beautifully crafted pixel worlds!</p>
-                        <div class="game-tags">
-                            <span class="tag">Arcade</span>
-                            <span class="tag">Pixel Art</span>
-                            <span class="tag">Runner</span>
-                        </div>
-                    </div>
-                    <div class="game-footer">
-                        <div class="game-meta">
-                            <span class="game-category">Action</span>
-                            <span class="difficulty">Easy</span>
-                        </div>
-                        <a href="games/pixel-runner.html" class="play-button">
-                            <i class="fas fa-play"></i>
-                            Play Now
-                        </a>
-                    </div>
-                </div>
+                <img src="Images/tic-tac-toe.jpg" alt="Game 1" class="game-image">
+                <h3>Adventure Quest</h3>
+                <a href="tic-tac-toe.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/snake.jpg" alt="Game 2" class="game-image">
+                <h3>Space Explorer</h3>
+                <a href="snake.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/game3.jpg" alt="Game 3" class="game-image">
+                <h3>Racing Masters</h3>
+                <a href="HTML/game3.html"><button class="play-button">PLAY NOW</button></a>
             </div>
         </div>
-    </main>
 
-    <footer>
-        <p>&copy; 2024 PixelHeavenGames. All rights reserved.</p>
-    </footer>
+        <!-- Row 2 -->
+        <div class="game-row">
+            <div class="game-card">
+                <img src="Images/game4.jpg" alt="Game 4" class="game-image">
+                <h3>Game Title 4</h3>
+                <a href="HTML/game4.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/game5.jpg" alt="Game 5" class="game-image">
+                <h3>Game Title 5</h3>
+                <a href="HTML/game5.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/game6.jpg" alt="Game 6" class="game-image">
+                <h3>Game Title 6</h3>
+                <a href="HTML/game6.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+        </div>
 
-    <script>
-        function filterGames() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const category = document.getElementById('categoryFilter').value.toLowerCase();
-            const gameCards = document.querySelectorAll('.game-card');
+        <!-- Row 3 -->
+        <div class="game-row">
+            <div class="game-card">
+                <img src="Images/game7.jpg" alt="Game 7" class="game-image">
+                <h3>Game Title 7</h3>
+                <a href="HTML/game7.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/game8.jpg" alt="Game 8" class="game-image">
+                <h3>Game Title 8</h3>
+                <a href="HTML/game8.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/game9.jpg" alt="Game 9" class="game-image">
+                <h3>Game Title 9</h3>
+                <a href="HTML/game9.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+        </div>
 
-            gameCards.forEach(card => {
-                const title = card.querySelector('.game-title').textContent.toLowerCase();
-                const description = card.querySelector('.game-description').textContent.toLowerCase();
-                const gameCategory = card.querySelector('.game-category').textContent.toLowerCase();
+        <!-- Row 4 -->
+        <div class="game-row">
+            <div class="game-card">
+                <img src="Images/game10.jpg" alt="Game 10" class="game-image">
+                <h3>Game Title 10</h3>
+                <a href="HTML/game10.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/game11.jpg" alt="Game 11" class="game-image">
+                <h3>Game Title 11</h3>
+                <a href="HTML/game11.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/game12.jpg" alt="Game 12" class="game-image">
+                <h3>Game Title 12</h3>
+                <a href="HTML/game12.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+        </div>
 
-                const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
-                const matchesCategory = category === 'all' || gameCategory === category;
-
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-
-                setTimeout(() => {
-                    if (matchesSearch && matchesCategory) {
-                        card.style.display = 'block';
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                }, 300);
-            });
-        }
-
-        document.querySelectorAll('.game-card').forEach(card => {
-            card.style.transition = 'all 0.3s ease-in-out';
-        });
-
-        document.getElementById('searchInput').addEventListener('input', filterGames);
-        document.getElementById('categoryFilter').addEventListener('change', filterGames);
-    </script>
+        <!-- Row 5 -->
+        <div class="game-row">
+            <div class="game-card">
+                <img src="Images/game13.jpg" alt="Game 13" class="game-image">
+                <h3>Game Title 13</h3>
+                <a href="HTML/game13.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/game14.jpg" alt="Game 14" class="game-image">
+                <h3>Game Title 14</h3>
+                <a href="HTML/game14.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+            <div class="game-card">
+                <img src="Images/game15.jpg" alt="Game 15" class="game-image">
+                <h3>Game Title 15</h3>
+                <a href="HTML/game15.html"><button class="play-button">PLAY NOW</button></a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
