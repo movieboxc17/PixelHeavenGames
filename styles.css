@@ -18,41 +18,95 @@ body {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 30px;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    animation: fadeOut 1s ease-in-out forwards;
-    animation-delay: 2s;
+    animation: fadeOut 1.5s ease-in-out forwards;
+    animation-delay: 3s;
+}
+
+.logo-container {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: logoFloat 2s ease-in-out infinite;
+}
+
+.logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+}
+
+.welcome-text {
+    font-size: 3em;
+    font-weight: bold;
+    text-align: center;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ff6b6b);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite, scaleIn 1s ease-out;
+    margin-bottom: 20px;
+}
+
+.logo-container {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+    animation: rotateLogo 2s ease-in-out infinite;
 }
 
 .loading-text {
-    font-size: 2em;
+    font-size: 1.8em;
     font-weight: bold;
     background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite;
-    letter-spacing: 2px;
+    animation: shine 3s linear infinite, float 2s ease-in-out infinite;
+    letter-spacing: 3px;
 }
 
 .loader-dots {
     display: flex;
-    gap: 8px;
+    gap: 12px;
 }
 
 .dot {
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
     background: #ff6b6b;
     border-radius: 50%;
-    animation: bounce 0.5s ease-in-out infinite;
+    animation: bounceDot 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
-.dot:nth-child(2) { animation-delay: 0.1s; }
-.dot:nth-child(3) { animation-delay: 0.2s; }
+@keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-10px) scale(1.05); }
+}
+
+@keyframes bounceDot {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.2); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
 
 /* Header Styles */
 .header {
@@ -73,18 +127,25 @@ body {
     align-items: center;
     padding: 0 20px;
 }
+  .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 2.2em;
+      font-weight: bold;
+      background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ff6b6b);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite;
+  }
 
-.logo {
-    font-size: 2.2em;
-    font-weight: bold;
-    background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ff6b6b);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite;
-}
-
+  .header-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+  }
 /* Navigation Menu */
 .nav-menu {
     display: flex;
@@ -330,6 +391,22 @@ body {
     transform-origin: bottom;
 }
 
+.logo-container {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: logoFloat 2s ease-in-out infinite;
+}
+
+.logo-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
 /* New Animations */
 @keyframes gradientBG {
     0% { background-position: 0% 50% }
