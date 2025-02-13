@@ -7,23 +7,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
         }
 
-        /* Header styles */
         .header {
             background: rgba(0, 0, 0, 0.3);
             padding: 20px 0;
             margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
         }
 
         .header-content {
-            max-width: 1024px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -32,11 +33,17 @@
         }
 
         .logo {
-            font-size: 2em;
+            font-size: 2.2em;
             font-weight: bold;
-            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ff6b6b);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
         }
 
         .nav-menu {
@@ -49,138 +56,182 @@
             text-decoration: none;
             padding: 8px 15px;
             border-radius: 20px;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            position: relative;
         }
 
-        .nav-menu a:hover {
-            background: rgba(255, 255, 255, 0.1);
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ff6b6b;
+            transition: width 0.3s ease;
         }
 
-        /* Categories Style */
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
         .categories {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             margin: 20px 0;
             flex-wrap: wrap;
             padding: 0 20px;
         }
 
         .category-tag {
-            background: rgba(255, 107, 107, 0.2);
-            padding: 8px 15px;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.2), rgba(255, 142, 142, 0.2));
+            padding: 10px 20px;
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
 
         .category-tag:hover {
             background: rgba(255, 107, 107, 0.4);
+            transform: translateY(-2px);
         }
 
-        /* Featured Section */
         .featured-section {
             background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .section-title {
-            color: #ff8e8e;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            padding-left: 10px;
+            font-size: 1.8em;
+            font-weight: 600;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-left: 15px;
             border-left: 4px solid #ff6b6b;
+            margin-bottom: 30px;
         }
 
         .container {
-            max-width: 1024px;
-            margin: 0 auto;
-            padding: 10px;
-        }
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 10px;
+}
 
-        .game-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
+.game-card {
+    width: calc((100% - 60px) / 4);
+    max-width: 300px;
+    min-width: 250px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
 
-        .game-card {
-            width: 210px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 10px;
-            margin: 5px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+.game-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    flex-wrap: nowrap;
+    gap: 20px;
+}
+
+.game-card {
+    flex: 1;
+    min-width: 0;
+    max-width: calc(25% - 15px);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
 
         .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
         }
 
         .game-image {
             width: 100%;
-            height: 100%px;
+            height: 150px;
             object-fit: cover;
-            border-radius: 8px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .play-button {
             background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 12px 24px;
+            border-radius: 25px;
             cursor: pointer;
             width: 100%;
-            margin-top: 8px;
+            margin-top: 12px;
             font-weight: bold;
-            transition: transform 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
 
         .play-button:hover {
             transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
 
         h3 {
-            margin: 8px 0;
+            margin: 12px 0;
             color: #ff8e8e;
-            font-size: 1em;
+            font-size: 1.2em;
+            text-align: center;
         }
 
-        /* Back to Top Button */
         .back-to-top {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 30px;
+            right: 30px;
             background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.3s;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
         }
 
         .back-to-top:hover {
             transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
 
-        /* Footer Style */
         .footer {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 40px 0 20px;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+            padding: 50px 0 20px;
             margin-top: 50px;
+            backdrop-filter: blur(10px);
         }
 
         .footer-content {
-            max-width: 1024px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -188,13 +239,25 @@
         .footer-links {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin-bottom: 30px;
+            gap: 40px;
+            margin-bottom: 40px;
         }
 
         .footer-section h4 {
             color: #ff8e8e;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            position: relative;
+        }
+
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #ff6b6b;
         }
 
         .footer-section ul {
@@ -203,28 +266,30 @@
         }
 
         .footer-section ul li {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .footer-section ul li a {
             color: #fff;
             text-decoration: none;
             transition: color 0.3s;
+            opacity: 0.8;
         }
 
         .footer-section ul li a:hover {
             color: #ff8e8e;
+            opacity: 1;
         }
 
         .footer-bottom {
             text-align: center;
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-content">
             <div class="logo">PixelHeavenGames</div>
@@ -232,13 +297,11 @@
                 <a href="index.html">Home</a>
                 <a href="about.html">About Us</a>
                 <a href="contact.html">Contact Us</a>
-                <a href="#"></a>
             </nav>
         </div>
     </header>
 
     <div class="container">
-        <!-- Categories Section -->
         <div class="categories">
             <div class="category-tag">Action</div>
             <div class="category-tag">Puzzle</div>
@@ -248,7 +311,6 @@
             <div class="category-tag">Sports</div>
         </div>
 
-        <!-- Featured Games Section -->
         <div class="featured-section">
             <h2 class="section-title">All Games</h2>
             <div class="game-row">
@@ -268,66 +330,44 @@
                     <a href="HTML/game3.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
                 <div class="game-card">
-                    <img src="Images/game3.jpg" alt="Game 4" class="game-image">
+                    <img src="Images/game4.jpg" alt="Game 4" class="game-image">
                     <h3>Game 4</h3>
-                    <a href="HTML/game3.html"><button class="play-button">PLAY NOW</button></a>
+                    <a href="HTML/game4.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
             </div>
         </div>
 
-        <!-- Most Popular Section -->
         <div class="featured-section">
             <h2 class="section-title">Most Popular</h2>
             <div class="game-row">
-                <!-- Your existing game cards from row 2 -->
-                <div class="game-card">
-                    <img src="Images/game4.jpg" alt="Game 4" class="game-image">
-                    <h3>Game Title 5</h3>
-                    <a href="HTML/game4.html"><button class="play-button">PLAY NOW</button></a>
-                </div>
                 <div class="game-card">
                     <img src="Images/game5.jpg" alt="Game 5" class="game-image">
-                    <h3>Game Title 6</h3>
+                    <h3>Game Title 5</h3>
                     <a href="HTML/game5.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
                 <div class="game-card">
                     <img src="Images/game6.jpg" alt="Game 6" class="game-image">
-                    <h3>Game Title 7</h3>
+                    <h3>Game Title 6</h3>
                     <a href="HTML/game6.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
                 <div class="game-card">
-                    <img src="Images/game6.jpg" alt="Game 6" class="game-image">
+                    <img src="Images/game7.jpg" alt="Game 7" class="game-image">
+                    <h3>Game Title 7</h3>
+                    <a href="HTML/game7.html"><button class="play-button">PLAY NOW</button></a>
+                </div>
+                <div class="game-card">
+                    <img src="Images/game8.jpg" alt="Game 8" class="game-image">
                     <h3>Game Title 8</h3>
-                    <a href="HTML/game6.html"><button class="play-button">PLAY NOW</button></a>
+                    <a href="HTML/game8.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
             </div>
         </div>
 
-        <!-- All Games Section -->
-        <h2 class="section-title">Other Games</h2>
-        <!-- Your existing game rows -->
-        <!-- Row 3 -->
-        <div class="game-row">
-            <!-- Your existing game cards -->
-        </div>
-
-        <!-- Row 4 -->
-        <div class="game-row">
-            <!-- Your existing game cards -->
-        </div>
-
-        <!-- Row 5 -->
-        <div class="game-row">
-            <!-- Your existing game cards -->
-        </div>
-
-        <!-- Back to Top Button -->
         <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
             <i class="fas fa-arrow-up"></i>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-links">
@@ -343,7 +383,10 @@
                 <div class="footer-section">
                     <h4>Categories</h4>
                     <ul>
-                       
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Puzzle</a></li>
+                        <li><a href="#">Strategy</a></li>
+                        <li><a href="#">Racing</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
