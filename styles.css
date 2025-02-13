@@ -206,14 +206,13 @@ body {
 }
 
 .game-image {
-    width: 100%;
-    min-height: 180px;
-    max-height: 300px;
-    object-fit: contain;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    object-fit: none;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
-    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .game-card {
@@ -231,7 +230,6 @@ body {
     perspective: 1000px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
 }.game-card:hover {
     transform: translateY(-8px) rotateX(10deg);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
