@@ -3,19 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Askansz's Games</title>
+    <title>PixelHeavenGames</title>
     <style>
         body {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 10px;
+            padding: 0;
+        }
+
+        /* Header styles */
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .header-content {
+            max-width: 1024px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: background 0.3s;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .container {
             max-width: 1024px;
             margin: 0 auto;
+            padding: 10px;
         }
 
         .game-row {
@@ -71,6 +114,19 @@
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">PixelHeavenGames</div>
+            <nav class="nav-menu">
+                <a href="#home">Home</a>
+                <a href="#popular">Popular</a>
+                <a href="#new">New Games</a>
+                <a href="#about">About</a>
+            </nav>
+        </div>
+    </header>
+
     <div class="container">
         <!-- Row 1 -->
         <div class="game-row">
@@ -89,7 +145,7 @@
                 <h3>Game 3</h3>
                 <a href="HTML/game3.html"><button class="play-button">PLAY NOW</button></a>
             </div>
-          <div class="game-card">
+            <div class="game-card">
                 <img src="Images/game3.jpg" alt="Game 3" class="game-image">
                 <h3>Game 4</h3>
                 <a href="HTML/game3.html"><button class="play-button">PLAY NOW</button></a>
@@ -113,7 +169,7 @@
                 <h3>Game Title 7</h3>
                 <a href="HTML/game6.html"><button class="play-button">PLAY NOW</button></a>
             </div>
-          <div class="game-card">
+            <div class="game-card">
                 <img src="Images/game6.jpg" alt="Game 6" class="game-image">
                 <h3>Game Title 8</h3>
                 <a href="HTML/game6.html"><button class="play-button">PLAY NOW</button></a>
@@ -137,7 +193,7 @@
                 <h3>Game Title 11</h3>
                 <a href="HTML/game9.html"><button class="play-button">PLAY NOW</button></a>
             </div>
-          <div class="game-card">
+            <div class="game-card">
                 <img src="Images/game6.jpg" alt="Game 6" class="game-image">
                 <h3>Game Title 12</h3>
                 <a href="HTML/game6.html"><button class="play-button">PLAY NOW</button></a>
@@ -161,7 +217,7 @@
                 <h3>Game Title 15</h3>
                 <a href="HTML/game12.html"><button class="play-button">PLAY NOW</button></a>
             </div>
-          <div class="game-card">
+            <div class="game-card">
                 <img src="Images/game6.jpg" alt="Game 6" class="game-image">
                 <h3>Game Title 16</h3>
                 <a href="HTML/game6.html"><button class="play-button">PLAY NOW</button></a>
@@ -185,7 +241,7 @@
                 <h3>Game Title 19</h3>
                 <a href="HTML/game15.html"><button class="play-button">PLAY NOW</button></a>
             </div>
-          <div class="game-card">
+            <div class="game-card">
                 <img src="Images/game6.jpg" alt="Game 6" class="game-image">
                 <h3>Game Title 20</h3>
                 <a href="HTML/game6.html"><button class="play-button">PLAY NOW</button></a>
