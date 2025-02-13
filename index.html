@@ -1,24 +1,32 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PixelHeavenGames</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>    
-<body>
-    <div class="loader">
-        <div class="loading-text">Loading Games</div>
+<body>    <div class="loader">
+        <div class="welcome-text">Welcome To<br>PixelHeavenGames</div>
+        <div class="logo-container">
+            <img src="logo.png" alt="PixelHeavenGames Logo">
+        </div>        
+        <div class="loading-text">Loading...</div>
         <div class="loader-dots">
             <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
+            <div class="dot" style="animation-delay: 0.2s"></div>
+            <div class="dot" style="animation-delay: 0.4s"></div>
         </div>
-    </div>        
+    </div>
     <header class="header">
         <div class="header-content">
-            <div class="logo">PixelHeavenGames</div>
+            <div class="logo">
+                <img src="logo.png" alt="PixelHeavenGames Logo" class="header-logo">
+                PixelHeavenGames
+            </div>
             <nav class="nav-menu">
                 <a href="index.html">Home</a>
                 <a href="about.html">About Us</a>
@@ -26,7 +34,6 @@
             </nav>
         </div>
     </header>
-
     <div class="container">
         <div class="categories">
             <div class="category-tag">Action</div>
