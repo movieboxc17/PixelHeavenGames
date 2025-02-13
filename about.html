@@ -1,23 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us</title>
+    <title>About Us - PixelHeavenGames</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #2b2b2b;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
             color: #ffffff;
-            text-align: center;
             margin: 0;
+            min-height: 100vh;
         }
 
-        header {
-            background-color: #1f1f1f;
-            padding: 20px;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+        .header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 2.2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ff6b6b);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
         }
 
         nav ul {
@@ -25,118 +48,159 @@
             padding: 0;
             margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        nav ul li {
-            margin: 0 15px;
+            gap: 20px;
         }
 
         nav ul li a {
-            text-decoration: none;
             color: #ffffff;
+            text-decoration: none;
             padding: 10px 20px;
-            transition: 0.3s;
+            border-radius: 20px;
+            transition: all 0.3s;
         }
 
-        nav ul li a.active,
         nav ul li a:hover {
-            background-color: #007bff;
-            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .hero {
-            background: url('https://assets.codepen.io/9051928/gradient.png') center/cover no-repeat, #1f1f1f;
-            padding: 100px 20px;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.2);
+            padding: 80px 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            margin-bottom: 40px;
         }
 
         .hero-content {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
-            text-align: center;
         }
 
         .hero h1 {
             font-size: 3em;
             margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .hero p {
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 1.2em;
+            color: #ddd;
+            line-height: 1.6;
         }
 
-        section.content {
-            padding: 60px 20px;
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .info-section {
-            max-width: 800px;
-            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+
+        .info-section h2 {
+            color: #ff8e8e;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .info-section p {
+            line-height: 1.8;
+            color: #fff;
+            font-size: 1.1em;
+            margin-bottom: 20px;
         }
 
         .info-section img {
-            max-width: 100%;
+            width: 100%;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
         }
 
-        h2 {
-            color: #007bff;
-            margin-bottom: 20px;
+        .info-section img:hover {
+            transform: scale(1.02);
         }
 
         footer {
-            background-color: #1f1f1f;
+            background: rgba(0, 0, 0, 0.3);
             padding: 20px;
-            box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            backdrop-filter: blur(10px);
             margin-top: 40px;
         }
 
         footer p {
             margin: 0;
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .info-section {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html" class="active">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">PixelHeavenGames</div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
     <div class="hero">
         <div class="hero-content">
-            <h1>About Us</h1>
-            <p>Learn more about our mission, our team, and what we aim to achieve.</p>
+            <h1>About PixelHeavenGames</h1>
+            <p>Creating fun, accessible gaming experiences for everyone</p>
         </div>
     </div>
 
-    <section class="content info-section">
-        <h2>Our Story</h2>
-        <img src="images/our-story.jpg" alt="Our Story Image">
-        <p></p>
+    <section class="content">
+        <div class="info-section">
+            <h2>Our Story</h2>
+            <img src="images/our-story.jpg" alt="Our Story Image">
+            <p>We started as two teenagers with a shared vision: to create a gaming platform free from the frustrations of intrusive ads and technical limitations. Our journey began when we noticed how many gaming websites were cluttered with advertisements and struggled to work properly on mobile devices.</p>
+        </div>
 
-        <h2>Our Team</h2>
-        <img src="images/our-team.jpg" alt="Our Team Image">
-        <p>We are two teenagers passionate about creating a fun gaming website where everyone can enjoy games without the hassle of annoying ads. Frustrated with other gaming sites filled with ads and games that don't work well on iPads and phones, we decided to build our own platform. As we developed our first site, we were excited to see it grow and improve with each update, making it a better experience for everyone.</p>
+        <div class="info-section">
+            <h2>Our Team</h2>
+            <img src="images/our-team.jpg" alt="Our Team Image">
+            <p>We are two teenagers passionate about creating a fun gaming website where everyone can enjoy games without the hassle of annoying ads. Frustrated with other gaming sites filled with ads and games that don't work well on iPads and phones, we decided to build our own platform. As we developed our first site, we were excited to see it grow and improve with each update, making it a better experience for everyone.</p>
+        </div>
 
-        <h2>Our Mission</h2>
-        <img src="images/our-mission.jpg" alt="Our Mission Image">
-        <p>Our goal is to inspire people by showing that anyone can build their own web pages. We aim to eliminate intrusive ads and create a happy environment where everyone can enjoy games without interruptions. We want to ensure that players can fully engage with games on their devices without any distractions.</p>
+        <div class="info-section">
+            <h2>Our Mission</h2>
+            <img src="images/our-mission.jpg" alt="Our Mission Image">
+            <p>Our goal is to inspire people by showing that anyone can build their own web pages. We aim to eliminate intrusive ads and create a happy environment where everyone can enjoy games without interruptions. We want to ensure that players can fully engage with games on their devices without any distractions.</p>
+        </div>
     </section>
 
     <footer>
-        <p>&copy; 2024 PixelHavenGames. All rights reserved.</p>
+        <p>&copy; 2025 PixelHeavenGames. All rights reserved.</p>
     </footer>
 </body>
-
 </html>
