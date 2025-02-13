@@ -6,12 +6,13 @@
         body {
             margin: 0;
             padding: 20px;
+            padding-bottom: 80px; /* Space for footer */
             background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
             font-family: 'Arial', sans-serif;
         }
           #game {
-              width: 1200px;
-              height: 600px;
+              width: 1600px;  /* Even bigger game window */
+              height: 800px;  /* Increased height */
               margin: 0 auto;
               position: relative;
               overflow: hidden;
@@ -23,16 +24,23 @@
 
           /* Add these styles for the footer and home button */
           .footer {
+              position: fixed;
+              bottom: 0;
+              left: 0;
               width: 100%;
               padding: 20px 0;
               background: #1a1a1a;
               color: #f97316;
               text-align: center;
-              margin-top: 30px;
               border-top: 3px solid #f97316;
+              z-index: 1000;
           }
 
           .home-button {
+              position: fixed;
+              top: 20px;
+              left: 20px;
+              z-index: 1000;
               padding: 12px 30px;
               font-size: 20px;
               background: linear-gradient(45deg, #f97316 0%, #fb923c 100%);
@@ -389,10 +397,10 @@
             }
         });
     </script>
-    <!-- Add this at the bottom of the body -->
 <footer class="footer">
     <button class="home-button" onclick="window.location.href='index.html'">Home</button>
-    <p>© 2024 Geometry Dash Clone</p>
+    <p>© 2024 PixelHeavenGames</p>
+    <p>Made by Moviebox C17</p>
 </footer>
 </body>
 </html>
