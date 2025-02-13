@@ -207,12 +207,13 @@ body {
 
 .game-image {
     width: 100%;
-    height: 220px;  /* Increased height for better proportions */
-    object-fit: cover;
+    height: 250px; /* Fixed height */
+    object-fit: scale-down; /* This will show the full image */
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
-    display: block; /* Ensures proper image behavior */
+    background-color: rgba(0, 0, 0, 0.2); /* Adds a subtle background */
+    padding: 10px;
 }
 
 .game-card {
@@ -228,12 +229,10 @@ body {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     transform-style: preserve-3d;
     perspective: 1000px;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Adds consistent spacing between elements */
-}
-.game-card:hover {
+    align-items: center;
+}.game-card:hover {
     transform: translateY(-8px) rotateX(10deg);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
     animation: cardFloat 3s ease-in-out infinite;
