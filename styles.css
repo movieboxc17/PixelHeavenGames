@@ -32,6 +32,7 @@ body {
     background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
     background-size: 200% auto;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shine 3s linear infinite;
     letter-spacing: 2px;
@@ -79,6 +80,7 @@ body {
     background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ff6b6b);
     background-size: 200% auto;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shine 3s linear infinite;
 }
@@ -178,6 +180,7 @@ body {
     background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
     background-size: 200% auto;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     padding-left: 15px;
     border-left: 4px solid #ff6b6b;
@@ -215,6 +218,9 @@ body {
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     transform-style: preserve-3d;
     perspective: 1000px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .game-card:hover {
@@ -236,19 +242,10 @@ body {
     transform: scale(1.05);
 }
 
-.game-card {
-    /* Update existing game-card styles */
-    padding: 15px;
-    overflow: hidden; /* Ensures image stays within card boundaries */
-    display: flex;
-    flex-direction: column;
-}
-
 .game-card h3 {
     margin: 15px 0;
     flex-grow: 1;
 }
-
 
 .play-button {
     background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
