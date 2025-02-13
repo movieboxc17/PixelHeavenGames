@@ -154,6 +154,7 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.1);
     font-weight: 500;
     letter-spacing: 0.5px;
+    animation: tagFloat 3s ease-in-out infinite;
 }
 
 .category-tag:hover {
@@ -185,7 +186,7 @@ body {
     padding-left: 15px;
     border-left: 4px solid #ff6b6b;
     margin-bottom: 30px;
-    animation: gradientFlow 3s linear infinite;
+    animation: titleSlide 0.8s ease-out, gradientFlow 3s linear infinite;
 }
 
 /* Game Cards */
@@ -230,19 +231,26 @@ body {
     perspective: 1000px;
     display: flex;
     flex-direction: column;
-}.game-card:hover {
-    transform: translateY(-8px) rotateX(10deg);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-    animation: cardFloat 3s ease-in-out infinite;
+    animation: fadeInUp 0.6s ease-out;
 }
-  .game-image {
-      width: 100%;
-      height: 250px; /* Much taller container now */
-      object-fit: contain;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease;
-  }
+
+.game-card:hover {
+    transform: translateY(-12px) rotateX(10deg) rotateY(5deg);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+.game-image {
+    width: 90%;
+    height: 250px;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
 .game-card:hover .game-image {
     transform: scale(1.05);
 }
@@ -266,7 +274,7 @@ body {
     letter-spacing: 1px;
     transition: all 0.3s;
     box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-    animation: buttonPulse 2s infinite;
+    animation: buttonGlow 3s infinite;
 }
 
 .play-button:hover {
@@ -306,6 +314,65 @@ body {
 /* Footer Styles */
 .footer {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
+
+/* Enhanced Loading Animation */
+.loader {
+    animation: gradientBG 3s ease infinite;
+}
+
+.loading-text {
+    animation: textPulse 2s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}
+
+.dot {
+    animation: bounceFade 1s ease-in-out infinite;
+    transform-origin: bottom;
+}
+
+/* New Animations */
+@keyframes gradientBG {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
+}
+
+@keyframes textPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+@keyframes bounceFade {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(-30px); opacity: 0.5; }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes buttonGlow {
+    0% { box-shadow: 0 0 5px #ff6b6b; }
+    50% { box-shadow: 0 0 20px #ff6b6b, 0 0 30px #ff8e8e; }
+    100% { box-shadow: 0 0 5px #ff6b6b; }
+}
+
+@keyframes tagFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes titleSlide {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
     padding: 50px 0 20px;
     margin-top: 50px;
     backdrop-filter: blur(10px);
