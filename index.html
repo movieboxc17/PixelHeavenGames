@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -133,5 +133,13 @@
         </div>
     </footer>
     <script src="script.js"></script>
+    <!-- Add this right before the closing </body> tag -->
+<script>
+    // Emergency fix to force hide the loader
+    setTimeout(function() {
+        document.querySelector('.loader').style.display = 'none';
+    }, 2000);
+</script>
+
 </body>
 </html>
