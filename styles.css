@@ -613,3 +613,74 @@ body {
         height: 15px;
     }
 }
+
+/* Add these fixes at the end of your existing CSS */
+
+/* Fix for white background on mobile devices */
+@supports (-webkit-touch-callout: none) {
+  /* CSS specific to iOS devices */
+  body {
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+    background-attachment: fixed; /* Fix background on iOS */
+  }
+  
+  .featured-section {
+    background: rgba(22, 33, 62, 0.7) !important; /* Darker, more opaque background */
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .game-card {
+    background: rgba(22, 33, 62, 0.8) !important; /* Darker, more opaque background */
+    -webkit-backdrop-filter: blur(10px);
+  }
+  
+  .loader {
+    background: linear-gradient(135deg, #1a1a2e, #16213e) !important;
+    background-attachment: fixed !important;
+  }
+  
+  .header {
+    background: rgba(0, 0, 0, 0.6) !important;
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+/* General mobile fixes for all devices */
+@media screen and (max-width: 1024px) {
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -10;
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  }
+  
+  .featured-section {
+    background-color: rgba(26, 26, 46, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  
+  .game-card {
+    background-color: rgba(26, 26, 46, 0.8);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+  
+  /* Ensure containers don't have unwanted background */
+  .container {
+    background: transparent;
+  }
+}
+
+/* Fix for Safari and older iOS browsers */
+@media not all and (min-resolution:.001dpcm) { 
+  @supports (-webkit-appearance:none) {
+    .featured-section, .game-card, .header {
+      background-color: rgba(15, 52, 96, 0.85);
+    }
+  }
+}
