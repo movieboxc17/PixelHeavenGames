@@ -48,169 +48,55 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
     }
 });
 
-// Simple Mobile Menu Implementation
-document.addEventListener('DOMContentLoaded', function() {
-    const menuToggle = document.querySelector('.mobile-menu-toggle');
-    const navMenu = document.querySelector('.nav-menu');
-    const overlay = document.querySelector('.mobile-menu-overlay');
-    
-    // Function to toggle menu
-    function toggleMenu() {
-        menuToggle.classList.toggle('active');
-        navMenu.classList.toggle('active');
-        overlay.classList.toggle('active');
-        
-        if (navMenu.classList.contains('active')) {
-            document.body.style.overflow = 'hidden'; // Prevent scrolling
-        } else {
-            document.body.style.overflow = ''; // Re-enable scrolling
-        }
-    }
-    
-    // Toggle menu when clicking the hamburger icon
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            toggleMenu();
-        });
-    }
-    
-    // Close menu when clicking the overlay
-    if (overlay) {
-        overlay.addEventListener('click', function() {
-            toggleMenu();
-        });
-    }
-    
-    // Close menu when clicking menu items
-    document.querySelectorAll('.nav-menu a').forEach(item => {
-        item.addEventListener('click', function() {
-            if (navMenu.classList.contains('active')) {
-                toggleMenu();
-            }
-        });
-    });
-    
-    // Handle window resize
-    window.addEventListener('resize', function() {
-        if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
-            menuToggle.classList.remove('active');
-            navMenu.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    });
-});
+// Mobile navigation toggle functionality
+const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+const navMenu = document.querySelector('.nav-menu');
 
-// Fix for various iOS interaction issues
-if (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
-    document.addEventListener('touchstart', function() {}, {passive: true});
-    
-    // Fix for sticky hover effects on iOS
-    document.addEventListener('touchend', function() {
-        const activeElement = document.activeElement;
-        if (activeElement && (activeElement.tagName === 'BUTTON' || activeElement.tagName === 'A')) {
-            activeElement.blur();
+if (mobileNavToggle) {
+    mobileNavToggle.addEventListener('click', function() {
+        navMenu.classList.toggle('active');
+        
+        // Change icon between bars and times
+        const icon = this.querySelector('i');
+        if (icon.classList.contains('fa-bars')) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-times');
+        } else {
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
         }
-    }, {passive: true});
+    });
 }
 
-// Handle touch events for game cards
-document.querySelectorAll('.game-card').forEach(card => {
-    // Add touch events for mobile devices
-    card.addEventListener('touchstart', function() {
-        this.style.transform = 'translateY(-5px)';
-    }, {passive: true});
-    
-    card.addEventListener('touchend', function() {
-        this.style.transform = 'translateY(0)';
-    }, {passive: true});
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    if (navMenu.classList.contains('active') && 
+        !navMenu.contains(event.target) && 
+        !mobileNavToggle.contains(event.target)) {
+        navMenu.classList.remove('active');
+        const icon = mobileNavToggle.querySelector('i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
 });
 
-// Ensure back-to-top button works on touch devices
-document.querySelector('.back-to-top').addEventListener('touchend', function() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
+// Handle orientation change for better mobile experience
+window.addEventListener('orientationchange', function() {
+    if (navMenu.classList.contains('active')) {
+        navMenu.classList.remove('active');
+        const icon = mobileNavToggle.querySelector('i');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+});
+
+// Add manifest.json file for PWA capabilities
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            console.log('ServiceWorker registration successful');
+        }, function(err) {
+            console.log('ServiceWorker registration failed: ', err);
+        });
     });
-}, {passive: true});
-// Improve category tag interactions on mobile
-document.querySelectorAll('.category-tag').forEach(tag => {
-  tag.addEventListener('touchend', function() {
-      // Remove active class from all tags
-      document.querySelectorAll('.category-tag').forEach(t => {
-          t.classList.remove('active');
-      });
-      // Add active class to tapped tag
-      this.classList.add('active');
-  }, {passive: true});
-});
-
-// Reliable mobile device detection
-document.addEventListener('DOMContentLoaded', function() {
-  // Function to detect mobile devices
-  function isMobileDevice() {
-      const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-        
-      // Check multiple properties for better detection
-      return (
-          // Check user agent
-          mobileRegex.test(navigator.userAgent) ||
-          // Check if touch points > 0
-          (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
-          // Check CSS media query through JavaScript
-          window.matchMedia("(max-width: 768px)").matches
-      );
-  }
-    
-  // Function specifically for iOS detection
-  function isIOSDevice() {
-      // iOS detection
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                    (navigator.userAgent.includes("Mac") && "ontouchend" in document);
-        
-      if (isIOS) {
-          console.log("iOS device detected");
-      }
-      return isIOS;
-  }
-    
-  // Apply appropriate classes to HTML element
-  if (isMobileDevice()) {
-      document.documentElement.classList.add('mobile-device');
-      console.log("Mobile device detected");
-        
-      if (isIOSDevice()) {
-          document.documentElement.classList.add('ios-device');
-            
-          // Check for notched iPhones
-          if (window.screen.height >= 812 || window.screen.width >= 812) {
-              document.documentElement.classList.add('has-notch');
-              console.log("Device with notch detected");
-          }
-      }
-  }
-
-  // Debug device detection (remove in production)
-  function updateDebugInfo() {
-      const debugElement = document.getElementById('device-debug');
-      if (debugElement) {
-          debugElement.innerHTML = 
-              `Device: ${navigator.userAgent.substring(0, 50)}...<br>` +
-              `Screen: ${window.screen.width}x${window.screen.height}<br>` +
-              `Classes: ${document.documentElement.className}`;
-      }
-  }
-  updateDebugInfo();
-});
-
-// General mobile fix to ensure backgrounds render correctly
-if (window.innerWidth <= 1024) {
-window.addEventListener('scroll', function() {
-  // This minimal operation forces a redraw on many browsers
-  document.body.style.minHeight = window.innerHeight + 'px';
-  setTimeout(function() {
-    document.body.style.minHeight = '';
-  }, 10);
-}, {passive: true});
 }
