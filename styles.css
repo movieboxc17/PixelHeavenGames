@@ -8,7 +8,7 @@ body {
     min-height: 100vh;
 }
 
-/* Loading Animation */
+/* Enhanced Loading Screen Styles */
 .loader {
     position: fixed;
     top: 0;
@@ -23,37 +23,97 @@ body {
     align-items: center;
     z-index: 1000;
     animation: fadeOut 1s ease-in-out forwards;
-    animation-delay: 2s;
+    animation-delay: 2.5s; /* Increased slightly to allow more time to see the loader */
+}
+
+.logo-container {
+    margin-bottom: 10px;
+}
+
+.loader-logo {
+    font-size: 2.5em;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e, #ff6b6b);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite, logoEntrance 1s ease-out;
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
 }
 
 .loading-text {
-    font-size: 2em;
+    font-size: 1.6em;
     font-weight: bold;
     background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite;
+    animation: shine 3s linear infinite, textPulse 1.5s ease-in-out infinite;
     letter-spacing: 2px;
 }
 
+.version-text {
+    position: absolute;
+    bottom: 30px;
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 1px;
+    animation: fadeIn 1s ease-in;
+}
+
+/* Improved dots animation */
 .loader-dots {
     display: flex;
     gap: 8px;
+    margin-top: 15px;
 }
 
 .dot {
-    width: 20px;
-    height: 20px;
-    background: #ff6b6b;
+    width: 15px;
+    height: 15px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
     border-radius: 50%;
-    animation: bounce 0.5s ease-in-out infinite;
+    animation: bounce 0.6s ease-in-out infinite;
 }
 
-.dot:nth-child(2) { animation-delay: 0.1s; }
-.dot:nth-child(3) { animation-delay: 0.2s; }
+.dot:nth-child(1) { animation-delay: 0s; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
 
+/* New animations for the loading screen */
+@keyframes logoEntrance {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media screen and (max-width: 768px) {
+    .loader-logo {
+        font-size: 2em;
+    }
+    
+    .loading-text {
+        font-size: 1.4em;
+    }
+    
+    .version-text {
+        bottom: 20px;
+    }
+}
 /* Header Styles */
 .header {
     background: rgba(0, 0, 0, 0.3);
@@ -449,9 +509,9 @@ body {
 }
 
 @keyframes fadeOut {
-    to { opacity: 0; visibility: hidden; }
+    0% { opacity: 1; visibility: visible; }
+    100% { opacity: 0; visibility: hidden; }
 }
-
 @keyframes glow {
     from { text-shadow: 0 0 5px #ff6b6b, 0 0 10px #ff6b6b; }
     to { text-shadow: 0 0 10px #ff6b6b, 0 0 15px #ff8e8e; }
