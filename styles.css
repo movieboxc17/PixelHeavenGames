@@ -8,7 +8,7 @@ body {
     min-height: 100vh;
 }
 
-/* Enhanced Loading Screen Styles */
+/* Loading Animation */
 .loader {
     position: fixed;
     top: 0;
@@ -84,36 +84,6 @@ body {
 .dot:nth-child(2) { animation-delay: 0.2s; }
 .dot:nth-child(3) { animation-delay: 0.4s; }
 
-/* New animations for the loading screen */
-@keyframes logoEntrance {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@media screen and (max-width: 768px) {
-    .loader-logo {
-        font-size: 2em;
-    }
-    
-    .loading-text {
-        font-size: 1.4em;
-    }
-    
-    .version-text {
-        bottom: 20px;
-    }
-}
 /* Header Styles */
 .header {
     background: rgba(0, 0, 0, 0.3);
@@ -143,6 +113,11 @@ body {
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shine 3s linear infinite;
+}
+
+/* Mobile Menu Styles - iOS Compatible */
+.mobile-nav-toggle {
+    display: none;
 }
 
 /* Navigation Menu */
@@ -374,65 +349,6 @@ body {
 /* Footer Styles */
 .footer {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
-
-/* Enhanced Loading Animation */
-.loader {
-    animation: gradientBG 3s ease infinite;
-}
-
-.loading-text {
-    animation: textPulse 2s ease-in-out infinite;
-    text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
-}
-
-.dot {
-    animation: bounceFade 1s ease-in-out infinite;
-    transform-origin: bottom;
-}
-
-/* New Animations */
-@keyframes gradientBG {
-    0% { background-position: 0% 50% }
-    50% { background-position: 100% 50% }
-    100% { background-position: 0% 50% }
-}
-
-@keyframes textPulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.8; }
-}
-
-@keyframes bounceFade {
-    0%, 100% { transform: translateY(0); opacity: 1; }
-    50% { transform: translateY(-30px); opacity: 0.5; }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes buttonGlow {
-    0% { box-shadow: 0 0 5px #ff6b6b; }
-    50% { box-shadow: 0 0 20px #ff6b6b, 0 0 30px #ff8e8e; }
-    100% { box-shadow: 0 0 5px #ff6b6b; }
-}
-
-@keyframes tagFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
-
-@keyframes titleSlide {
-    from { transform: translateX(-20px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
     padding: 50px 0 20px;
     margin-top: 50px;
     backdrop-filter: blur(10px);
@@ -498,6 +414,198 @@ body {
     opacity: 0.8;
 }
 
+/* Mobile Menu Implementation */
+@media screen and (max-width: 768px) {
+    .header-content {
+        padding: 15px 20px;
+    }
+    
+    .mobile-nav-toggle {
+        display: block;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 9999;
+    }
+    
+    .hamburger-icon {
+        display: block;
+        position: relative;
+        width: 30px;
+        height: 24px;
+    }
+    
+    .hamburger-icon .line {
+        display: block;
+        position: absolute;
+        height: 3px;
+        width: 100%;
+        background: #fff;
+        border-radius: 3px;
+        opacity: 1;
+        left: 0;
+        transform: rotate(0deg);
+        transition: .25s ease-in-out;
+    }
+    
+    .hamburger-icon .line:nth-child(1) {
+        top: 0px;
+    }
+    
+    .hamburger-icon .line:nth-child(2) {
+        top: 10px;
+    }
+    
+    .hamburger-icon .line:nth-child(3) {
+        top: 20px;
+    }
+    
+    .mobile-nav-toggle.active .line:nth-child(1) {
+        top: 10px;
+        transform: rotate(135deg);
+    }
+    
+    .mobile-nav-toggle.active .line:nth-child(2) {
+        opacity: 0;
+        left: -60px;
+    }
+    
+    .mobile-nav-toggle.active .line:nth-child(3) {
+        top: 10px;
+        transform: rotate(-135deg);
+    }
+    
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100%;
+        background-color: rgba(15, 52, 96, 0.98);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 80px;
+        transition: right 0.3s ease;
+        z-index: 9998;
+    }
+    
+    .nav-menu.active {
+        right: 0;
+    }
+    
+    .nav-menu a {
+        margin: 15px 0;
+        font-size: 18px;
+        width: 80%;
+        text-align: center;
+        padding: 15px 0;
+    }
+    
+    /* Make the desktop hover effects not apply on mobile */
+    .nav-menu a::before,
+    .nav-menu a::after {
+        display: none;
+    }
+    
+    /* Overlay when menu is open */
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9997;
+        display: none;
+    }
+    
+    .menu-overlay.active {
+        display: block;
+    }
+    
+    /* Fix for body scroll when menu is open */
+    body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+    }
+    
+    /* Game card layout for mobile */
+    .game-row {
+        flex-wrap: wrap;
+    }
+    
+    .game-card {
+        min-width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    /* Categories for mobile */
+    .categories {
+        justify-content: center;
+    }
+    
+    /* Footer responsive */
+    .footer-links {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .footer-section {
+        text-align: center;
+    }
+    
+    .footer-section h4::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    /* Back to top button positioning for mobile */
+    .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
+
+/* iOS-specific styles */
+@supports (-webkit-touch-callout: none) {
+    /* iOS specific styles */
+    .nav-menu {
+        padding-top: 100px; /* Extra space for notch */
+    }
+    
+    .nav-menu a {
+        padding: 18px 0;
+    }
+    
+    /* Fix for iOS Safari 100vh bug */
+    .menu-overlay, 
+    .nav-menu {
+        height: -webkit-fill-available;
+    }
+    
+    /* Prevent overscroll bounce effect */
+    html {
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+        width: 100%;
+    }
+    
+    body.menu-open {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+}
+
 /* Animations */
 @keyframes shine {
     to { background-position: 200% center; }
@@ -512,6 +620,7 @@ body {
     0% { opacity: 1; visibility: visible; }
     100% { opacity: 0; visibility: hidden; }
 }
+
 @keyframes glow {
     from { text-shadow: 0 0 5px #ff6b6b, 0 0 10px #ff6b6b; }
     to { text-shadow: 0 0 10px #ff6b6b, 0 0 15px #ff8e8e; }
@@ -548,298 +657,62 @@ body {
     }
 }
 
-/* Add these responsive styles at the end of your existing CSS */
-
-/* Responsive Design */
-@media screen and (max-width: 1200px) {
-    .container {
-        padding: 0 20px;
-    }
-    
-    .game-card {
-        max-width: calc(33.33% - 15px);
-    }
-    
-    .game-row {
-        flex-wrap: wrap;
-    }
-}
-
-@media screen and (max-width: 900px) {
-    .game-card {
-        max-width: calc(50% - 15px);
-    }
-    
-    .footer-links {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* iOS-optimized mobile menu styles */
-@media screen and (max-width: 768px) {
-    body {
-        position: relative;
-        overflow-x: hidden;
-    }
-    
-    .header-content {
-        justify-content: space-between;
-    }
-    
-    .mobile-nav-toggle {
-        display: block;
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.5rem;
-        cursor: pointer;
-        z-index: 1010;
-        padding: 10px;
-        -webkit-tap-highlight-color: transparent;
-    }
-    
-    .nav-menu {
-        position: fixed;
-        top: 0;
-        right: -80%;
-        width: 80%;
-        height: 100%;
-        background: rgba(26, 26, 46, 0.95);
-        -webkit-backdrop-filter: blur(10px);
-        backdrop-filter: blur(10px);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding-top: 70px;
-        gap: 30px;
-        transition: right 0.3s cubic-bezier(0.77, 0, 0.175, 1);
-        z-index: 1005;
-        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
-    }
-    
-    .nav-menu.active {
-        right: 0;
-    }
-    
-    .nav-menu a {
-        font-size: 1.2rem;
-        padding: 15px 30px;
-        width: 100%;
-        text-align: center;
-        border-radius: 0;
-    }
-    
-    .nav-menu a::before,
-    .nav-menu a::after {
-        display: none;
-    }
-    
-    .nav-menu a:active {
-        background: rgba(255, 107, 107, 0.3);
-    }
-    
-    /* iOS-specific tweaks */
-    @supports (-webkit-touch-callout: none) {
-        .nav-menu {
-            padding-top: 100px; /* Extra padding for iPhone notch */
-        }
-        
-        .nav-menu a {
-            margin-bottom: 5px;
-            padding: 18px 30px; /* Larger touch target for iOS */
-        }
-        
-        .mobile-menu-overlay {
-            -webkit-backdrop-filter: blur(5px);
-        }
-    }
-    
-    /* Menu overlay */
-    .mobile-menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 1000;
+@keyframes fadeInUp {
+    from {
         opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease;
-        backdrop-filter: blur(3px);
+        transform: translateY(20px);
     }
-    
-    .mobile-menu-overlay.active {
+    to {
         opacity: 1;
-        visibility: visible;
-    }
-    
-    .game-image {
-        height: 200px;
-    }
-    
-    .category-tag {
-        padding: 8px 15px;
-        font-size: 0.9em;
+        transform: translateY(0);
     }
 }
 
-@media screen and (max-width: 480px) {
-    .game-card {
-        max-width: 100%;
-    }
-    
-    .game-row {
-        flex-direction: column;
-    }
-    
-    .footer-links {
-        grid-template-columns: 1fr;
-    }
-    
-    .logo {
-        font-size: 1.8em;
-    }
-    
-    .section-title {
-        font-size: 1.5em;
-    }
-    
-    .back-to-top {
-        bottom: 15px;
-        right: 15px;
-        width: 40px;
-        height: 40px;
-    }
+@keyframes buttonGlow {
+    0% { box-shadow: 0 0 5px #ff6b6b; }
+    50% { box-shadow: 0 0 20px #ff6b6b, 0 0 30px #ff8e8e; }
+    100% { box-shadow: 0 0 5px #ff6b6b; }
 }
 
-/* Mobile Navigation Styles */
-.mobile-nav-toggle {
-    display: none;
-    position: relative;
-    z-index: 1001;
+@keyframes tagFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 
-.header-content {
-    position: relative;
+@keyframes titleSlide {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
-/* Touch-friendly adjustments */
-.game-card, .category-tag, .play-button, .back-to-top, .nav-menu a {
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+@keyframes gradientBG {
+    0% { background-position: 0% 50% }
+    50% { background-position: 100% 50% }
+    100% { background-position: 0% 50% }
 }
 
-/* Improved loading for mobile */
-@media screen and (max-width: 768px) {
-    .loading-text {
-        font-size: 1.5em;
+@keyframes textPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+@keyframes logoEntrance {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
     }
-    
-    .dot {
-        width: 15px;
-        height: 15px;
+    to {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 
-/* Add these fixes at the end of your existing CSS */
-
-/* Fix for white background on mobile devices */
-@supports (-webkit-touch-callout: none) {
-  /* CSS specific to iOS devices */
-  body {
-    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-    background-attachment: fixed; /* Fix background on iOS */
-  }
-  
-  .featured-section {
-    background: rgba(22, 33, 62, 0.7) !important; /* Darker, more opaque background */
-    -webkit-backdrop-filter: blur(10px);
-  }
-  
-  .game-card {
-    background: rgba(22, 33, 62, 0.8) !important; /* Darker, more opaque background */
-    -webkit-backdrop-filter: blur(10px);
-  }
-  
-  .loader {
-    background: linear-gradient(135deg, #1a1a2e, #16213e) !important;
-    background-attachment: fixed !important;
-  }
-  
-  .header {
-    background: rgba(0, 0, 0, 0.6) !important;
-    -webkit-backdrop-filter: blur(10px);
-  }
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
-/* General mobile fixes for all devices */
-@media screen and (max-width: 1024px) {
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: -10;
-    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-  }
-  
-  .featured-section {
-    background-color: rgba(26, 26, 46, 0.7);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-  }
-  
-  .game-card {
-    background-color: rgba(26, 26, 46, 0.8);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-  }
-  
-  /* Ensure containers don't have unwanted background */
-  .container {
-    background: transparent;
-  }
+@keyframes bounceFade {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(-30px); opacity: 0.5; }
 }
 
-/* Fix for Safari and older iOS browsers */
-@media not all and (min-resolution:.001dpcm) { 
-  @supports (-webkit-appearance:none) {
-    .featured-section, .game-card, .header {
-      background-color: rgba(15, 52, 96, 0.85);
-    }
-  }
-}
-
-/* iOS notch-specific adjustments */
-html.ios-device.has-notch .nav-menu {
-    padding-top: 120px; /* Extra padding for iPhone notch */
-}
-
-html.ios-device .mobile-nav-toggle {
-    transform: scale(1.2); /* Slightly larger tap target */
-}
-
-/* Prevent overscroll behavior on iOS */
-html.ios-device {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
-html.ios-device body {
-    width: 100%;
-    height: auto;
-    position: relative;
-}
-
-html.ios-device body.menu-open {
-    overflow: hidden;
-    position: fixed;
-    width: 100%;
-}
