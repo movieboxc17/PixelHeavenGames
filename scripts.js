@@ -134,51 +134,83 @@ document.querySelector('.back-to-top').addEventListener('touchend', function() {
         behavior: 'smooth'
     });
 }, {passive: true});
-
 // Improve category tag interactions on mobile
 document.querySelectorAll('.category-tag').forEach(tag => {
-    tag.addEventListener('touchend', function() {
-        // Remove active class from all tags
-        document.querySelectorAll('.category-tag').forEach(t => {
-            t.classList.remove('active');
-        });
-        // Add active class to tapped tag
-        this.classList.add('active');
-    }, {passive: true});
+  tag.addEventListener('touchend', function() {
+      // Remove active class from all tags
+      document.querySelectorAll('.category-tag').forEach(t => {
+          t.classList.remove('active');
+      });
+      // Add active class to tapped tag
+      this.classList.add('active');
+  }, {passive: true});
 });
 
-// Add this at the end of your script.js file
-// Fix for background issues on mobile
-
-// Detect iOS devices
-function isIOS() {
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-}
-
-// Apply specific fixes for iOS devices
-if (isIOS()) {
-  document.addEventListener('DOMContentLoaded', function() {
-    // Fix container backgrounds
-    document.querySelectorAll('.featured-section, .game-card').forEach(el => {
-      el.style.backgroundColor = 'rgba(26, 26, 46, 0.85)';
-    });
+// Reliable mobile device detection
+document.addEventListener('DOMContentLoaded', function() {
+  // Function to detect mobile devices
+  function isMobileDevice() {
+      const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+        
+      // Check multiple properties for better detection
+      return (
+          // Check user agent
+          mobileRegex.test(navigator.userAgent) ||
+          // Check if touch points > 0
+          (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) ||
+          // Check CSS media query through JavaScript
+          window.matchMedia("(max-width: 768px)").matches
+      );
+  }
     
-    // Force redraw to fix potential rendering issues
-    document.body.style.display = 'none';
-    setTimeout(function() {
-      document.body.style.display = '';
-    }, 10);
-  });
-}
+  // Function specifically for iOS detection
+  function isIOSDevice() {
+      // iOS detection
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                    (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+        
+      if (isIOS) {
+          console.log("iOS device detected");
+      }
+      return isIOS;
+  }
+    
+  // Apply appropriate classes to HTML element
+  if (isMobileDevice()) {
+      document.documentElement.classList.add('mobile-device');
+      console.log("Mobile device detected");
+        
+      if (isIOSDevice()) {
+          document.documentElement.classList.add('ios-device');
+            
+          // Check for notched iPhones
+          if (window.screen.height >= 812 || window.screen.width >= 812) {
+              document.documentElement.classList.add('has-notch');
+              console.log("Device with notch detected");
+          }
+      }
+  }
+
+  // Debug device detection (remove in production)
+  function updateDebugInfo() {
+      const debugElement = document.getElementById('device-debug');
+      if (debugElement) {
+          debugElement.innerHTML = 
+              `Device: ${navigator.userAgent.substring(0, 50)}...<br>` +
+              `Screen: ${window.screen.width}x${window.screen.height}<br>` +
+              `Classes: ${document.documentElement.className}`;
+      }
+  }
+  updateDebugInfo();
+});
 
 // General mobile fix to ensure backgrounds render correctly
 if (window.innerWidth <= 1024) {
-  window.addEventListener('scroll', function() {
-    // This minimal operation forces a redraw on many browsers
-    document.body.style.minHeight = window.innerHeight + 'px';
-    setTimeout(function() {
-      document.body.style.minHeight = '';
-    }, 10);
-  }, {passive: true});
+window.addEventListener('scroll', function() {
+  // This minimal operation forces a redraw on many browsers
+  document.body.style.minHeight = window.innerHeight + 'px';
+  setTimeout(function() {
+    document.body.style.minHeight = '';
+  }, 10);
+}, {passive: true});
 }
