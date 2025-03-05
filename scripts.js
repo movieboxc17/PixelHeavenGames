@@ -48,36 +48,97 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
     }
 });
 
-// Mobile Navigation Toggle
+// Mobile Navigation for iPhone and other devices
 document.querySelector('.mobile-nav-toggle').addEventListener('click', function() {
     const navMenu = document.querySelector('.nav-menu');
+    const overlay = document.querySelector('.mobile-menu-overlay');
+    const icon = this.querySelector('i');
+    
     navMenu.classList.toggle('active');
+    overlay.classList.toggle('active');
     
     // Change icon based on menu state
-    const icon = this.querySelector('i');
     if (navMenu.classList.contains('active')) {
         icon.classList.remove('fa-bars');
         icon.classList.add('fa-times');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
     } else {
         icon.classList.remove('fa-times');
         icon.classList.add('fa-bars');
+        document.body.style.overflow = '';
     }
 });
 
-// Close mobile menu when clicking outside
-document.addEventListener('click', function(event) {
+// Close menu when clicking the overlay
+document.querySelector('.mobile-menu-overlay').addEventListener('click', function() {
     const navMenu = document.querySelector('.nav-menu');
-    const mobileNavToggle = document.querySelector('.mobile-nav-toggle');
+    const icon = document.querySelector('.mobile-nav-toggle i');
     
-    if (navMenu.classList.contains('active') && 
-        !navMenu.contains(event.target) && 
-        !mobileNavToggle.contains(event.target)) {
+    navMenu.classList.remove('active');
+    this.classList.remove('active');
+    icon.classList.remove('fa-times');
+    icon.classList.add('fa-bars');
+    document.body.style.overflow = '';
+});
+
+// Close menu when clicking menu items
+document.querySelectorAll('.nav-menu a').forEach(link => {
+    link.addEventListener('click', function() {
+        const navMenu = document.querySelector('.nav-menu');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+        const icon = document.querySelector('.mobile-nav-toggle i');
+        
+        if (window.innerWidth <= 768) { // Only on mobile
+            navMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+            document.body.style.overflow = '';
+        }
+    });
+});
+
+// Add swipe support for closing the menu on iPhones
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.querySelector('.nav-menu').addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+
+document.querySelector('.nav-menu').addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipeGesture();
+}, {passive: true});
+
+function handleSwipeGesture() {
+    if (touchStartX - touchEndX > 50) { // Swipe left to close
+        const navMenu = document.querySelector('.nav-menu');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+        const icon = document.querySelector('.mobile-nav-toggle i');
+        
         navMenu.classList.remove('active');
-        const icon = mobileNavToggle.querySelector('i');
+        overlay.classList.remove('active');
         icon.classList.remove('fa-times');
         icon.classList.add('fa-bars');
+        document.body.style.overflow = '';
     }
-});
+}
+
+// iOS-specific detection and adjustments
+function isiOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+if (isiOS()) {
+    document.documentElement.classList.add('ios-device');
+    
+    // Adjust for iOS safe areas (notch)
+    if (window.innerHeight >= 812) { // iPhone X or newer with notch
+        document.documentElement.classList.add('has-notch');
+    }
+}
 
 // Handle touch events for game cards
 document.querySelectorAll('.game-card').forEach(card => {
