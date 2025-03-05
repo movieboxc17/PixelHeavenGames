@@ -110,3 +110,39 @@ document.querySelectorAll('.category-tag').forEach(tag => {
         this.classList.add('active');
     }, {passive: true});
 });
+
+// Add this at the end of your script.js file
+// Fix for background issues on mobile
+
+// Detect iOS devices
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+// Apply specific fixes for iOS devices
+if (isIOS()) {
+  document.addEventListener('DOMContentLoaded', function() {
+    // Fix container backgrounds
+    document.querySelectorAll('.featured-section, .game-card').forEach(el => {
+      el.style.backgroundColor = 'rgba(26, 26, 46, 0.85)';
+    });
+    
+    // Force redraw to fix potential rendering issues
+    document.body.style.display = 'none';
+    setTimeout(function() {
+      document.body.style.display = '';
+    }, 10);
+  });
+}
+
+// General mobile fix to ensure backgrounds render correctly
+if (window.innerWidth <= 1024) {
+  window.addEventListener('scroll', function() {
+    // This minimal operation forces a redraw on many browsers
+    document.body.style.minHeight = window.innerHeight + 'px';
+    setTimeout(function() {
+      document.body.style.minHeight = '';
+    }, 10);
+  }, {passive: true});
+}
