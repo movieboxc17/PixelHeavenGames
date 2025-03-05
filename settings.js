@@ -159,6 +159,20 @@ function addEventListeners() {
     });
 }
 
+// Check if running as installed PWA
+function checkPWAMode() {
+    // Check if the app is running in standalone mode (PWA installed)
+    if (window.matchMedia('(display-mode: standalone)').matches || 
+        window.navigator.standalone === true) {
+        // Add class to body to show PWA-specific elements
+        document.body.classList.add('pwa-mode');
+        
+        console.log('Running as installed PWA');
+    } else {
+        console.log('Running in browser mode');
+    }
+}
+
 // Verify developer code
 function verifyDeveloperCode() {
     const codeInput = document.getElementById('dev-code-input');
@@ -209,7 +223,66 @@ function verifyDeveloperCode() {
     }
 }
 
-// Update loadSettings function to check dev mode status
+// Enhanced notification toggle function
+function toggleNotifications(enabled) {
+    if (enabled) {
+        // Check if browser supports notifications
+        if (!("Notification" in window)) {
+            alert("This browser does not support notifications");
+            document.getElementById('notifications-toggle').checked = false;
+            return;
+        }
+        
+        // Request permission if not already granted
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    // Permission was granted, save setting and send test notification
+                    localStorage.setItem('notificationsEnabled', 'true');
+                    sendTestNotification();
+                } else {
+                    // User denied permission, update toggle to reflect this
+                    document.getElementById('notifications-toggle').checked = false;
+                    alert("Notification permission denied. Please enable notifications in your browser settings.");
+                }
+            });
+        } else {
+            // Permission already granted, just save setting and send test
+            localStorage.setItem('notificationsEnabled', 'true');
+            sendTestNotification();
+        }
+    } else {
+        // User turned off notifications
+        localStorage.setItem('notificationsEnabled', 'false');
+        console.log("Notifications disabled");
+    }
+}
+
+// Function to send a test notification
+function sendTestNotification() {
+    if (Notification.permission === 'granted') {
+        const notification = new Notification('PixelHeavenGames', {
+            body: 'Notifications are now enabled! You will receive game updates and events.',
+            icon: 'https://i.ibb.co/LNwMv5g/notification-icon.png', // Placeholder icon URL
+            badge: 'https://i.ibb.co/LNwMv5g/notification-icon.png',
+            vibrate: [100, 50, 100],
+            tag: 'test-notification'
+        });
+        
+        // Close notification after 5 seconds
+        setTimeout(() => {
+            notification.close();
+        }, 5000);
+        
+        // Optional: Handle notification click
+        notification.onclick = function() {
+            window.focus();
+            this.close();
+        };
+    }
+}
+
+// Update the loadSettings function to properly check notification permission
 function loadSettings() {
     const savedSettings = localStorage.getItem('pixelHeavenSettings');
     
@@ -218,11 +291,17 @@ function loadSettings() {
         
         // Apply saved settings to toggles
         document.getElementById('darkmode-toggle').checked = settings.darkMode;
-        document.getElementById('notifications-toggle').checked = settings.notifications;
+        
+        // Check notification permission before setting toggle
+        if (Notification.permission === 'granted' && 
+            localStorage.getItem('notificationsEnabled') === 'true') {
+            document.getElementById('notifications-toggle').checked = true;
+        } else {
+            document.getElementById('notifications-toggle').checked = false;
+        }
         
         // Apply settings to the UI
         toggleDarkMode(settings.darkMode);
-        toggleNotifications(settings.notifications);
         
         // Check if dev mode was previously verified
         if (localStorage.getItem('devModeVerified') === 'true') {
@@ -234,31 +313,37 @@ function loadSettings() {
         
         console.log('Settings loaded');
     }
+    
+    // Always check notification permission on load
+    checkNotificationPermission();
 }
 
-// Update saveSettings function
+// Check and synchronize notification permission with toggle
+function checkNotificationPermission() {
+    const notificationToggle = document.getElementById('notifications-toggle');
+    
+    if (Notification.permission === 'granted' && 
+        localStorage.getItem('notificationsEnabled') === 'true') {
+        notificationToggle.checked = true;
+    } else {
+        notificationToggle.checked = false;
+    }
+}
+
+// Update the saveSettings function to include notification state
 function saveSettings() {
     const settings = {
         darkMode: document.getElementById('darkmode-toggle').checked,
         animations: document.getElementById('animations-toggle').checked,
-        notifications: document.getElementById('notifications-toggle').checked,
+        notifications: document.getElementById('notifications-toggle').checked && 
+                       Notification.permission === 'granted',
         lastUpdated: new Date().toISOString()
     };
     
     localStorage.setItem('pixelHeavenSettings', JSON.stringify(settings));
+    localStorage.setItem('notificationsEnabled', settings.notifications ? 'true' : 'false');
     console.log('Settings saved');
-}        
-        // Apply settings to the UI
-        toggleDarkMode(settings.darkMode);
-        toggleAnimations(settings.animations);
-        setDifficulty(settings.difficulty);
-        toggleNotifications(settings.notifications);
-        
-        console.log('Settings loaded');
-    
-
-
-// Toggle dark mode
+}// Toggle dark mode
 function toggleDarkMode(enabled) {
     if (enabled) {
         document.body.classList.add('dark-mode');
@@ -276,13 +361,6 @@ function toggleAnimations(enabled) {
     } else {
         document.body.classList.add('no-animations');
     }
-}
-
-// Set difficulty
-function setDifficulty(level) {
-    console.log(`Difficulty set to: ${level}`);
-    // Store for games to use when started
-    localStorage.setItem('gameDifficulty', level);
 }
 
 // Toggle notifications
@@ -413,5 +491,14 @@ window.addEventListener('load', function() {
     
     if (footerVersion && versionElement) {
         versionElement.textContent = footerVersion.textContent.replace('V ', '');
+    }
+    
+    // Initialize notification state
+    const notificationEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+    
+    if (notificationEnabled && Notification.permission === 'granted') {
+        document.getElementById('notifications-toggle').checked = true;
+    } else {
+        document.getElementById('notifications-toggle').checked = false;
     }
 });
