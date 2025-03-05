@@ -6,7 +6,7 @@
     --toggle-inactive: #666;
 }
 
-/* Settings Button Position - Base styles */
+/* Settings Button - Consistent positioning across all devices */
 .settings-button {
     position: fixed;
     bottom: 30px;
@@ -20,54 +20,32 @@
     justify-content: center;
     color: white;
     box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
-    z-index: 99; /* Increase z-index to ensure visibility */
+    z-index: 150; /* High z-index to ensure visibility on all devices */
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 1.2rem;
 }
 
-/* Improved Mobile Adjustments with higher z-index */
-@media screen and (max-width: 768px) {
-    .settings-button {
-        bottom: 25px;
-        left: 25px;
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-        z-index: 150; /* Higher z-index for mobile */
-        box-shadow: 0 3px 10px rgba(255, 107, 107, 0.5); /* Enhanced shadow for visibility */
-    }
-}
-
-/* Enhanced positioning for smaller devices */
-@media screen and (max-width: 480px) {
-    .settings-button {
-        bottom: 85px; /* Position above the back-to-top button */
-        left: 20px;
-        z-index: 200; /* Even higher z-index for smallest screens */
-    }
-}
-
-/* iOS-specific fix for bottom positioning */
-@supports (-webkit-touch-callout: none) {
-    .settings-button {
-        bottom: max(30px, env(safe-area-inset-bottom) + 15px);
-    }
-    
-    @media screen and (max-width: 480px) {
-        .settings-button {
-            bottom: max(85px, env(safe-area-inset-bottom) + 70px);
-        }
-    }
-}
-
-/* Animation for the button */
-.settings-button i {
-    transition: transform 0.4s ease;
-}
-
 .settings-button:hover i {
     transform: rotate(90deg);
+}
+
+/* Only adjust size slightly for smaller screens, not position */
+@media screen and (max-width: 768px) {
+    .settings-button {
+        width: 42px;
+        height: 42px;
+        font-size: 1.1rem;
+    }
+}
+
+/* iOS safe area handling without changing position */
+@supports (-webkit-touch-callout: none) {
+    .settings-button {
+        /* Ensures the button doesn't get hidden by iOS UI elements */
+        bottom: 30px !important;
+        left: 30px !important;
+    }
 }
 
 /* Settings Modal */
