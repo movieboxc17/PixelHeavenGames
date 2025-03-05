@@ -22,7 +22,7 @@ function createSettingsElements() {
     const settingsOverlay = document.createElement('div');
     settingsOverlay.className = 'settings-overlay';
     
-    // Settings panel HTML
+    // Settings panel HTML - removed difficulty, added dev code for animations
     settingsOverlay.innerHTML = `
         <div class="settings-panel">
             <div class="settings-header">
@@ -43,26 +43,27 @@ function createSettingsElements() {
             
             <div class="settings-option">
                 <div>
-                    <div class="option-label">Animations</div>
-                    <div class="option-description">Enable or disable animations</div>
+                    <div class="option-label">Animations Control</div>
+                    <div class="option-description">Developer-only animation settings</div>
                 </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="animations-toggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+                <button id="dev-code-toggle" class="dev-code-submit">Developer Mode</button>
             </div>
             
-            <div class="settings-option">
-                <div>
-                    <div class="option-label">Game Difficulty</div>
-                    <div class="option-description">Set default difficulty level</div>
-                </div>
-                <div class="select-wrapper">
-                    <select class="settings-select" id="difficulty-select">
-                        <option value="easy">Easy</option>
-                        <option value="medium" selected>Medium</option>
-                        <option value="hard">Hard</option>
-                    </select>
+            <div id="dev-code-container" class="dev-code-container">
+                <div class="option-description">Enter developer code to control animations</div>
+                <input type="password" id="dev-code-input" class="dev-code-input" placeholder="Enter developer code">
+                <button id="dev-code-submit" class="dev-code-submit">Verify Code</button>
+                <div id="dev-code-message" class="dev-code-message">Invalid developer code</div>
+                
+                <div class="settings-option" style="display: none;" id="animation-toggle-container">
+                    <div>
+                        <div class="option-label">Disable Animations</div>
+                        <div class="option-description">Turn off all site animations</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="animations-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
                 </div>
             </div>
             
@@ -124,14 +125,27 @@ function addEventListeners() {
         toggleDarkMode(this.checked);
     });
     
-    // Animations toggle
-    document.getElementById('animations-toggle').addEventListener('change', function() {
-        toggleAnimations(this.checked);
+    // Developer Code toggle
+    document.getElementById('dev-code-toggle').addEventListener('click', function() {
+        const codeContainer = document.getElementById('dev-code-container');
+        codeContainer.classList.toggle('active');
     });
     
-    // Difficulty select
-    document.getElementById('difficulty-select').addEventListener('change', function() {
-        setDifficulty(this.value);
+    // Developer Code submit
+    document.getElementById('dev-code-submit').addEventListener('click', function() {
+        verifyDeveloperCode();
+    });
+    
+    // Allow Enter key to submit dev code
+    document.getElementById('dev-code-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            verifyDeveloperCode();
+        }
+    });
+    
+    // Animations toggle (only works after code verification)
+    document.getElementById('animations-toggle').addEventListener('change', function() {
+        toggleAnimations(this.checked);
     });
     
     // Notifications toggle
@@ -145,47 +159,95 @@ function addEventListeners() {
     });
 }
 
-// Check if running as installed PWA
-function checkPWAMode() {
-    // Check if the app is running in standalone mode (PWA installed)
-    if (window.matchMedia('(display-mode: standalone)').matches || 
-        window.navigator.standalone === true) {
-        // Add class to body to show PWA-specific elements
-        document.body.classList.add('pwa-mode');
+// Verify developer code
+function verifyDeveloperCode() {
+    const codeInput = document.getElementById('dev-code-input');
+    const message = document.getElementById('dev-code-message');
+    const animationToggleContainer = document.getElementById('animation-toggle-container');
+    
+    // Check if code is correct - using "dev2025" as the code
+    // In production, use a more secure mechanism
+    if (codeInput.value === "dev2025") {
+        // Code is correct
+        message.textContent = "Developer access granted";
+        message.style.color = "#4caf50";
+        message.classList.add('active');
         
-        console.log('Running as installed PWA');
+        // Show animation toggle
+        animationToggleContainer.style.display = "flex";
+        
+        // Load animation setting
+        const savedSettings = localStorage.getItem('pixelHeavenSettings');
+        if (savedSettings) {
+            const settings = JSON.parse(savedSettings);
+            document.getElementById('animations-toggle').checked = settings.animations || false;
+        }
+        
+        // Hide message after 3 seconds
+        setTimeout(() => {
+            message.classList.remove('active');
+        }, 3000);
+        
+        // Store dev mode state
+        localStorage.setItem('devModeVerified', 'true');
     } else {
-        console.log('Running in browser mode');
+        // Code is incorrect
+        message.textContent = "Invalid developer code";
+        message.style.color = "#ff6b6b";
+        message.classList.add('active');
+        
+        // Hide animation toggle
+        animationToggleContainer.style.display = "none";
+        
+        // Clear dev mode state
+        localStorage.removeItem('devModeVerified');
+        
+        // Hide message after 3 seconds
+        setTimeout(() => {
+            message.classList.remove('active');
+        }, 3000);
     }
 }
 
-// Save settings to localStorage
-function saveSettings() {
-    const settings = {
-        darkMode: document.getElementById('darkmode-toggle').checked,
-        animations: document.getElementById('animations-toggle').checked,
-        difficulty: document.getElementById('difficulty-select').value,
-        notifications: document.getElementById('notifications-toggle').checked,
-        lastUpdated: new Date().toISOString()
-    };
-    
-    localStorage.setItem('pixelHeavenSettings', JSON.stringify(settings));
-    console.log('Settings saved');
-}
-
-// Load settings from localStorage
+// Update loadSettings function to check dev mode status
 function loadSettings() {
     const savedSettings = localStorage.getItem('pixelHeavenSettings');
     
     if (savedSettings) {
         const settings = JSON.parse(savedSettings);
         
-        // Apply saved settings to toggles and selects
+        // Apply saved settings to toggles
         document.getElementById('darkmode-toggle').checked = settings.darkMode;
-        document.getElementById('animations-toggle').checked = settings.animations;
-        document.getElementById('difficulty-select').value = settings.difficulty;
         document.getElementById('notifications-toggle').checked = settings.notifications;
         
+        // Apply settings to the UI
+        toggleDarkMode(settings.darkMode);
+        toggleNotifications(settings.notifications);
+        
+        // Check if dev mode was previously verified
+        if (localStorage.getItem('devModeVerified') === 'true') {
+            // Show animation toggle
+            document.getElementById('animation-toggle-container').style.display = "flex";
+            document.getElementById('animations-toggle').checked = settings.animations || false;
+            toggleAnimations(settings.animations || false);
+        }
+        
+        console.log('Settings loaded');
+    }
+}
+
+// Update saveSettings function
+function saveSettings() {
+    const settings = {
+        darkMode: document.getElementById('darkmode-toggle').checked,
+        animations: document.getElementById('animations-toggle').checked,
+        notifications: document.getElementById('notifications-toggle').checked,
+        lastUpdated: new Date().toISOString()
+    };
+    
+    localStorage.setItem('pixelHeavenSettings', JSON.stringify(settings));
+    console.log('Settings saved');
+}        
         // Apply settings to the UI
         toggleDarkMode(settings.darkMode);
         toggleAnimations(settings.animations);
@@ -193,8 +255,8 @@ function loadSettings() {
         toggleNotifications(settings.notifications);
         
         console.log('Settings loaded');
-    }
-}
+    
+
 
 // Toggle dark mode
 function toggleDarkMode(enabled) {
