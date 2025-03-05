@@ -584,73 +584,82 @@ body {
     }
 }
 
+/* Reset and fix mobile menu styles */
+.menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    padding: 5px;
+}
+
+/* Fix for mobile menu */
 @media screen and (max-width: 768px) {
-    .header-content {
+    .menu-toggle {
+        display: block;
+    }
+    
+    .nav-menu.mobile-menu {
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
         flex-direction: column;
-        padding: 10px;
-        gap: 15px;
+        padding: 10px 0;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255, 107, 107, 0.3);
+    }
+    
+    .header-content {
+        flex-direction: row !important;
+        justify-content: center;
+        padding: 15px;
         position: relative;
     }
     
     .logo {
-        font-size: 1.8em;
-    }
-    
-    .nav-menu {
-        gap: 10px;
-    }
-    
-    .menu-toggle {
-        display: block;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-    }
-    
-    .nav-menu.mobile-menu {
-        position: absolute;
-        top: 70px;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        padding: 20px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        font-size: 1.6em;
+        margin: 0;
+        text-align: center;
     }
     
     .nav-menu.mobile-menu a {
+        padding: 12px 20px;
+        display: block;
         width: 100%;
         text-align: center;
-        padding: 12px;
+        box-sizing: border-box;
     }
-    
-    .footer-links {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .categories {
-        justify-content: center;
-    }
-    
-    .category-tag {
-        padding: 8px 15px;
-        font-size: 0.9em;
-    }
-    
-    .section-title {
-        font-size: 1.5em;
-    }
-    
-    .back-to-top {
-        bottom: 20px;
-        right: 20px;
-        width: 40px;
-        height: 40px;
-    }
-    
-    .featured-section {
-        padding: 20px;
+}
+
+/* Fix game card layout */
+.game-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.game-card {
+    flex: 1 1 280px;
+    min-width: 0;
+    max-width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .game-card {
+        flex: 0 0 calc(50% - 20px);
+        max-width: calc(50% - 20px);
     }
 }
 
@@ -659,44 +668,161 @@ body {
         flex: 0 0 100%;
         max-width: 100%;
     }
+}
+
+/* Fix iOS touch interactions */
+html, body {
+    position: relative;
+    overflow-x: hidden;
+    width: 100%;
+}
+
+.touch-device .game-card:hover {
+    transform: none !important;
+}
+
+.touch-device .play-button {
+    padding: 15px 24px;
+}
+
+/* Fix for iOS scroll issues */
+@supports (-webkit-touch-callout: none) {
+    .container, .footer {
+        /* Prevent Safari overscroll issues */
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* iPad Specific Fixes - targeting common iPad dimensions */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .game-card {
+        flex: 0 0 calc(50% - 20px);
+        max-width: calc(50% - 20px);
+    }
     
-    .nav-menu {
-        flex-wrap: wrap;
+    .container {
+        padding: 20px;
+    }
+    
+    .section-title {
+        font-size: 1.6em;
+    }
+    
+    .featured-section {
+        padding: 25px;
+    }
+    
+    .categories {
         justify-content: center;
     }
-    
-    .footer-links {
-        grid-template-columns: 1fr;
-        gap: 20px;
+}
+
+/* Enhanced Mobile Styles */
+@media screen and (max-width: 768px) {
+    .category-tag {
+        padding: 8px 15px;
+        font-size: 0.9em;
+        margin: 5px;
     }
     
-    .footer-section h4 {
-        margin-bottom: 10px;
-    }
-    
-    .footer-section ul li {
-        margin-bottom: 8px;
-    }
-    
-    .loading-text {
-        font-size: 1.5em;
-    }
-    
-    .dot {
-        width: 15px;
-        height: 15px;
+    .container {
+        padding: 15px;
     }
     
     .featured-section {
         padding: 20px 15px;
+        margin: 20px 0;
     }
     
-    .game-image {
-        height: 200px;
+    .footer-content {
+        padding: 0 15px;
+    }
+    
+    .footer-section h4 {
+        font-size: 1.1em;
+    }
+    
+    /* Improve touch targets for mobile */
+    .play-button {
+        padding: 15px 24px;
+    }
+    
+    .back-to-top {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Small Phone Devices */
+@media screen and (max-width: 480px) {
+    .logo {
+        font-size: 1.4em;
+    }
+    
+    .categories {
+        gap: 10px;
     }
     
     .category-tag {
         padding: 6px 12px;
         font-size: 0.8em;
     }
+    
+    .section-title {
+        font-size: 1.4em;
+        padding-left: 10px;
+    }
+    
+    .featured-section {
+        padding: 15px;
+    }
+    
+    .game-image {
+        height: 180px;
+    }
+    
+    .footer-links {
+        gap: 15px;
+    }
+}
+
+/* Fix for notched iPhones */
+@supports (padding: max(0px)) {
+    .header, .footer {
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+    }
+    
+    .footer {
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+}
+
+/* Touch device improvements */
+.touch-device .category-tag {
+    padding: 10px 18px;  /* Larger touch target */
+}
+
+.touch-device .game-card {
+    margin-bottom: 25px;  /* More spacing between cards */
+}
+
+/* iOS-specific fixes */
+.ios-device {
+    /* Fix for 100vh issue in iOS */
+    height: calc(var(--vh, 1vh) * 100);
+}
+
+.ios-device .header {
+    /* Add padding for the notch */
+    padding-top: env(safe-area-inset-top);
+}
+
+.ios-device .game-card {
+    /* Prevent unwanted hover effects */
+    transform: none !important;
+}
+
+.ios-device .game-card:active {
+    transform: scale(0.98) !important;
 }
