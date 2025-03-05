@@ -53,8 +53,12 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">PixelHeavenGames</div>
-            <button class="mobile-nav-toggle">
-                <i class="fas fa-bars"></i>
+            <button class="mobile-nav-toggle" aria-label="Toggle menu">
+                <span class="hamburger-icon">
+                    <span class="line"></span>
+                    <span class="line"></span>
+                    <span class="line"></span>
+                </span>
             </button>
             <nav class="nav-menu">
                 <a href="index.html">Home</a>
@@ -63,9 +67,8 @@
             </nav>
         </div>
     </header>
-
-    <!-- Add this right after the header -->
-    <div class="mobile-menu-overlay"></div>
+    <!-- Add this overlay for the mobile menu -->
+    <div class="menu-overlay"></div>
 
     <div class="container">
         <div class="categories">
