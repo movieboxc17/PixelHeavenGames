@@ -414,66 +414,15 @@ body {
     opacity: 0.8;
 }
 
-/* Mobile Menu Implementation */
-@media screen and (max-width: 768px) {
+/* More reliable mobile detection with CSS */
+@media (max-width: 768px), (pointer: coarse) {
+    /* This will apply to all touch devices and small screens */
     .header-content {
         padding: 15px 20px;
     }
     
     .mobile-nav-toggle {
-        display: block;
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 10px;
-        z-index: 9999;
-    }
-    
-    .hamburger-icon {
-        display: block;
-        position: relative;
-        width: 30px;
-        height: 24px;
-    }
-    
-    .hamburger-icon .line {
-        display: block;
-        position: absolute;
-        height: 3px;
-        width: 100%;
-        background: #fff;
-        border-radius: 3px;
-        opacity: 1;
-        left: 0;
-        transform: rotate(0deg);
-        transition: .25s ease-in-out;
-    }
-    
-    .hamburger-icon .line:nth-child(1) {
-        top: 0px;
-    }
-    
-    .hamburger-icon .line:nth-child(2) {
-        top: 10px;
-    }
-    
-    .hamburger-icon .line:nth-child(3) {
-        top: 20px;
-    }
-    
-    .mobile-nav-toggle.active .line:nth-child(1) {
-        top: 10px;
-        transform: rotate(135deg);
-    }
-    
-    .mobile-nav-toggle.active .line:nth-child(2) {
-        opacity: 0;
-        left: -60px;
-    }
-    
-    .mobile-nav-toggle.active .line:nth-child(3) {
-        top: 10px;
-        transform: rotate(-135deg);
+        display: block !important;
     }
     
     .nav-menu {
@@ -492,48 +441,7 @@ body {
         z-index: 9998;
     }
     
-    .nav-menu.active {
-        right: 0;
-    }
-    
-    .nav-menu a {
-        margin: 15px 0;
-        font-size: 18px;
-        width: 80%;
-        text-align: center;
-        padding: 15px 0;
-    }
-    
-    /* Make the desktop hover effects not apply on mobile */
-    .nav-menu a::before,
-    .nav-menu a::after {
-        display: none;
-    }
-    
-    /* Overlay when menu is open */
-    .menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 9997;
-        display: none;
-    }
-    
-    .menu-overlay.active {
-        display: block;
-    }
-    
-    /* Fix for body scroll when menu is open */
-    body.menu-open {
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
-    }
-    
-    /* Game card layout for mobile */
+    /* Additional mobile styles */
     .game-row {
         flex-wrap: wrap;
     }
@@ -543,66 +451,34 @@ body {
         max-width: 100%;
         margin-bottom: 20px;
     }
-    
-    /* Categories for mobile */
-    .categories {
-        justify-content: center;
-    }
-    
-    /* Footer responsive */
-    .footer-links {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-    
-    .footer-section {
-        text-align: center;
-    }
-    
-    .footer-section h4::after {
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    
-    /* Back to top button positioning for mobile */
-    .back-to-top {
-        bottom: 20px;
-        right: 20px;
-        width: 45px;
-        height: 45px;
-    }
 }
 
-/* iOS-specific styles */
+/* iOS specific detection via CSS */
 @supports (-webkit-touch-callout: none) {
-    /* iOS specific styles */
-    .nav-menu {
-        padding-top: 100px; /* Extra space for notch */
+    .mobile-nav-toggle {
+        display: block !important;
     }
     
-    .nav-menu a {
-        padding: 18px 0;
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100%;
+        background-color: rgba(15, 52, 96, 0.98);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 100px; /* Extra padding for iOS notch */
+        transition: right 0.3s ease;
+        z-index: 9998;
     }
     
-    /* Fix for iOS Safari 100vh bug */
-    .menu-overlay, 
-    .nav-menu {
+    /* Additional iOS fixes */
+    html.ios-device {
+        /* Fix for iOS Safari 100vh bug */
         height: -webkit-fill-available;
-    }
-    
-    /* Prevent overscroll bounce effect */
-    html {
-        position: fixed;
-        height: 100%;
-        overflow: auto;
-        width: 100%;
-    }
-    
-    body.menu-open {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
     }
 }
 
