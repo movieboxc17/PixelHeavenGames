@@ -48,96 +48,71 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
     }
 });
 
-// Mobile Navigation for iPhone and other devices
-document.querySelector('.mobile-nav-toggle').addEventListener('click', function() {
+// Mobile Menu Implementation - iOS Compatible
+document.addEventListener('DOMContentLoaded', function() {
+    const menuButton = document.querySelector('.mobile-nav-toggle');
     const navMenu = document.querySelector('.nav-menu');
-    const overlay = document.querySelector('.mobile-menu-overlay');
-    const icon = this.querySelector('i');
+    const overlay = document.querySelector('.menu-overlay');
     
-    navMenu.classList.toggle('active');
-    overlay.classList.toggle('active');
-    
-    // Change icon based on menu state
-    if (navMenu.classList.contains('active')) {
-        icon.classList.remove('fa-bars');
-        icon.classList.add('fa-times');
-        document.body.style.overflow = 'hidden'; // Prevent scrolling when menu is open
-    } else {
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
-        document.body.style.overflow = '';
-    }
-});
-
-// Close menu when clicking the overlay
-document.querySelector('.mobile-menu-overlay').addEventListener('click', function() {
-    const navMenu = document.querySelector('.nav-menu');
-    const icon = document.querySelector('.mobile-nav-toggle i');
-    
-    navMenu.classList.remove('active');
-    this.classList.remove('active');
-    icon.classList.remove('fa-times');
-    icon.classList.add('fa-bars');
-    document.body.style.overflow = '';
-});
-
-// Close menu when clicking menu items
-document.querySelectorAll('.nav-menu a').forEach(link => {
-    link.addEventListener('click', function() {
-        const navMenu = document.querySelector('.nav-menu');
-        const overlay = document.querySelector('.mobile-menu-overlay');
-        const icon = document.querySelector('.mobile-nav-toggle i');
+    function toggleMenu() {
+        menuButton.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        overlay.classList.toggle('active');
         
-        if (window.innerWidth <= 768) { // Only on mobile
-            navMenu.classList.remove('active');
-            overlay.classList.remove('active');
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-            document.body.style.overflow = '';
+        if (navMenu.classList.contains('active')) {
+            document.body.classList.add('menu-open');
+        } else {
+            document.body.classList.remove('menu-open');
         }
+    }
+    
+    // Toggle menu on button click
+    menuButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleMenu();
     });
+    
+    // Close menu when clicking overlay
+    overlay.addEventListener('click', function() {
+        toggleMenu();
+    });
+    
+    // Close menu when clicking menu items
+    document.querySelectorAll('.nav-menu a').forEach(item => {
+        item.addEventListener('click', function() {
+            if (navMenu.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+    });
+    
+    // Handle touch events for iOS
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    navMenu.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+    
+    navMenu.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        if (touchStartX - touchEndX > 50) {
+            toggleMenu();
+        }
+    }, {passive: true});
 });
 
-// Add swipe support for closing the menu on iPhones
-let touchStartX = 0;
-let touchEndX = 0;
-
-document.querySelector('.nav-menu').addEventListener('touchstart', function(e) {
-    touchStartX = e.changedTouches[0].screenX;
-}, {passive: true});
-
-document.querySelector('.nav-menu').addEventListener('touchend', function(e) {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipeGesture();
-}, {passive: true});
-
-function handleSwipeGesture() {
-    if (touchStartX - touchEndX > 50) { // Swipe left to close
-        const navMenu = document.querySelector('.nav-menu');
-        const overlay = document.querySelector('.mobile-menu-overlay');
-        const icon = document.querySelector('.mobile-nav-toggle i');
-        
-        navMenu.classList.remove('active');
-        overlay.classList.remove('active');
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
-        document.body.style.overflow = '';
-    }
-}
-
-// iOS-specific detection and adjustments
-function isiOS() {
-    return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-}
-
-if (isiOS()) {
-    document.documentElement.classList.add('ios-device');
+// Fix for various iOS interaction issues
+if (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+    document.addEventListener('touchstart', function() {}, {passive: true});
     
-    // Adjust for iOS safe areas (notch)
-    if (window.innerHeight >= 812) { // iPhone X or newer with notch
-        document.documentElement.classList.add('has-notch');
-    }
+    // Fix for sticky hover effects on iOS
+    document.addEventListener('touchend', function() {
+        const activeElement = document.activeElement;
+        if (activeElement && (activeElement.tagName === 'BUTTON' || activeElement.tagName === 'A')) {
+            activeElement.blur();
+        }
+    }, {passive: true});
 }
 
 // Handle touch events for game cards
