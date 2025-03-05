@@ -27,7 +27,6 @@ window.addEventListener('scroll', function() {
         backToTopButton.style.visibility = 'hidden';
     }
 });
-
 // Category tag click handler with filtering functionality
 document.querySelectorAll('.category-tag').forEach(tag => {
     tag.addEventListener('click', function() {
@@ -50,15 +49,15 @@ document.querySelectorAll('.category-tag').forEach(tag => {
             });
         } else {
             // Filter games based on category
-            // This assumes each game card has a data-category attribute
-            // Since that doesn't exist yet, let's also add a fix for it
             document.querySelectorAll('.game-card').forEach(card => {
                 // For now, show all cards with animation
+                card.style.display = 'flex';
+                card.classList.add('animated');
+                // In the future, you can filter based on categories
             });
         }
     });
 });
-
 // Game card hover effects - mobile-friendly version
 document.querySelectorAll('.game-card').forEach(card => {
     // Only apply hover effects on non-touch devices
@@ -164,20 +163,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (backToTopButton) {
         backToTopButton.removeAttribute('onclick');
     }
-    
-    // Check for broken links
+    // Make sure all links work properly
     document.querySelectorAll('a').forEach(link => {
-        if (link.getAttribute('href') && link.getAttribute('href').includes('.html')) {
-            link.addEventListener('click', function(e) {
-                // For demo/placeholder pages that don't exist
-                if (!['index.html', 'tic-tac-toe.html', 'snake.html', 'geometrydash.html'].includes(link.getAttribute('href'))) {
-                    e.preventDefault();
-                    alert('This page is coming soon!');
-                }
-            });
-        }
+        // Remove any existing click event listeners that might prevent navigation
+        const newLink = link.cloneNode(true);
+        link.parentNode.replaceChild(newLink, link);
     });
-    
     // Add form validation for any forms
     const forms = document.querySelectorAll('form');
     forms.forEach(form => {
