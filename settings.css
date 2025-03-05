@@ -9,10 +9,10 @@
 /* Settings Button */
 .settings-button {
     position: fixed;
-    top: 30px;
-    right: 90px;
-    width: 40px;
-    height: 40px;
+    bottom: 30px;
+    left: 30px; /* Moved to bottom left */
+    width: 45px;
+    height: 45px;
     background: var(--primary-gradient);
     border-radius: 50%;
     display: flex;
@@ -23,11 +23,16 @@
     z-index: 99;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-size: 1.2rem;
 }
 
-.settings-button:hover {
-    transform: rotate(30deg);
-    box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+/* Animation for the button */
+.settings-button i {
+    transition: transform 0.4s ease;
+}
+
+.settings-button:hover i {
+    transform: rotate(90deg);
 }
 
 /* Settings Modal */
@@ -54,6 +59,82 @@
     visibility: visible;
 }
 
+/* Developer Code Modal */
+.dev-code-container {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+.dev-code-container.active {
+    display: block;
+}
+
+.dev-code-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    padding: 10px 15px;
+    margin-top: 10px;
+    font-family: monospace;
+    letter-spacing: 2px;
+}
+
+.dev-code-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.dev-code-submit {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.dev-code-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+}
+
+.dev-code-message {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #ff6b6b;
+    display: none;
+}
+
+.dev-code-message.active {
+    display: block;
+    animation: fadeIn 0.3s;
+}
+
+/* Mobile Adjustments */
+@media screen and (max-width: 768px) {
+    .settings-button {
+        bottom: 25px;
+        left: 25px;
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
+
+/* Make sure settings and back-to-top buttons don't overlap */
+@media screen and (max-width: 480px) {
+    .settings-button {
+        bottom: 85px; /* Position above the back-to-top button */
+    }
+}
 .settings-panel {
     width: 90%;
     max-width: 500px;
