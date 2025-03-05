@@ -54,26 +54,7 @@ document.querySelectorAll('.category-tag').forEach(tag => {
             // Since that doesn't exist yet, let's also add a fix for it
             document.querySelectorAll('.game-card').forEach(card => {
                 // For now, show all cards with animation
-                card.style.display = 'flex';
-                card.style.animation = 'fadeInUp 0.5s';
             });
-            
-            // Add a placeholder message for filtering functionality
-            const message = document.createElement('div');
-            message.className = 'filter-message';
-            message.textContent = `Filtering by "${selectedCategory}" will be available soon!`;
-            message.style.textAlign = 'center';
-            message.style.padding = '20px';
-            message.style.color = '#ff8e8e';
-            
-            // Show the message briefly
-            const container = document.querySelector('.featured-section');
-            if (!document.querySelector('.filter-message')) {
-                container.appendChild(message);
-                setTimeout(() => {
-                    message.remove();
-                }, 3000);
-            }
         }
     });
 });
