@@ -955,3 +955,37 @@ img {
     -o-user-drag: none;
     user-drag: none;
 }
+
+/* Fix for white containers on mobile devices */
+@media screen and (max-width: 767px) {
+    /* Ensure featured sections have proper background */
+    .featured-section {
+        background: rgba(26, 26, 46, 0.5);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+    
+    /* Fix game cards background */
+    .game-card {
+        background: rgba(26, 26, 46, 0.7);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+}
+
+/* Additional iOS and Android fixes for containers */
+@supports (-webkit-touch-callout: none) {
+    /* iOS specific background fix */
+    .featured-section, 
+    .game-card {
+        background: rgba(26, 26, 46, 0.7);
+    }
+}
+
+/* Samsung/Android specific fix */
+@media screen and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5) {
+    .featured-section, 
+    .game-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(30, 30, 60, 0.8));
+    }
+}
