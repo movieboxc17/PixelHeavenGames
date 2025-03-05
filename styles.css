@@ -176,6 +176,11 @@ body {
     width: 100%;
 }
 
+.nav-menu a.active {
+    background: rgba(255, 107, 107, 0.2);
+    border-bottom: 2px solid #ff6b6b;
+}
+
 /* Categories Section */
 .categories {
     display: flex;
@@ -203,6 +208,12 @@ body {
     background: rgba(255, 107, 107, 0.4);
     transform: translateY(-2px);
     animation: tagPulse 1s ease-in-out infinite;
+}
+
+.category-tag.active {
+    background: linear-gradient(45deg, rgba(255, 107, 107, 0.6), rgba(255, 142, 142, 0.6));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
 }
 
 /* Featured Section */
@@ -246,16 +257,6 @@ body {
     margin-bottom: 30px;
     flex-wrap: nowrap;
     gap: 20px;
-}
-
-.game-image {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    object-fit: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
 }
 
 .game-card {
@@ -341,6 +342,8 @@ body {
     transition: all 0.3s;
     box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
     z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
 }
 
 .back-to-top:hover {
@@ -471,22 +474,6 @@ body {
     }
 }
 
-/* Enhanced Loading Animation */
-.loader {
-    animation: gradientBG 3s ease infinite;
-}
-
-.loading-text {
-    animation: textPulse 2s ease-in-out infinite;
-    text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
-}
-
-.dot {
-    animation: bounceFade 1s ease-in-out infinite;
-    transform-origin: bottom;
-}
-
-/* New Animations */
 @keyframes gradientBG {
     0% { background-position: 0% 50% }
     50% { background-position: 100% 50% }
@@ -573,8 +560,8 @@ body {
 
 @media screen and (max-width: 768px) {
     .header-content {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        justify-content: space-between;
     }
     
     .game-image {
@@ -587,11 +574,10 @@ body {
     
     .mobile-nav-toggle {
         display: block; /* Show hamburger menu on mobile */
-        font-size: 1.5em;
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
     }
     
     .nav-menu.active {
@@ -622,6 +608,10 @@ body {
     .version-text {
         bottom: 20px;
     }
+    
+    .featured-section {
+        padding: 20px;
+    }
 }
 
 @media screen and (max-width: 480px) {
@@ -651,31 +641,54 @@ body {
         width: 40px;
         height: 40px;
     }
+    
+    .game-image {
+        height: 180px;
+    }
+    
+    .categories {
+        justify-content: center;
+    }
 }
 
 /* Fix for white background on mobile devices */
 @supports (-webkit-touch-callout: none) {
-    /* CSS specific to iOS devices */
-    body {
-      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460) fixed;
-      background-attachment: fixed;
-      min-height: -webkit-fill-available;
+  /* CSS specific to iOS devices */
+  body {
+    background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460) fixed;
+    background-attachment: fixed;
+    min-height: -webkit-fill-available;
+  }
+  
+  html {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Prevent image drag */
+img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+/* Touch optimizations */
+@media (hover: none) {
+    .game-card:hover {
+        transform: none;
     }
     
-    html {
-      height: -webkit-fill-available;
+    .game-card:active {
+        transform: scale(0.98);
     }
-  }
-  
-  /* Active states for navigation */
-  .nav-menu a.active {
-      background: rgba(255, 107, 107, 0.2);
-      border-bottom: 2px solid #ff6b6b;
-  }
-  
-  .category-tag.active {
-      background: linear-gradient(45deg, rgba(255, 107, 107, 0.6), rgba(255, 142, 142, 0.6));
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
-  }
-  
+    
+    .play-button {
+        padding: 15px 24px; /* Larger touch target */
+    }
+    
+    .category-tag {
+        padding: 10px 20px; /* Larger touch target */
+    }
+}
