@@ -48,34 +48,39 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
     }
 });
 
-// Mobile Menu Implementation - iOS Compatible
+// Simple Mobile Menu Implementation
 document.addEventListener('DOMContentLoaded', function() {
-    const menuButton = document.querySelector('.mobile-nav-toggle');
+    const menuToggle = document.querySelector('.mobile-menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
-    const overlay = document.querySelector('.menu-overlay');
+    const overlay = document.querySelector('.mobile-menu-overlay');
     
+    // Function to toggle menu
     function toggleMenu() {
-        menuButton.classList.toggle('active');
+        menuToggle.classList.toggle('active');
         navMenu.classList.toggle('active');
         overlay.classList.toggle('active');
         
         if (navMenu.classList.contains('active')) {
-            document.body.classList.add('menu-open');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
         } else {
-            document.body.classList.remove('menu-open');
+            document.body.style.overflow = ''; // Re-enable scrolling
         }
     }
     
-    // Toggle menu on button click
-    menuButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        toggleMenu();
-    });
+    // Toggle menu when clicking the hamburger icon
+    if (menuToggle) {
+        menuToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleMenu();
+        });
+    }
     
-    // Close menu when clicking overlay
-    overlay.addEventListener('click', function() {
-        toggleMenu();
-    });
+    // Close menu when clicking the overlay
+    if (overlay) {
+        overlay.addEventListener('click', function() {
+            toggleMenu();
+        });
+    }
     
     // Close menu when clicking menu items
     document.querySelectorAll('.nav-menu a').forEach(item => {
@@ -86,20 +91,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Handle touch events for iOS
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    navMenu.addEventListener('touchstart', function(e) {
-        touchStartX = e.changedTouches[0].screenX;
-    }, {passive: true});
-    
-    navMenu.addEventListener('touchend', function(e) {
-        touchEndX = e.changedTouches[0].screenX;
-        if (touchStartX - touchEndX > 50) {
-            toggleMenu();
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && navMenu.classList.contains('active')) {
+            menuToggle.classList.remove('active');
+            navMenu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
         }
-    }, {passive: true});
+    });
 });
 
 // Fix for various iOS interaction issues
