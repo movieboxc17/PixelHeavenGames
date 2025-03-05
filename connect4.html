@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Connect 4</title>
+    <style>
+        :root {
+            --player1-color: #ff5252;
+            --player1-glow: rgba(255, 82, 82, 0.6);
+            --player2-color: #ffdd00;
+            --player2-glow: rgba(255, 221, 0, 0.6);
+            --board-color: #2962ff;
+            --board-bg: #121212;
+            --empty-cell: #2c2c2c;
+            --bg-dark-1: #0f0f1e;
+            --bg-dark-2: #1f1f3d;
+            --card-bg: rgba(25, 25, 35, 0.95);
+            --text-primary: #e0e0e0;
+            --text-secondary: #9e9e9e;
+            --accent-glow: 0 0 20px rgba(41, 98, 255, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark-1) 0%, var(--bg-dark-2) 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 20px 0 20px;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .game-container {
+            background-color: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
+                        0 5px 15px rgba(0, 0, 0, 0.4), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            padding: 35px;
+            max-width: 800px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            margin-bottom: 30px;
+        }
+
+        .game-container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 
+                        0 10px 20px rgba(0, 0, 0, 0.5), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--text-primary);
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(41, 98, 255, 0.6);
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            letter-spacing: 1px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--player1-color), var(--player2-color));
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            padding: 0 10px;
+        }
+
+        .player-turn {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.3),
+                        0 0 15px rgba(41, 98, 255, 0.15);
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .player-indicator {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            margin-right: 15px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .player-indicator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 50%);
+            border-radius: 50%;
+        }
+
+        .player1 {
+            background: radial-gradient(circle at 30% 30%, #ff7b7b, var(--player1-color));
+            box-shadow: 0 0 15px var(--player1-glow), 
+                        inset 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        .player2 {
+            background: radial-gradient(circle at 30% 30%, #ffeb7f, var(--player2-color));
+            box-shadow: 0 0 15px var(--player2-glow),
+                        inset 0 0 8px rgba(255, 255, 255, 0.6);
+        }
+
+        button {
+            background: linear-gradient(145deg, #3675ff, #2962ff);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 15px rgba(41, 98, 255, 0.3),
+                        0 0 20px rgba(41, 98, 255, 0.2),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(45deg);
+            transition: all 0.4s;
+            opacity: 0;
+        }
+
+        button:hover {
+            background: linear-gradient(145deg, #2962ff, #1e45c2);
+            box-shadow: 0 10px 20px rgba(41, 98, 255, 0.4),
+                        0 0 30px rgba(41, 98, 255, 0.3),
+                        inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        button:hover::before {
+            opacity: 1;
+            animation: sheen 1.5s forwards;
+        }
+
+        @keyframes sheen {
+            0% {
+                transform: rotate(45deg) translateX(-300%);
+            }
+            100% {
+                transform: rotate(45deg) translateX(300%);
+                opacity: 0;
+            }
+        }
+
+        button:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 10px rgba(41, 98, 255, 0.3);
+        }
+
+        .board-container {
+            position: relative;
+            margin: 0 auto;
+            max-width: 700px;
+        }
+
+        .column-indicators {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .column-indicator {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 22px;
+            color: var(--text-primary);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2),
+                       inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .column-indicator:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3),
+                       inset 0 1px 1px rgba(255, 255, 255, 0.1),
+                       0 0 20px rgba(41, 98, 255, 0.3);
+            color: white;
+        }
+
+        .column-indicator.current-player1 {
+            background: rgba(255, 82, 82, 0.3);
+            color: white;
+            box-shadow: 0 0 15px var(--player1-glow);
+        }
+
+        .column-indicator.current-player2 {
+            background: rgba(255, 221, 0, 0.3);
+            color: white;
+            box-shadow: 0 0 15px var(--player2-glow);
+        }
+
+        .game-board {
+            background: linear-gradient(145deg, #264dca, #2962ff);
+            padding: 22px;
+            border-radius: 18px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 14px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 
+                       inset 0 2px 5px rgba(255, 255, 255, 0.2),
+                       inset 0 -2px 5px rgba(0, 0, 0, 0.3),
+                       0 0 25px rgba(41, 98, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-board::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 70%);
+            opacity: 0.5;
+        }
+
+        .cell {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background-color: var(--board-bg);
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .cell:hover {
+            transform: scale(0.95);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8),
+                        0 0 10px rgba(41, 98, 255, 0.3);
+        }
+
+        .cell::after {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            background-color: var(--empty-cell);
+            border-radius: 50%;
+            transition: all 0.5s ease;
+            box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.1),
+                        inset 0 -3px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .cell::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 60%);
+            z-index: 2;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .cell.player1::after {
+            background: radial-gradient(circle at 30% 30%, #ff7b7b, var(--player1-color));
+            box-shadow: 0 0 20px var(--player1-glow),
+                       inset 0 3px 5px rgba(255, 255, 255, 0.3),
+                       inset 0 -3px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .cell.player2::after {
+            background: radial-gradient(circle at 30% 30%, #ffeb7f, var(--player2-color));
+            box-shadow: 0 0 20px var(--player2-glow),
+                       inset 0 3px 5px rgba(255, 255, 255, 0.3),
+                       inset 0 -3px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        .cell.dropping {
+            animation: drop 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes drop {
+            0% {
+                transform: translateY(-350%) scale(0.8);
+                filter: brightness(1.2);
+            }
+            60% {
+                transform: translateY(15%) scale(1.1);
+                filter: brightness(1.1);
+            }
+            80% {
+                transform: translateY(-10%) scale(0.93);
+                filter: brightness(1);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                filter: brightness(1);
+            }
+        }
+
+        /* Winner Message Styling - Fixed Positioning */
+        .winner-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Increased z-index to make sure it's on top */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s, visibility 0.4s;
+            backdrop-filter: blur(8px);
+        }
+
+        .winner-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .winner-content {
+            background: rgba(30, 30, 45, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            transform: scale(0.8) translateY(50px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5),
+                    0 0 25px rgba(41, 98, 255, 0.3),
+                    inset 0 2px 1px rgba(255, 255, 255, 0.1);
+            max-width: 90%;
+            width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .winner-message.show .winner-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .winner-content h2 {
+            margin-bottom: 30px;
+            font-size: 2.2rem;
+            color: var(--text-primary);
+            text-shadow: 0 0 10px rgba(41, 98, 255, 0.5);
+            letter-spacing: 0.5px;
+        }
+
+        #winner-player {
+            font-weight: 700;
+            color: var(--player1-color);
+            animation: winner-pulse 2s infinite;
+            display: inline-block;
+            padding: 0 5px;
+        }
+
+        @keyframes winner-pulse {
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 82, 82, 0.7); }
+            50% { text-shadow: 0 0 20px rgba(255, 82, 82, 1); }
+        }
+
+        .winner-content button {
+            margin-top: 25px;
+            padding: 15px 35px;
+            font-size: 18px;
+            animation: button-pulse 2s infinite;
+        }
+
+        @keyframes button-pulse {
+            0%, 100% { box-shadow: 0 8px 15px rgba(41, 98, 255, 0.4), 0 0 20px rgba(41, 98, 255, 0.3); }
+            50% { box-shadow: 0 8px 20px rgba(41, 98, 255, 0.6), 0 0 30px rgba(41, 98, 255, 0.5); }
+        }
+
+        /* Footer Styling */
+        .game-footer {
+            margin-top: auto; /* This pushes the footer to the bottom */
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--card-bg);
+            border-radius: 15px 15px 0 0; /* Rounded corners only at top */
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-footer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(41, 98, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: footer-shine 8s linear infinite;
+        }
+
+        @keyframes footer-shine {
+            0% {
+                transform: translateX(-100%) rotate(45deg);
+            }
+            100% {
+                transform: translateX(100%) rotate(45deg);
+            }
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .game-footer p {
+            margin: 5px 0;
+            color: var(--text-secondary);
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .game-footer p:first-child {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .copyright {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Make it responsive for different devices */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .game-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .player-turn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .column-indicator {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+            
+            .game-board {
+                gap: 8px;
+                padding: 15px;
+            }
+            
+            .winner-content {
+                padding: 30px 20px;
+                width: 85%;
+            }
+            
+            .game-footer {
+                margin-top: 30px;
+                padding: 15px;
+            }
+            
+            .game-footer p {
+                font-size: 14px;
+            }
+            
+            .game-footer p:first-child {
+                font-size: 15px;
+            }
+            
+            .copyright {
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .player-turn {
+                font-size: 16px;
+                padding: 10px 15px;
+            }
+            
+            .player-indicator {
+                width: 20px;
+                height: 20px;
+                margin-right: 10px;
+            }
+            
+            button {
+                padding: 10px 18px;
+                font-size: 15px;
+            }
+            
+            .column-indicator {
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
+            }
+            
+            .game-board {
+                gap: 6px;
+                padding: 10px;
+            }
+            
+            .winner-content {
+                padding: 25px 15px;
+            }
+            
+            .winner-content h2 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+            }
+            
+            .winner-content button {
+                padding: 12px 25px;
+                font-size: 16px;
+            }
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark-1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--board-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1e45c2;
+        }
+
+        /* Focus styles for accessibility */
+        button:focus, 
+        .column-indicator:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.5), 
+                        0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Special animation when game is won */
+        .game-board.game-won {
+            animation: board-won 1.5s;
+        }
+
+        @keyframes board-won {
+            0%, 100% { box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(41, 98, 255, 0.4); }
+            50% { box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 50px rgba(41, 98, 255, 0.7); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Pixel Connect 4</h1>
+        <div class="game-info">
+            <div class="player-turn">
+                <span class="player-indicator player1"></span>
+                <span>Player 1's Turn</span>
+            </div>
+            <button id="restart-game">Restart Game</button>
+        </div>
+        <div class="board-container">
+            <div class="column-indicators"></div>
+            <div class="game-board"></div>
+        </div>
+        <div class="winner-message">
+            <div class="winner-content">
+                <h2>Player <span id="winner-player"></span> Wins!</h2>
+                <button id="play-again">Play Again</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="game-footer">
+        <div class="footer-content">
+            <p>Created by Moviebox C17</p>
+            <p class="copyright">© 2025 PixelHeavenGames. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ROWS = 6;
+            const COLS = 7;
+            const gameBoard = document.querySelector('.game-board');
+            const columnIndicators = document.querySelector('.column-indicators');
+            const playerTurnText = document.querySelector('.player-turn span:last-child');
+            const playerIndicator = document.querySelector('.player-indicator');
+            const winnerMessage = document.querySelector('.winner-message');
+            const winnerPlayer = document.getElementById('winner-player');
+            const restartBtn = document.getElementById('restart-game');
+            const playAgainBtn = document.getElementById('play-again');
+            
+            let currentPlayer = 1;
+            let board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+            let gameActive = true;
+            
+            // Initialize the game
+            initGame();
+            
+            function initGame() {
+                createBoard();
+                createColumnIndicators();
+                updatePlayerTurn();
+            }
+            
+            // Create the game board UI
+            function createBoard() {
+                gameBoard.innerHTML = '';
+                for (let row = 0; row < ROWS; row++) {
+                    for (let col = 0; col < COLS; col++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('cell');
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        cell.addEventListener('click', () => handleCellClick(col));
+                        gameBoard.appendChild(cell);
+                    }
+                }
+            }
+            
+            // Create column indicators for easier mobile play
+            function createColumnIndicators() {
+                columnIndicators.innerHTML = '';
+                for (let col = 0; col < COLS; col++) {
+                    const indicator = document.createElement('div');
+                    indicator.classList.add('column-indicator');
+                    indicator.textContent = '↓';
+                    indicator.addEventListener('click', () => handleCellClick(col));
+                    indicator.addEventListener('mouseenter', () => {
+                        indicator.classList.add(`current-player${currentPlayer}`);
+                    });
+                    indicator.addEventListener('mouseleave', () => {
+                        indicator.classList.remove('current-player1', 'current-player2');
+                    });
+                    columnIndicators.appendChild(indicator);
+                }
+            }
+            
+            // Handle clicking on a column
+            function handleCellClick(col) {
+                if (!gameActive) return;
+                
+                const row = findLowestEmptyRow(col);
+                if (row === -1) return; // Column is full
+                
+                dropPiece(row, col);
+            }
+            
+            // Find the lowest empty row in a column
+            function findLowestEmptyRow(col) {
+                for (let row = ROWS - 1; row >= 0; row--) {
+                    if (board[row][col] === 0) {
+                        return row;
+                    }
+                }
+                return -1; // Column is full
+            }
+            
+            // Drop a piece into the board
+            function dropPiece(row, col) {
+                board[row][col] = currentPlayer;
+                
+                // Update the visual cell
+                const cells = document.querySelectorAll('.cell');
+                const index = row * COLS + col;
+                const cell = cells[index];
+                
+                // Add dropping animation
+                cell.classList.add('dropping');
+                cell.classList.add(`player${currentPlayer}`);
+                
+                // Check for win after the animation
+                setTimeout(() => {
+                    if (checkWin(row, col)) {
+                        gameActive = false;
+                        gameBoard.classList.add('game-won');
+                        showWinner();
+                        return;
+                    }
+                    
+                    // Check for draw
+                    if (checkDraw()) {
+                        gameActive = false;
+                        showDraw();
+                        return;
+                    }
+                    
+                    // Switch player
+                    currentPlayer = currentPlayer === 1 ? 2 : 1;
+                    updatePlayerTurn();
+                }, 500);
+            }
+            
+            // Update player turn indicator
+            function updatePlayerTurn() {
+                playerTurnText.textContent = `Player ${currentPlayer}'s Turn`;
+                playerIndicator.className = 'player-indicator';
+                playerIndicator.classList.add(`player${currentPlayer}`);
+                
+                // Update column indicators to show current player
+                document.querySelectorAll('.column-indicator').forEach(indicator => {
+                    indicator.classList.remove('current-player1', 'current-player2');
+                    indicator.addEventListener('mouseenter', () => {
+                        indicator.classList.add(`current-player${currentPlayer}`);
+                    });
+                });
+            }
+            
+            // FIXED: Check if the current move results in a win
+            function checkWin(row, col) {
+                const directions = [
+                    [0, 1],  // Horizontal
+                    [1, 0],  // Vertical
+                    [1, 1],  // Diagonal: bottom-left to top-right
+                    [1, -1]  // Diagonal: bottom-right to top-left
+                ];
+                
+                const player = board[row][col];
+                
+                for (const [rowDir, colDir] of directions) {
+                    let count = 1; // Start with 1 for the current piece
+                    
+                    // Check in one direction
+                    for (let i = 1; i < 4; i++) {
+                        const newRow = row + rowDir * i;
+                        const newCol = col + colDir * i;
+                        
+                        if (
+                            newRow >= 0 && newRow < ROWS &&
+                            newCol >= 0 && newCol < COLS &&
+                            board[newRow][newCol] === player
+                        ) {
+                            count++;
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    // Check in the opposite direction
+                    for (let i = 1; i < 4; i++) {
+                        const newRow = row - rowDir * i;
+                        const newCol = col - colDir * i;
+                        
+                        if (
+                            newRow >= 0 && newRow < ROWS &&
+                            newCol >= 0 && newCol < COLS &&
+                            board[newRow][newCol] === player
+                        ) {
+                            count++;
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    if (count >= 4) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+            
+            // Check if the game is a draw
+            function checkDraw() {
+                return board[0].every(cell => cell !== 0);
+            }
+            
+            // Show winner message
+            function showWinner() {
+                winnerPlayer.textContent = currentPlayer;
+                // Update color based on which player won
+                winnerPlayer.style.color = currentPlayer === 1 ? 
+                    'var(--player1-color)' : 'var(--player2-color)';
+                
+                // Update animation for winning player
+                if (currentPlayer === 2) {
+                    document.documentElement.style.setProperty(
+                        '--winner-color', 'var(--player2-color)'
+                    );
+                    document.documentElement.style.setProperty(
+                        '--winner-glow', 'var(--player2-glow)'
+                    );
+                }
+                
+                winnerMessage.classList.add('show');
+            }
+            
+            // Show draw message
+            function showDraw() {
+                winnerPlayer.textContent = 'Nobody - It\'s a Draw';
+                winnerPlayer.style.color = 'var(--text-primary)';
+                winnerMessage.classList.add('show');
+            }
+            
+            // Reset the game
+            function resetGame() {
+                board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+                currentPlayer = 1;
+                gameActive = true;
+                winnerMessage.classList.remove('show');
+                gameBoard.classList.remove('game-won');
+                
+                const cells = document.querySelectorAll('.cell');
+                cells.forEach(cell => {
+                    cell.classList.remove('player1', 'player2', 'dropping');
+                });
+                
+                updatePlayerTurn();
+            }
+            
+            // Event listeners for game controls
+            restartBtn.addEventListener('click', resetGame);
+            playAgainBtn.addEventListener('click', resetGame);
+        });
+    </script>
+</body>
+</html>
