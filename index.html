@@ -1,41 +1,11 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PixelHeavenGames</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- iOS home screen support -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="format-detection" content="telephone=no">
-    <!-- iOS app icons -->
-    <link rel="apple-touch-icon" href="icons/icon-120.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
-    
-    <!-- iOS splash screens -->
-    <!-- iPhone X (1125px x 2436px) -->
-    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" href="/splash/apple-launch-1125x2436.png">
-    <!-- iPhone 8, 7, 6s, 6 (750px x 1334px) -->
-    <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="/splash/apple-launch-750x1334.png">
-    <!-- iPad Pro 12.9" (2048px x 2732px) -->
-    <link rel="apple-touch-startup-image" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" href="/splash/apple-launch-2048x2732.png">
-    <!-- iPad Pro 11" (1668px x 2388px) -->
-    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" href="/splash/apple-launch-1668x2388.png">
-    <!-- iPad Pro 10.5" (1668px x 2224px) -->
-    <link rel="apple-touch-startup-image" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" href="/splash/apple-launch-1668x2224.png">
-    <!-- iPad Mini, Air (1536px x 2048px) -->
-    <link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" href="/splash/apple-launch-1536x2048.png">
-    
-    <!-- Web app manifest -->
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- Theme color -->
-    <meta name="theme-color" content="#333333">
 </head>    
 <body>
     <div class="loader">
@@ -49,6 +19,9 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">PixelHeavenGames</div>
+            <button class="mobile-nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
             <nav class="nav-menu">
                 <a href="index.html">Home</a>
                 <a href="about.html">About Us</a>
@@ -59,7 +32,6 @@
 
     <div class="container">
         <div class="categories">
-            <div class="category-tag active">All</div>
             <div class="category-tag">Action</div>
             <div class="category-tag">Puzzle</div>
             <div class="category-tag">Strategy</div>
@@ -88,8 +60,8 @@
                 </div>
                 <div class="game-card">
                     <img src="Images/game4.jpg" alt="Game 4" class="game-image">
-                    <h3>Pixel Connect 4</h3>
-                    <a href="connect4.html"><button class="play-button">PLAY NOW</button></a>
+                    <h3>Game 4</h3>
+                    <a href="HTML/game4.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
             </div>
         </div>
@@ -100,22 +72,22 @@
                 <div class="game-card">
                     <img src="Images/game5.jpg" alt="Game 5" class="game-image">
                     <h3>Game Title 5</h3>
-                    <a href="404.html"><button class="play-button">PLAY NOW</button></a>
+                    <a href="HTML/game5.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
                 <div class="game-card">
                     <img src="Images/game6.jpg" alt="Game 6" class="game-image">
                     <h3>Game Title 6</h3>
-                    <a href="404.html"><button class="play-button">PLAY NOW</button></a>
+                    <a href="HTML/game6.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
                 <div class="game-card">
                     <img src="Images/game7.jpg" alt="Game 7" class="game-image">
                     <h3>Game Title 7</h3>
-                    <a href="404.html"><button class="play-button">PLAY NOW</button></a>
+                    <a href="HTML/game7.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
                 <div class="game-card">
                     <img src="Images/game8.jpg" alt="Game 8" class="game-image">
                     <h3>Game Title 8</h3>
-                    <a href="404.html"><button class="play-button">PLAY NOW</button></a>
+                    <a href="HTML/game8.html"><button class="play-button">PLAY NOW</button></a>
                 </div>
             </div>
         </div>
@@ -140,16 +112,16 @@
                 <div class="footer-section">
                     <h4>Categories</h4>
                     <ul>
-                        <li><a href="index.html">Action</a></li>
-                        <li><a href="index.html">Puzzle</a></li>
-                        <li><a href="index.html">Strategy</a></li>
-                        <li><a href="index.html">Racing</a></li>
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Puzzle</a></li>
+                        <li><a href="#">Strategy</a></li>
+                        <li><a href="#">Racing</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h4>Support</h4>
                     <ul>
-                        <li><a href="404.html">FAQ</a></li>
+                        <li><a href="...">FAQ</a></li>
                         <li><a href="contact.html">Contact Us</a></li>
                         <li><a href="Privacy Policy 2025.pdf">Privacy Policy</a></li>
                         <li><a href="Terms of Service 2025.pdf">Terms of Service</a></li>
@@ -163,13 +135,6 @@
             </div>
         </div>
     </footer>
-    <script src="scripts.js"></script>
-    <!-- Add this right before the closing </body> tag -->
-    <script>
-        // Emergency fix to force hide the loader
-        setTimeout(function() {
-            document.querySelector('.loader').style.display = 'none';
-        }, 2000);
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
