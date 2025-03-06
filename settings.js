@@ -1,32 +1,68 @@
 // Wait until the document is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Settings script loaded');
+    console.log('Enhanced settings script loaded');
     
-    // Check if settings already exist - if so, remove them to avoid duplicates
-    const existingButton = document.querySelector('.settings-button');
-    const existingOverlay = document.querySelector('.settings-overlay');
+    // Check if the original settings panel exists
+    const existingPanel = document.querySelector('.settings-panel');
     
-    if (existingButton) {
-        console.log('Removing existing settings button');
-        existingButton.remove();
+    if (existingPanel) {
+        // Enhance the existing settings panel instead of replacing it
+        enhanceExistingSettings(existingPanel);
+    } else {
+        // If no settings panel exists, create our own
+        createSettingsElements();
+        addEventListeners();
     }
     
-    if (existingOverlay) {
-        console.log('Removing existing settings overlay');
-        existingOverlay.remove();
-    }
-    
-    // Now create our new settings elements
-    createSettingsElements();
-    
-    // Check if running as installed PWA
+    // Check PWA mode regardless
     checkPWAMode();
-    
-    // Add event listeners to our new elements
-    addEventListeners();
-    
-    console.log('Settings initialization complete');
 });
+
+// Function to enhance existing settings panel
+function enhanceExistingSettings(panel) {
+    console.log('Enhancing existing settings panel');
+    
+    // Add new settings options to the existing panel
+    const newOptions = document.createElement('div');
+    newOptions.innerHTML = `
+        <div class="settings-option">
+            <div>
+                <div class="option-label">Sound Effects</div>
+                <div class="option-description">Enable game sound effects</div>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="sound-toggle" checked>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+        
+        <div class="settings-option">
+            <div>
+                <div class="option-label">Background Music</div>
+                <div class="option-description">Enable background music in games</div>
+            </div>
+            <label class="toggle-switch">
+                <input type="checkbox" id="music-toggle" checked>
+                <span class="toggle-slider"></span>
+            </label>
+        </div>
+    `;
+    
+    // Find a good place to insert our new options
+    const insertPoint = panel.querySelector('.settings-option');
+    if (insertPoint && insertPoint.parentNode) {
+        insertPoint.parentNode.insertBefore(newOptions, insertPoint.nextSibling);
+        
+        // Add event listeners for new toggles
+        document.getElementById('sound-toggle').addEventListener('change', function() {
+            toggleSound(this.checked);
+        });
+        
+        document.getElementById('music-toggle').addEventListener('change', function() {
+            toggleMusic(this.checked);
+        });
+    }
+}
   // Create settings elements
   function createSettingsElements() {
       console.log('Creating settings elements');
