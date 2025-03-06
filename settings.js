@@ -1,5 +1,5 @@
-// Settings Panel Functionality
-document.addEventListener('DOMContentLoaded', function() {
+// Wrap the initialization in a function we can call regardless of when the script loads
+function initializeSettings() {
     // Create settings button and panel
     createSettingsElements();
     
@@ -8,7 +8,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Event listeners
     addEventListeners();
-});
+}
+
+// Call the initialization when DOM is loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeSettings);
+} else {
+    // DOM is already loaded, initialize immediately
+    initializeSettings();
+}
 
 // Create settings elements
 function createSettingsElements() {
@@ -22,7 +30,7 @@ function createSettingsElements() {
     const settingsOverlay = document.createElement('div');
     settingsOverlay.className = 'settings-overlay';
     
-    // Settings panel HTML - removed difficulty, added dev code for animations
+    // Settings panel HTML with new options
     settingsOverlay.innerHTML = `
         <div class="settings-panel">
             <div class="settings-header">
@@ -39,6 +47,43 @@ function createSettingsElements() {
                     <input type="checkbox" id="darkmode-toggle" checked>
                     <span class="toggle-slider"></span>
                 </label>
+            </div>
+            
+            <div class="settings-option">
+                <div>
+                    <div class="option-label">Sound Effects</div>
+                    <div class="option-description">Enable game sound effects</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="sound-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-option">
+                <div>
+                    <div class="option-label">Background Music</div>
+                    <div class="option-description">Enable background music in games</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="music-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-option">
+                <div>
+                    <div class="option-label">Language</div>
+                    <div class="option-description">Select your preferred language</div>
+                </div>
+                <div class="select-wrapper">
+                    <select id="language-select" class="settings-select">
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                    </select>
+                </div>
             </div>
             
             <div class="settings-option">
@@ -78,9 +123,58 @@ function createSettingsElements() {
                 </label>
             </div>
             
+            <!-- PWA-only settings (initially hidden) -->
+            <div class="pwa-only-settings">
+                <div class="pwa-settings-header">PWA Features</div>
+                
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Offline Mode</div>
+                        <div class="option-description">Enable enhanced offline gameplay</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="offline-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Haptic Feedback</div>
+                        <div class="option-description">Enable vibration on supported devices</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="haptic-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Cloud Save</div>
+                        <div class="option-description">Sync game progress across devices</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="cloud-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="settings-option">
+                    <div>
+                        <div class="option-label">Auto Updates</div>
+                        <div class="option-description">Automatically update when new versions are available</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="autoupdate-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            
             <div class="version-info">
                 <div>PixelHeavenGames</div>
-                <div>Version: <span class="version-number">18.1</span></div>
+                <div>Version: <span class="version-number">19.0</span></div>
             </div>
             
             <button class="reboot-button">
@@ -125,6 +219,21 @@ function addEventListeners() {
         toggleDarkMode(this.checked);
     });
     
+    // Sound toggle
+    document.getElementById('sound-toggle').addEventListener('change', function() {
+        toggleSound(this.checked);
+    });
+    
+    // Music toggle
+    document.getElementById('music-toggle').addEventListener('change', function() {
+        toggleMusic(this.checked);
+    });
+    
+    // Language select
+    document.getElementById('language-select').addEventListener('change', function() {
+        changeLanguage(this.value);
+    });
+    
     // Developer Code toggle
     document.getElementById('dev-code-toggle').addEventListener('click', function() {
         const codeContainer = document.getElementById('dev-code-container');
@@ -153,6 +262,35 @@ function addEventListeners() {
         toggleNotifications(this.checked);
     });
     
+    // PWA-only toggles
+    const offlineToggle = document.getElementById('offline-toggle');
+    if (offlineToggle) {
+        offlineToggle.addEventListener('change', function() {
+            toggleOfflineMode(this.checked);
+        });
+    }
+    
+    const hapticToggle = document.getElementById('haptic-toggle');
+    if (hapticToggle) {
+        hapticToggle.addEventListener('change', function() {
+            toggleHapticFeedback(this.checked);
+        });
+    }
+    
+    const cloudToggle = document.getElementById('cloud-toggle');
+    if (cloudToggle) {
+        cloudToggle.addEventListener('change', function() {
+            toggleCloudSave(this.checked);
+        });
+    }
+    
+    const autoUpdateToggle = document.getElementById('autoupdate-toggle');
+    if (autoUpdateToggle) {
+        autoUpdateToggle.addEventListener('change', function() {
+            toggleAutoUpdate(this.checked);
+        });
+    }
+    
     // Reboot button (only visible in PWA mode)
     document.querySelector('.reboot-button').addEventListener('click', function() {
         rebootApplication();
@@ -167,8 +305,20 @@ function checkPWAMode() {
         // Add class to body to show PWA-specific elements
         document.body.classList.add('pwa-mode');
         
+        // Show PWA-only settings
+        const pwaSettings = document.querySelector('.pwa-only-settings');
+        if (pwaSettings) {
+            pwaSettings.style.display = 'block';
+        }
+        
         console.log('Running as installed PWA');
     } else {
+        // Hide PWA-only settings
+        const pwaSettings = document.querySelector('.pwa-only-settings');
+        if (pwaSettings) {
+            pwaSettings.style.display = 'none';
+        }
+        
         console.log('Running in browser mode');
     }
 }
@@ -223,6 +373,61 @@ function verifyDeveloperCode() {
     }
 }
 
+// Toggle sound effects
+function toggleSound(enabled) {
+    localStorage.setItem('soundEnabled', enabled);
+    console.log('Sound effects ' + (enabled ? 'enabled' : 'disabled'));
+    
+    // If enabled, play a test sound
+    if (enabled) {
+        playTestSound();
+    }
+}
+
+// Play a test sound effect
+function playTestSound() {
+    try {
+        const testSound = new Audio('sounds/click.mp3');
+        testSound.volume = 0.5;
+        testSound.play().catch(error => console.log('Audio play failed:', error));
+    } catch (error) {
+        console.log('Could not play test sound:', error);
+    }
+}
+
+// Toggle background music
+function toggleMusic(enabled) {
+    localStorage.setItem('musicEnabled', enabled);
+    console.log('Background music ' + (enabled ? 'enabled' : 'disabled'));
+    
+    // Control background music if it exists
+    const bgMusic = document.getElementById('background-music');
+    if (bgMusic) {
+        if (enabled) {
+            bgMusic.play().catch(error => console.log('Music play failed:', error));
+        } else {
+            bgMusic.pause();
+        }
+    }
+}
+
+// Change language
+function changeLanguage(language) {
+    localStorage.setItem('preferredLanguage', language);
+    console.log('Language changed to: ' + language);
+    
+    // In a real implementation, this would trigger a translation function
+    // For now, we'll just show a message
+    const message = document.createElement('div');
+    message.className = 'language-change-message';
+    message.textContent = 'Language will change after restart';
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+        message.remove();
+    }, 3000);
+}
+
 // Enhanced notification toggle function
 function toggleNotifications(enabled) {
     if (enabled) {
@@ -263,8 +468,8 @@ function sendTestNotification() {
     if (Notification.permission === 'granted') {
         const notification = new Notification('PixelHeavenGames', {
             body: 'Notifications are now enabled! You will receive game updates and events.',
-            icon: 'https://i.ibb.co/LNwMv5g/notification-icon.png', // Placeholder icon URL
-            badge: 'https://i.ibb.co/LNwMv5g/notification-icon.png',
+            icon: 'icon.png', // Use the same icon as the app
+            badge: 'icon.png',
             vibrate: [100, 50, 100],
             tag: 'test-notification'
         });
@@ -282,68 +487,88 @@ function sendTestNotification() {
     }
 }
 
-// Update the loadSettings function to properly check notification permission
-function loadSettings() {
-    const savedSettings = localStorage.getItem('pixelHeavenSettings');
+// PWA-only functions
+function toggleOfflineMode(enabled) {
+    if (!document.body.classList.contains('pwa-mode')) return;
     
-    if (savedSettings) {
-        const settings = JSON.parse(savedSettings);
-        
-        // Apply saved settings to toggles
-        document.getElementById('darkmode-toggle').checked = settings.darkMode;
-        
-        // Check notification permission before setting toggle
-        if (Notification.permission === 'granted' && 
-            localStorage.getItem('notificationsEnabled') === 'true') {
-            document.getElementById('notifications-toggle').checked = true;
-        } else {
-            document.getElementById('notifications-toggle').checked = false;
-        }
-        
-        // Apply settings to the UI
-        toggleDarkMode(settings.darkMode);
-        
-        // Check if dev mode was previously verified
-        if (localStorage.getItem('devModeVerified') === 'true') {
-            // Show animation toggle
-            document.getElementById('animation-toggle-container').style.display = "flex";
-            document.getElementById('animations-toggle').checked = settings.animations || false;
-            toggleAnimations(settings.animations || false);
-        }
-        
-        console.log('Settings loaded');
-    }
+    localStorage.setItem('offlineMode', enabled);
+    console.log('Offline mode ' + (enabled ? 'enabled' : 'disabled'));
     
-    // Always check notification permission on load
-    checkNotificationPermission();
-}
-
-// Check and synchronize notification permission with toggle
-function checkNotificationPermission() {
-    const notificationToggle = document.getElementById('notifications-toggle');
-    
-    if (Notification.permission === 'granted' && 
-        localStorage.getItem('notificationsEnabled') === 'true') {
-        notificationToggle.checked = true;
+    // In a real app, this would configure the service worker's caching strategy
+    if (enabled) {
+        // Show confirmation message
+        showToast('Enhanced offline mode enabled. Game content will be available offline.');
     } else {
-        notificationToggle.checked = false;
+        showToast('Standard offline mode. Some features may not work without a connection.');
     }
 }
 
-// Update the saveSettings function to include notification state
-function saveSettings() {
-    const settings = {
-        darkMode: document.getElementById('darkmode-toggle').checked,
-        animations: document.getElementById('animations-toggle').checked,
-        notifications: document.getElementById('notifications-toggle').checked && 
-                       Notification.permission === 'granted',
-        lastUpdated: new Date().toISOString()
-    };
+function toggleHapticFeedback(enabled) {
+    if (!document.body.classList.contains('pwa-mode')) return;
     
-    localStorage.setItem('pixelHeavenSettings', JSON.stringify(settings));
-    localStorage.setItem('notificationsEnabled', settings.notifications ? 'true' : 'false');
-    console.log('Settings saved');
-}// Toggle dark mode
+    localStorage.setItem('hapticFeedback', enabled);
+    console.log('Haptic feedback ' + (enabled ? 'enabled' : 'disabled'));
+    
+    // Test vibration if enabled and supported
+    if (enabled && 'vibrate' in navigator) {
+        navigator.vibrate(100);
+    }
+}
+
+function toggleCloudSave(enabled) {
+    if (!document.body.classList.contains('pwa-mode')) return;
+    
+    localStorage.setItem('cloudSave', enabled);
+    console.log('Cloud save ' + (enabled ? 'enabled' : 'disabled'));
+    
+    // Show sync icon animation
+    if (enabled) {
+        const syncIcon = document.createElement('div');
+        syncIcon.className = 'sync-icon';
+        syncIcon.innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+        document.body.appendChild(syncIcon);
+        
+        setTimeout(() => {
+            syncIcon.remove();
+        }, 2000);
+    }
+}
+
+function toggleAutoUpdate(enabled) {
+    if (!document.body.classList.contains('pwa-mode')) return;
+    
+    localStorage.setItem('autoUpdate', enabled);
+    console.log('Auto updates ' + (enabled ? 'enabled' : 'disabled'));
+    
+    if (enabled) {
+        showToast('Auto updates enabled. New versions will be installed automatically.');
+    } else {
+        showToast('Auto updates disabled. You will be prompted before installing updates.');
+    }
+}
+
+// Display toast message
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'settings-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Add visible class to trigger animation
+    setTimeout(() => {
+        toast.classList.add('visible');
+    }, 10);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+
+// Toggle dark mode
 function toggleDarkMode(enabled) {
     if (enabled) {
         document.body.classList.add('dark-mode');
@@ -363,15 +588,123 @@ function toggleAnimations(enabled) {
     }
 }
 
-// Toggle notifications
-function toggleNotifications(enabled) {
-    if (enabled) {
-        // Request notification permission if needed
-        if (Notification && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-            Notification.requestPermission();
+// Update the loadSettings function to properly check notification permission
+function loadSettings() {
+    const savedSettings = localStorage.getItem('pixelHeavenSettings');
+    
+    if (savedSettings) {
+        try {
+            const settings = JSON.parse(savedSettings);
+            
+            // Apply saved settings to toggles
+            document.getElementById('darkmode-toggle').checked = settings.darkMode !== false; // Default to true
+            document.getElementById('sound-toggle').checked = settings.sound !== false; // Default to true
+            document.getElementById('music-toggle').checked = settings.music !== false; // Default to true
+            
+            // Set language select
+            if (settings.language) {
+                document.getElementById('language-select').value = settings.language;
+            }
+            
+            // Check notification permission before setting toggle
+            if (Notification.permission === 'granted' && 
+                localStorage.getItem('notificationsEnabled') === 'true') {
+                document.getElementById('notifications-toggle').checked = true;
+            } else {
+                document.getElementById('notifications-toggle').checked = false;
+            }
+            
+            // Apply settings to the UI
+            toggleDarkMode(settings.darkMode !== false);
+            
+            // PWA-only settings
+            if (document.body.classList.contains('pwa-mode')) {
+                const offlineToggle = document.getElementById('offline-toggle');
+                const hapticToggle = document.getElementById('haptic-toggle');
+                const cloudToggle = document.getElementById('cloud-toggle');
+                const autoUpdateToggle = document.getElementById('autoupdate-toggle');
+                
+                if (offlineToggle) offlineToggle.checked = settings.offlineMode !== false;
+                if (hapticToggle) hapticToggle.checked = settings.hapticFeedback === true;
+                if (cloudToggle) cloudToggle.checked = settings.cloudSave === true;
+                if (autoUpdateToggle) autoUpdateToggle.checked = settings.autoUpdate !== false;
+            }
+            
+            // Check if dev mode was previously verified
+            if (localStorage.getItem('devModeVerified') === 'true') {
+                // Show animation toggle
+                document.getElementById('animation-toggle-container').style.display = "flex";
+                document.getElementById('animations-toggle').checked = settings.animations || false;
+                toggleAnimations(settings.animations || false);
+            }
+            
+            console.log('Settings loaded');
+        } catch (error) {
+            console.error('Error loading settings:', error);
+            // If settings are corrupted, create new default settings
+            saveSettings();
         }
+    } else {
+        // First time user, set defaults
+        const defaultSettings = {
+            darkMode: true,
+            sound: true,
+            music: true,
+            language: 'en',
+            animations: false,
+            notifications: false,
+            lastUpdated: new Date().toISOString()
+        };
+        
+        localStorage.setItem('pixelHeavenSettings', JSON.stringify(defaultSettings));
     }
-    localStorage.setItem('notificationsEnabled', enabled);
+    
+    // Always check notification permission on load
+    checkNotificationPermission();
+}
+
+// Check and synchronize notification permission with toggle
+function checkNotificationPermission() {
+    const notificationToggle = document.getElementById('notifications-toggle');
+    if (!notificationToggle) return;
+    
+    if (Notification.permission === 'granted' && 
+        localStorage.getItem('notificationsEnabled') === 'true') {
+        notificationToggle.checked = true;
+    } else {
+        notificationToggle.checked = false;
+    }
+}
+
+// Update the saveSettings function to include notification state
+function saveSettings() {
+    const settings = {
+        darkMode: document.getElementById('darkmode-toggle').checked,
+        sound: document.getElementById('sound-toggle').checked,
+        music: document.getElementById('music-toggle').checked,
+        language: document.getElementById('language-select').value,
+        animations: document.getElementById('animations-toggle').checked,
+        notifications: document.getElementById('notifications-toggle').checked && 
+                      Notification.permission === 'granted',
+        lastUpdated: new Date().toISOString()
+    };
+    
+    // Add PWA-only settings if in PWA mode
+    if (document.body.classList.contains('pwa-mode')) {
+        const offlineToggle = document.getElementById('offline-toggle');
+        const hapticToggle = document.getElementById('haptic-toggle');
+        const cloudToggle = document.getElementById('cloud-toggle');
+        const autoUpdateToggle = document.getElementById('autoupdate-toggle');
+        
+        if (offlineToggle) settings.offlineMode = offlineToggle.checked;
+        if (hapticToggle) settings.hapticFeedback = hapticToggle.checked;
+        if (cloudToggle) settings.cloudSave = cloudToggle.checked;
+        if (autoUpdateToggle) settings.autoUpdate = autoUpdateToggle.checked;
+    }
+    
+    localStorage.setItem('pixelHeavenSettings', JSON.stringify(settings));
+    localStorage.setItem('notificationsEnabled', settings.notifications ? 'true' : 'false');
+    console.log('Settings saved');
 }
 
 // Reboot application (PWA only)
@@ -395,7 +728,7 @@ function rebootApplication() {
     }
 }
 
-// Add this CSS for the reboot overlay
+// Add styles for the reboot overlay and other effects
 const style = document.createElement('style');
 style.textContent = `
     .reboot-overlay {
@@ -428,51 +761,10 @@ style.textContent = `
         margin-top: 10px;
     }
     
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    /* No animation class */
     .no-animations * {
         animation: none !important;
         transition: none !important;
         transform: none !important;
-    }
-    
-    /* Light mode adjustments */
-    .light-mode {
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-        color: #333;
-    }
-    
-    .light-mode .header, 
-    .light-mode .featured-section,
-    .light-mode .game-card {
-        background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-    
-    .light-mode .logo,
-    .light-mode .section-title {
-        background: linear-gradient(45deg, #ff6b6b, #fe8c00);
-        -webkit-background-clip: text;
-        background-clip: text;
-    }
-    
-    .light-mode .nav-menu a {
-        color: #333;
-    }
-    
-    .light-mode .game-card h3,
-    .light-mode .footer-section h4 {
-        color: #333;
-    }
-    
-    .light-mode .category-tag {
-        background: rgba(255, 107, 107, 0.2);
-        color: #333;
     }
 `;
 document.head.appendChild(style);
@@ -495,10 +787,13 @@ window.addEventListener('load', function() {
     
     // Initialize notification state
     const notificationEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+    const notificationToggle = document.getElementById('notifications-toggle');
     
-    if (notificationEnabled && Notification.permission === 'granted') {
-        document.getElementById('notifications-toggle').checked = true;
-    } else {
-        document.getElementById('notifications-toggle').checked = false;
+    if (notificationToggle) {
+        if (notificationEnabled && Notification.permission === 'granted') {
+            notificationToggle.checked = true;
+        } else {
+            notificationToggle.checked = false;
+        }
     }
 });
