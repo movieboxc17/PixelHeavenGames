@@ -1,195 +1,85 @@
-// Wrap the initialization in a function we can call regardless of when the script loads
-function initializeSettings() {
-    // Create settings button and panel
+// Wait until the document is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Settings script loaded');
+    
+    // Check if settings already exist - if so, remove them to avoid duplicates
+    const existingButton = document.querySelector('.settings-button');
+    const existingOverlay = document.querySelector('.settings-overlay');
+    
+    if (existingButton) {
+        console.log('Removing existing settings button');
+        existingButton.remove();
+    }
+    
+    if (existingOverlay) {
+        console.log('Removing existing settings overlay');
+        existingOverlay.remove();
+    }
+    
+    // Now create our new settings elements
     createSettingsElements();
     
-    // Check if running as installed PWA (added to home screen)
+    // Check if running as installed PWA
     checkPWAMode();
     
-    // Event listeners
+    // Add event listeners to our new elements
     addEventListeners();
-}
-
-// Call the initialization when DOM is loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeSettings);
-} else {
-    // DOM is already loaded, initialize immediately
-    initializeSettings();
-}
-
-// Create settings elements
-function createSettingsElements() {
-    // Settings button
-    const settingsButton = document.createElement('div');
-    settingsButton.className = 'settings-button';
-    settingsButton.innerHTML = '<i class="fas fa-cog"></i>';
-    document.body.appendChild(settingsButton);
     
-    // Settings overlay
-    const settingsOverlay = document.createElement('div');
-    settingsOverlay.className = 'settings-overlay';
+    console.log('Settings initialization complete');
+});
+  // Create settings elements
+  function createSettingsElements() {
+      console.log('Creating settings elements');
     
-    // Settings panel HTML with new options
-    settingsOverlay.innerHTML = `
-        <div class="settings-panel">
-            <div class="settings-header">
-                <div class="settings-title">Settings</div>
-                <div class="close-settings"><i class="fas fa-times"></i></div>
-            </div>
-            
-            <div class="settings-option">
-                <div>
-                    <div class="option-label">Dark Mode</div>
-                    <div class="option-description">Switch between light and dark theme</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="darkmode-toggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            
-            <div class="settings-option">
-                <div>
-                    <div class="option-label">Sound Effects</div>
-                    <div class="option-description">Enable game sound effects</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="sound-toggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            
-            <div class="settings-option">
-                <div>
-                    <div class="option-label">Background Music</div>
-                    <div class="option-description">Enable background music in games</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="music-toggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            
-            <div class="settings-option">
-                <div>
-                    <div class="option-label">Language</div>
-                    <div class="option-description">Select your preferred language</div>
-                </div>
-                <div class="select-wrapper">
-                    <select id="language-select" class="settings-select">
-                        <option value="en">English</option>
-                        <option value="es">Español</option>
-                        <option value="fr">Français</option>
-                        <option value="de">Deutsch</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="settings-option">
-                <div>
-                    <div class="option-label">Animations Control</div>
-                    <div class="option-description">Developer-only animation settings</div>
-                </div>
-                <button id="dev-code-toggle" class="dev-code-submit">Developer Mode</button>
-            </div>
-            
-            <div id="dev-code-container" class="dev-code-container">
-                <div class="option-description">Enter developer code to control animations</div>
-                <input type="password" id="dev-code-input" class="dev-code-input" placeholder="Enter developer code">
-                <button id="dev-code-submit" class="dev-code-submit">Verify Code</button>
-                <div id="dev-code-message" class="dev-code-message">Invalid developer code</div>
-                
-                <div class="settings-option" style="display: none;" id="animation-toggle-container">
-                    <div>
-                        <div class="option-label">Disable Animations</div>
-                        <div class="option-description">Turn off all site animations</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="animations-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-            
-            <div class="settings-option">
-                <div>
-                    <div class="option-label">Notifications</div>
-                    <div class="option-description">Enable game event notifications</div>
-                </div>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="notifications-toggle">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-            
-            <!-- PWA-only settings (initially hidden) -->
-            <div class="pwa-only-settings">
-                <div class="pwa-settings-header">PWA Features</div>
-                
-                <div class="settings-option">
-                    <div>
-                        <div class="option-label">Offline Mode</div>
-                        <div class="option-description">Enable enhanced offline gameplay</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="offline-toggle" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div>
-                        <div class="option-label">Haptic Feedback</div>
-                        <div class="option-description">Enable vibration on supported devices</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="haptic-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div>
-                        <div class="option-label">Cloud Save</div>
-                        <div class="option-description">Sync game progress across devices</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="cloud-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div>
-                        <div class="option-label">Auto Updates</div>
-                        <div class="option-description">Automatically update when new versions are available</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="autoupdate-toggle" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-            
-            <div class="version-info">
-                <div>PixelHeavenGames</div>
-                <div>Version: <span class="version-number">19.0</span></div>
-            </div>
-            
-            <button class="reboot-button">
-                <i class="fas fa-redo-alt"></i> Restart Application
-            </button>
-            
-            <div class="developer-section">
-                <div>Developed by: Moviebox C17 & Askansz</div>
-            </div>
-        </div>
-    `;
+      // Settings button
+      const settingsButton = document.createElement('div');
+      settingsButton.className = 'settings-button';
+      settingsButton.innerHTML = '<i class="fas fa-cog"></i>';
+      document.body.appendChild(settingsButton);
     
-    document.body.appendChild(settingsOverlay);
-}
-
+      // Settings overlay - simplified version first to ensure it works
+      const settingsOverlay = document.createElement('div');
+      settingsOverlay.className = 'settings-overlay';
+    
+      settingsOverlay.innerHTML = `
+          <div class="settings-panel">
+              <div class="settings-header">
+                  <div class="settings-title">Settings - NEW VERSION</div>
+                  <div class="close-settings"><i class="fas fa-times"></i></div>
+              </div>
+            
+              <div class="settings-option">
+                  <div>
+                      <div class="option-label">Dark Mode</div>
+                      <div class="option-description">Switch between light and dark theme</div>
+                  </div>
+                  <label class="toggle-switch">
+                      <input type="checkbox" id="darkmode-toggle" checked>
+                      <span class="toggle-slider"></span>
+                  </label>
+              </div>
+            
+              <div class="settings-option">
+                  <div>
+                      <div class="option-label">Sound Effects - NEW</div>
+                      <div class="option-description">Enable game sound effects</div>
+                  </div>
+                  <label class="toggle-switch">
+                      <input type="checkbox" id="sound-toggle" checked>
+                      <span class="toggle-slider"></span>
+                  </label>
+              </div>
+            
+              <div class="version-info">
+                  <div>PixelHeavenGames</div>
+                  <div>Version: <span class="version-number">19.0</span></div>
+              </div>
+          </div>
+      `;
+    
+      document.body.appendChild(settingsOverlay);
+      console.log('Settings elements created');
+  }
 // Add event listeners
 function addEventListeners() {
     // Open settings panel
