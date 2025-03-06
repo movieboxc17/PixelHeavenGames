@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        /* Base Styles */
+        body {
+            font-family: 'Press Start 2P', cursive;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000; /* Solid black background like old games */
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Retro Glow and Container */
+        .container {
+            position: relative;
+            text-align: center;
+            padding: 50px;
+            background: #111;
+            border: 6px solid #00ffff;
+            border-radius: 10px;
+            box-shadow: 0 0 30px #00ffff, 0 0 50px #ff00ff;
+            max-width: 700px;
+            width: 90%;
+            z-index: 1;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        /* Retro Neon Glow Effect */
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff;
+            }
+            100% {
+                box-shadow: 0 0 40px #00ffff, 0 0 60px #ff00ff;
+            }
+        }
+
+        /* Retro Title */
+        h1 {
+            font-size: 5em;
+            margin-bottom: 20px;
+            color: #ff00ff;
+            text-shadow: 4px 4px 0 #00ffff, 8px 8px 0 #ff0099;
+            animation: flicker 2s infinite alternate;
+        }
+
+        /* Flicker Effect */
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+                text-shadow: 4px 4px 10px #00ffff, 8px 8px 15px #ff00ff;
+            }
+            50% {
+                opacity: 0.8;
+                text-shadow: 2px 2px 5px #ff0099, 6px 6px 10px #00ffea;
+            }
+        }
+
+        /* Retro Description */
+        p {
+            font-size: 1.3em;
+            margin-top: 10px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #00ffff;
+        }
+
+        /* Retro Button */
+        a {
+            position: relative;
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 30px;
+            font-size: 1.2em;
+            padding: 15px 30px;
+            border: 3px solid #00ffff;
+            border-radius: 5px;
+            box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffff;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+            z-index: 1;
+        }
+
+        /* Button Neon Hover Effect */
+        a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(0, 255, 255, 0.5), transparent);
+            transition: 0.3s;
+            z-index: -1;
+        }
+
+        a:hover::before {
+            left: 100%;
+        }
+
+        a:hover {
+            color: #000;
+            background-color: #00ffff;
+            box-shadow: 0 0 40px #ff00ff, 0 0 50px #00ffff;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 480px) {
+            h1 {
+                font-size: 3em;
+            }
+
+            .container {
+                max-width: 350px;
+            }
+
+            p {
+                font-size: 1em;
+            }
+
+            a {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <p>Sorry, this page doesn't exist!</p>
+        <p><a href="https://movieboxc17.github.io/Teknik.AB_Games/">Return to Home</a></p>
+    </div>
+</body>
+</html>
