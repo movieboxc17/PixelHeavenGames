@@ -500,9 +500,8 @@ function rebootApplication() {
     }
 }
 
-// Add this CSS for the reboot overlay
-const style = document.createElement('style');
-style.textContent = `
+const settingsStyle = document.createElement('style');
+settingsStyle.textContent = `
     .reboot-overlay {
         position: fixed;
         top: 0;
@@ -622,7 +621,7 @@ style.textContent = `
         }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(settingsStyle);
 
 // Initialize the settings
 window.addEventListener('load', function() {
