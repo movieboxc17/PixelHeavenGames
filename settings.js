@@ -294,6 +294,23 @@ function createSettingsElements() {
     `;
     
     document.body.appendChild(settingsOverlay);
+    
+    // Fix for iOS scrolling
+    const settingsPanel = document.querySelector('.settings-panel');
+    if (settingsPanel) {
+        // Prevent body scrolling when touching the settings panel
+        settingsPanel.addEventListener('touchstart', function(e) {
+            // Only if the panel is scrollable (content height > panel height)
+            if (this.scrollHeight > this.clientHeight) {
+                e.stopPropagation();
+            }
+        }, { passive: true });
+        
+        // Prevent settings panel from closing when scrolling
+        settingsPanel.addEventListener('touchmove', function(e) {
+            e.stopPropagation();
+        }, { passive: true });
+    }
 }
 
 // Add event listeners
@@ -301,6 +318,8 @@ function addEventListeners() {
     // Open settings panel
     document.querySelector('.settings-button').addEventListener('click', function() {
         document.querySelector('.settings-overlay').classList.add('active');
+        // Prevent body scrolling when settings panel is open
+        document.body.style.overflow = 'hidden';
         // Load saved settings
         loadSettings();
     });
@@ -308,6 +327,8 @@ function addEventListeners() {
     // Close settings panel
     document.querySelector('.close-settings').addEventListener('click', function() {
         document.querySelector('.settings-overlay').classList.remove('active');
+        // Restore body scrolling
+        document.body.style.overflow = '';
         // Save settings when closing
         saveSettings();
     });
@@ -316,6 +337,8 @@ function addEventListeners() {
     document.querySelector('.settings-overlay').addEventListener('click', function(e) {
         if (e.target === this) {
             this.classList.remove('active');
+            // Restore body scrolling
+            document.body.style.overflow = '';
             saveSettings();
         }
     });
@@ -340,619 +363,619 @@ function addEventListeners() {
         toggleReduceMotion(this.checked);
     });
     
-        // PWA-specific event listeners
-        if (document.getElementById('vibration-toggle')) {
-            document.getElementById('vibration-toggle').addEventListener('change', function() {
-                toggleVibration(this.checked);
-            });
-        }
-        
-        if (document.getElementById('offline-mode-toggle')) {
-            document.getElementById('offline-mode-toggle').addEventListener('change', function() {
-                toggleOfflineMode(this.checked);
-            });
-        }
-        
-        if (document.getElementById('orientation-select')) {
-            document.getElementById('orientation-select').addEventListener('change', function() {
-                changeScreenOrientation(this.value);
-            });
-        }
-        
-        if (document.getElementById('battery-saver-toggle')) {
-            document.getElementById('battery-saver-toggle').addEventListener('change', function() {
-                toggleBatterySaver(this.checked);
-            });
-        }
-        
-        if (document.getElementById('clear-cache-button')) {
-            document.getElementById('clear-cache-button').addEventListener('click', function() {
-                clearCache();
-            });
-        }
-        
-        if (document.getElementById('check-updates-button')) {
-            document.getElementById('check-updates-button').addEventListener('click', function() {
-                checkForUpdates();
-            });
-        }
-        
-        // Developer Code toggle
-        document.getElementById('dev-code-toggle').addEventListener('click', function() {
-            const codeContainer = document.getElementById('dev-code-container');
-            codeContainer.classList.toggle('active');
+    // PWA-specific event listeners
+    if (document.getElementById('vibration-toggle')) {
+        document.getElementById('vibration-toggle').addEventListener('change', function() {
+            toggleVibration(this.checked);
         });
-        
-        // Developer Code submit
-        document.getElementById('dev-code-submit').addEventListener('click', function() {
+    }
+    
+    if (document.getElementById('offline-mode-toggle')) {
+        document.getElementById('offline-mode-toggle').addEventListener('change', function() {
+            toggleOfflineMode(this.checked);
+        });
+    }
+    
+    if (document.getElementById('orientation-select')) {
+        document.getElementById('orientation-select').addEventListener('change', function() {
+            changeScreenOrientation(this.value);
+        });
+    }
+    
+    if (document.getElementById('battery-saver-toggle')) {
+        document.getElementById('battery-saver-toggle').addEventListener('change', function() {
+            toggleBatterySaver(this.checked);
+        });
+    }
+    
+    if (document.getElementById('clear-cache-button')) {
+        document.getElementById('clear-cache-button').addEventListener('click', function() {
+            clearCache();
+        });
+    }
+    
+    if (document.getElementById('check-updates-button')) {
+        document.getElementById('check-updates-button').addEventListener('click', function() {
+            checkForUpdates();
+        });
+    }
+    
+    // Developer Code toggle
+    document.getElementById('dev-code-toggle').addEventListener('click', function() {
+        const codeContainer = document.getElementById('dev-code-container');
+        codeContainer.classList.toggle('active');
+    });
+    
+    // Developer Code submit
+    document.getElementById('dev-code-submit').addEventListener('click', function() {
+        verifyDeveloperCode();
+    });
+    
+    // Allow Enter key to submit dev code
+    document.getElementById('dev-code-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
             verifyDeveloperCode();
-        });
-        
-        // Allow Enter key to submit dev code
-        document.getElementById('dev-code-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                verifyDeveloperCode();
-            }
-        });
-        
-        // Animations toggle (only works after code verification)
-        document.getElementById('animations-toggle').addEventListener('change', function() {
-            toggleAnimations(this.checked);
-        });
-        
-        // Notifications toggle
-        document.getElementById('notifications-toggle').addEventListener('change', function() {
-            toggleNotifications(this.checked);
-        });
-        
-        // Reboot button (only visible in PWA mode)
-        document.querySelector('.reboot-button').addEventListener('click', function() {
-            rebootApplication();
-        });
-    }
-    
-    // Check if running as installed PWA
-    function checkPWAMode() {
-        // Check if the app is running in standalone mode (PWA installed)
-        if (window.matchMedia('(display-mode: standalone)').matches || 
-            window.navigator.standalone === true) {
-            // Add class to body to show PWA-specific elements
-            document.body.classList.add('pwa-mode');
-            
-            console.log('Running as installed PWA');
-        } else {
-            console.log('Running in browser mode');
         }
-    }
+    });
     
-    // Verify developer code
-    function verifyDeveloperCode() {
-        const codeInput = document.getElementById('dev-code-input');
-        const message = document.getElementById('dev-code-message');
-        const animationToggleContainer = document.getElementById('animation-toggle-container');
-        
-        // Check if code is correct - using "dev2025" as the code
-        // In production, use a more secure mechanism
-        if (codeInput.value === "dev2025") {
-            // Code is correct
-            message.textContent = "Developer access granted";
-            message.style.color = "#4caf50";
-            message.classList.add('active');
-            
-            // Show animation toggle
-            animationToggleContainer.style.display = "flex";
-            
-            // Load animation setting
-            const savedSettings = localStorage.getItem('pixelHeavenSettings');
-            if (savedSettings) {
-                const settings = JSON.parse(savedSettings);
-                document.getElementById('animations-toggle').checked = settings.animations || false;
-            }
-            
-            // Hide message after 3 seconds
-            setTimeout(() => {
-                message.classList.remove('active');
-            }, 3000);
-            
-            // Store dev mode state
-            localStorage.setItem('devModeVerified', 'true');
-        } else {
-            // Code is incorrect
-            message.textContent = "Invalid developer code";
-            message.style.color = "#ff6b6b";
-            message.classList.add('active');
-            
-            // Hide animation toggle
-            animationToggleContainer.style.display = "none";
-            
-            // Clear dev mode state
-            localStorage.removeItem('devModeVerified');
-            
-            // Hide message after 3 seconds
-            setTimeout(() => {
-                message.classList.remove('active');
-            }, 3000);
-        }
-    }
+    // Animations toggle (only works after code verification)
+    document.getElementById('animations-toggle').addEventListener('change', function() {
+        toggleAnimations(this.checked);
+    });
     
-    // Enhanced notification toggle function
-    function toggleNotifications(enabled) {
-        if (enabled) {
-            // Check if browser supports notifications
-            if (!("Notification" in window)) {
-                alert("This browser does not support notifications");
-                document.getElementById('notifications-toggle').checked = false;
-                return;
-            }
-            
-            // Request permission if not already granted
-            if (Notification.permission !== 'granted') {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        // Permission was granted, save setting and send test notification
-                        localStorage.setItem('notificationsEnabled', 'true');
-                        sendTestNotification();
-                    } else {
-                        // User denied permission, update toggle to reflect this
-                        document.getElementById('notifications-toggle').checked = false;
-                        alert("Notification permission denied. Please enable notifications in your browser settings.");
-                    }
-                });
-            } else {
-                // Permission already granted, just save setting and send test
-                localStorage.setItem('notificationsEnabled', 'true');
-                sendTestNotification();
-            }
-        } else {
-            // User turned off notifications
-            localStorage.setItem('notificationsEnabled', 'false');
-            console.log("Notifications disabled");
-        }
-    }
+    // Notifications toggle
+    document.getElementById('notifications-toggle').addEventListener('change', function() {
+        toggleNotifications(this.checked);
+    });
     
-    // Function to send a test notification
-    function sendTestNotification() {
-        if (Notification.permission === 'granted') {
-            const notification = new Notification('PixelHeavenGames', {
-                body: 'Notifications are now enabled! You will receive game updates and events.',
-                icon: './icon.png', // Use relative path
-                badge: './icon.png',
-                vibrate: [100, 50, 100],
-                tag: 'test-notification'
-            });
-            
-            // Close notification after 5 seconds
-            setTimeout(() => {
-                notification.close();
-            }, 5000);
-            
-            // Optional: Handle notification click
-            notification.onclick = function() {
-                window.focus();
-                this.close();
-            };
-        }
-    }
-    
-    // Toggle vibration feedback
-    function toggleVibration(enabled) {
-        localStorage.setItem('vibrationEnabled', enabled ? 'true' : 'false');
-        
-        // Test vibration if enabled
-        if (enabled && 'vibrate' in navigator) {
-            navigator.vibrate(50);
-        }
-    }
-    
-    // Toggle offline mode
-    function toggleOfflineMode(enabled) {
-        localStorage.setItem('offlineModeEnabled', enabled ? 'true' : 'false');
-        
-        if (enabled) {
-            // Force cache update when enabling offline mode
-            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-                navigator.serviceWorker.controller.postMessage({
-                    action: 'updateCache'
-                });
-                
-                showToast('Caching content for offline use...');
-            }
-        }
-    }
-    
-    // Change screen orientation
-    function changeScreenOrientation(orientation) {
-        localStorage.setItem('screenOrientation', orientation);
-        
-        // If screen orientation API is available
-        if ('screen' in window && 'orientation' in window.screen && 'lock' in window.screen.orientation) {
-            try {
-                if (orientation === 'portrait') {
-                    window.screen.orientation.lock('portrait').catch(e => {
-                        console.log('Orientation lock not supported:', e);
-                    });
-                } else if (orientation === 'landscape') {
-                    window.screen.orientation.lock('landscape').catch(e => {
-                        console.log('Orientation lock not supported:', e);
-                    });
-                } else {
-                    // Auto - unlock
-                    window.screen.orientation.unlock();
-                }
-            } catch (e) {
-                console.log('Screen orientation API not supported:', e);
-            }
-        }
-    }
-    
-    // Toggle battery saver mode
-    function toggleBatterySaver(enabled) {
-        if (enabled) {
-            document.body.classList.add('battery-saver');
-        } else {
-            document.body.classList.remove('battery-saver');
-        }
-    }
-    
-    // Clear cache
-    function clearCache() {
-        if ('caches' in window) {
-            caches.keys().then(cacheNames => {
-                return Promise.all(
-                    cacheNames.map(cacheName => {
-                        return caches.delete(cacheName);
-                    })
-                );
-            }).then(() => {
-                showToast('Cache cleared successfully');
-            });
-        } else {
-            showToast('Cache API not supported in this browser');
-        }
-    }
-    
-    // Check for updates
-    function checkForUpdates() {
-        // In a real app, this would check with a server
-        // For now, we'll just simulate it
-        showToast('Checking for updates...');
-        
-        setTimeout(() => {
-            showToast('You are using the latest version');
-        }, 2000);
-    }
-    
-    // Change text size
-    function changeTextSize(size) {
-        // Remove any existing text size classes
-        document.body.classList.remove('text-size-small', 'text-size-medium', 'text-size-large');
-        
-        // Add the selected text size class
-        document.body.classList.add(`text-size-${size}`);
-        
-        // Save the setting
-        localStorage.setItem('textSize', size);
-    }
-    
-    // Toggle reduce motion
-    function toggleReduceMotion(enabled) {
-        if (enabled) {
-            document.body.classList.add('reduce-motion');
-        } else {
-            document.body.classList.remove('reduce-motion');
-        }
-    }
-    
-    // Show toast notification
-    function showToast(message) {
-        // Remove any existing toast
-        const existingToast = document.querySelector('.toast-notification');
-        if (existingToast) {
-            existingToast.remove();
-        }
-        
-        // Create new toast
-        const toast = document.createElement('div');
-        toast.className = 'toast-notification';
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        
-        // Show the toast
-        setTimeout(() => {
-            toast.classList.add('show');
-        }, 10);
-        
-        // Hide after 3 seconds
-        setTimeout(() => {
-            toast.classList.remove('show');
-            
-            // Remove from DOM after animation
-            setTimeout(() => {
-                toast.remove();
-            }, 300);
-        }, 3000);
-    }
-    
-    // Save settings to localStorage
-    function saveSettings() {
-        const settings = {
-            darkMode: document.getElementById('darkmode-toggle').checked,
-            animations: document.getElementById('animations-toggle').checked,
-            clickSound: document.getElementById('sound-toggle').checked,
-            notifications: document.getElementById('notifications-toggle').checked && 
-                           Notification.permission === 'granted',
-            textSize: document.getElementById('text-size-select').value,
-            reduceMotion: document.getElementById('reduce-motion-toggle').checked,
-            lastUpdated: new Date().toISOString()
-        };
-        
-        // Add PWA-specific settings if available
-        if (document.getElementById('vibration-toggle')) {
-            settings.vibration = document.getElementById('vibration-toggle').checked;
-        }
-        
-        if (document.getElementById('offline-mode-toggle')) {
-            settings.offlineMode = document.getElementById('offline-mode-toggle').checked;
-        }
-        
-        if (document.getElementById('orientation-select')) {
-            settings.screenOrientation = document.getElementById('orientation-select').value;
-        }
-        
-        if (document.getElementById('battery-saver-toggle')) {
-            settings.batterySaver = document.getElementById('battery-saver-toggle').checked;
-        }
-        
-        localStorage.setItem('pixelHeavenSettings', JSON.stringify(settings));
-        localStorage.setItem('notificationsEnabled', settings.notifications ? 'true' : 'false');
-        localStorage.setItem('clickSoundEnabled', settings.clickSound ? 'true' : 'false');
-        console.log('Settings saved');
-    }
-    
-    // Load settings from localStorage
-    function loadSettings() {
-        const savedSettings = localStorage.getItem('pixelHeavenSettings');
-        
-        if (savedSettings) {
-            const settings = JSON.parse(savedSettings);
-            
-            // Apply saved settings to toggles
-            document.getElementById('darkmode-toggle').checked = settings.darkMode;
-            
-            // Load click sound setting
-            const clickSoundEnabled = localStorage.getItem('clickSoundEnabled') === 'true';
-            document.getElementById('sound-toggle').checked = clickSoundEnabled;
-            
-            // Check notification permission before setting toggle
-            if (Notification.permission === 'granted' && 
-                localStorage.getItem('notificationsEnabled') === 'true') {
-                document.getElementById('notifications-toggle').checked = true;
-            } else {
-                document.getElementById('notifications-toggle').checked = false;
-            }
-            
-            // Text size
-            if (settings.textSize) {
-                document.getElementById('text-size-select').value = settings.textSize;
-                changeTextSize(settings.textSize);
-            }
-            
-            // Reduce motion
-            if (settings.reduceMotion !== undefined) {
-                document.getElementById('reduce-motion-toggle').checked = settings.reduceMotion;
-                toggleReduceMotion(settings.reduceMotion);
-            }
-            
-            // Apply settings to the UI
-            toggleDarkMode(settings.darkMode);
-            
-            // Initialize audio if click sound is enabled
-            if (clickSoundEnabled) {
-                initAudio();
-            }
-    
-            // Check if dev mode was previously verified
-            if (localStorage.getItem('devModeVerified') === 'true') {
-                // Show animation toggle
-                document.getElementById('animation-toggle-container').style.display = "flex";
-                document.getElementById('animations-toggle').checked = settings.animations || false;
-                toggleAnimations(settings.animations || false);
-            }
-            
-            // PWA-specific settings
-            if (document.body.classList.contains('pwa-mode')) {
-                // Vibration
-                if (settings.vibration !== undefined) {
-                    document.getElementById('vibration-toggle').checked = settings.vibration;
-                } else {
-                    // Default to enabled if not set
-                    document.getElementById('vibration-toggle').checked = true;
-                }
-                
-                // Offline mode
-                if (settings.offlineMode !== undefined) {
-                    document.getElementById('offline-mode-toggle').checked = settings.offlineMode;
-                }
-                
-                // Screen orientation
-                if (settings.screenOrientation) {
-                    document.getElementById('orientation-select').value = settings.screenOrientation;
-                }
-                
-                // Battery saver
-                if (settings.batterySaver !== undefined) {
-                    document.getElementById('battery-saver-toggle').checked = settings.batterySaver;
-                    toggleBatterySaver(settings.batterySaver);
-                }
-            }
-            
-            console.log('Settings loaded');
-        }
-        
-        // Always check notification permission on load
-        checkNotificationPermission();
-    }
-    
-    // Check and synchronize notification permission with toggle
-    function checkNotificationPermission() {
-        const notificationToggle = document.getElementById('notifications-toggle');
-        
-        if (Notification.permission === 'granted' && 
-            localStorage.getItem('notificationsEnabled') === 'true') {
-            notificationToggle.checked = true;
-        } else {
-            notificationToggle.checked = false;
-        }
-    }
-    
-    // Toggle dark mode
-function toggleDarkMode(enabled) {
-    if (enabled) {
-        document.body.classList.add('dark-mode');
-        document.body.classList.remove('light-mode');
-    } else {
-        document.body.classList.add('light-mode');
-        document.body.classList.remove('dark-mode');
-    }
-}
-
-// Toggle animations
-function toggleAnimations(enabled) {
-    if (enabled) {
-        document.body.classList.remove('no-animations');
-    } else {
-        document.body.classList.add('no-animations');
-    }
-}
-
-// Reboot application (PWA only)
-function rebootApplication() {
-    if (document.body.classList.contains('pwa-mode')) {
-        // Show reboot animation/message
-        const rebootOverlay = document.createElement('div');
-        rebootOverlay.className = 'reboot-overlay';
-        rebootOverlay.innerHTML = `
-            <div class="reboot-message">
-                <i class="fas fa-sync fa-spin"></i>
-                <p>Restarting...</p>
-            </div>
-        `;
-        document.body.appendChild(rebootOverlay);
-        
-        // Wait a moment for animation, then reload the page
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500);
-    }
-}
-
-// Register service worker for PWA functionality
-if ('serviceWorker' in navigator) {
-    // Get the base URL for GitHub Pages
-    const scope = location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1);
-    
-    window.addEventListener('load', function() {
-        navigator.serviceWorker.register('./sw.js', {scope: scope})
-            .then(function(registration) {
-                console.log('ServiceWorker registration successful with scope: ', registration.scope);
-            })
-            .catch(function(err) {
-                console.log('ServiceWorker registration failed: ', err);
-            });
+    // Reboot button (only visible in PWA mode)
+    document.querySelector('.reboot-button').addEventListener('click', function() {
+        rebootApplication();
     });
 }
 
-const settingsStyle = document.createElement('style');
-settingsStyle.textContent = `
-    .settings-section {
-        margin-bottom: 25px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding-bottom: 15px;
+// Check if running as installed PWA
+function checkPWAMode() {
+    // Check if the app is running in standalone mode (PWA installed)
+    if (window.matchMedia('(display-mode: standalone)').matches || 
+        window.navigator.standalone === true) {
+        // Add class to body to show PWA-specific elements
+        document.body.classList.add('pwa-mode');
+        
+        console.log('Running as installed PWA');
+    } else {
+        console.log('Running in browser mode');
     }
+}
+
+// Verify developer code
+function verifyDeveloperCode() {
+    const codeInput = document.getElementById('dev-code-input');
+    const message = document.getElementById('dev-code-message');
+    const animationToggleContainer = document.getElementById('animation-toggle-container');
     
-    .settings-section-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: rgba(255, 255, 255, 0.9);
-    }
-    
-    .pwa-only-section {
-        display: none;
-    }
-    
-    .pwa-mode .pwa-only-section {
-        display: block;
-    }
-    
-    .reboot-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.85);
-        z-index: 10000;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        animation: fadeIn 0.3s ease;
-    }
-    
-    .reboot-message {
-        text-align: center;
-        color: white;
-    }
-    
-    .reboot-message i {
-        font-size: 3rem;
-        color: #ff6b6b;
-        margin-bottom: 15px;
-    }
-    
-    .reboot-message p {
-        font-size: 1.2rem;
-        margin-top: 10px;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    /* No animation class */
-    .no-animations * {
-        animation: none !important;
-        transition: none !important;
-        transform: none !important;
-    }
-    
-    /* Light mode adjustments */
-    .light-mode {
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-        color: #333;
-    }
-    
-    .light-mode .header, 
-    .light-mode .featured-section,
-    .light-mode .game-card {
-        background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-    
-    .light-mode .logo,
-    .light-mode .section-title {
-        background: linear-gradient(45deg, #ff6b6b, #fe8c00);
-        -webkit-background-clip: text;
-        background-clip: text;
-    }
-    
-    .light-mode .nav-menu a {
-        color: #333;
-    }
-    
-    .light-mode .game-card h3,
+    // Check if code is correct - using "dev2025" as the code
+    // In production, use a more secure mechanism
+    if (codeInput.value === "dev2025") {
+        // Code is correct
+        message.textContent = "Developer access granted";
+        message.style.color = "#4caf50";
+        message.classList.add('active');
+        
+        // Show animation toggle
+        animationToggleContainer.style.display = "flex";
+        
+                // Load animation setting
+                const savedSettings = localStorage.getItem('pixelHeavenSettings');
+                if (savedSettings) {
+                    const settings = JSON.parse(savedSettings);
+                    document.getElementById('animations-toggle').checked = settings.animations || false;
+                }
+                
+                // Hide message after 3 seconds
+                setTimeout(() => {
+                    message.classList.remove('active');
+                }, 3000);
+                
+                // Store dev mode state
+                localStorage.setItem('devModeVerified', 'true');
+            } else {
+                // Code is incorrect
+                message.textContent = "Invalid developer code";
+                message.style.color = "#ff6b6b";
+                message.classList.add('active');
+                
+                // Hide animation toggle
+                animationToggleContainer.style.display = "none";
+                
+                // Clear dev mode state
+                localStorage.removeItem('devModeVerified');
+                
+                // Hide message after 3 seconds
+                setTimeout(() => {
+                    message.classList.remove('active');
+                }, 3000);
+            }
+        }
+        
+        // Enhanced notification toggle function
+        function toggleNotifications(enabled) {
+            if (enabled) {
+                // Check if browser supports notifications
+                if (!("Notification" in window)) {
+                    alert("This browser does not support notifications");
+                    document.getElementById('notifications-toggle').checked = false;
+                    return;
+                }
+                
+                // Request permission if not already granted
+                if (Notification.permission !== 'granted') {
+                    Notification.requestPermission().then(permission => {
+                        if (permission === 'granted') {
+                            // Permission was granted, save setting and send test notification
+                            localStorage.setItem('notificationsEnabled', 'true');
+                            sendTestNotification();
+                        } else {
+                            // User denied permission, update toggle to reflect this
+                            document.getElementById('notifications-toggle').checked = false;
+                            alert("Notification permission denied. Please enable notifications in your browser settings.");
+                        }
+                    });
+                } else {
+                    // Permission already granted, just save setting and send test
+                    localStorage.setItem('notificationsEnabled', 'true');
+                    sendTestNotification();
+                }
+            } else {
+                // User turned off notifications
+                localStorage.setItem('notificationsEnabled', 'false');
+                console.log("Notifications disabled");
+            }
+        }
+        
+        // Function to send a test notification
+        function sendTestNotification() {
+            if (Notification.permission === 'granted') {
+                const notification = new Notification('PixelHeavenGames', {
+                    body: 'Notifications are now enabled! You will receive game updates and events.',
+                    icon: './icon.png', // Use relative path
+                    badge: './icon.png',
+                    vibrate: [100, 50, 100],
+                    tag: 'test-notification'
+                });
+                
+                // Close notification after 5 seconds
+                setTimeout(() => {
+                    notification.close();
+                }, 5000);
+                
+                // Optional: Handle notification click
+                notification.onclick = function() {
+                    window.focus();
+                    this.close();
+                };
+            }
+        }
+        
+        // Toggle vibration feedback
+        function toggleVibration(enabled) {
+            localStorage.setItem('vibrationEnabled', enabled ? 'true' : 'false');
+            
+            // Test vibration if enabled
+            if (enabled && 'vibrate' in navigator) {
+                navigator.vibrate(50);
+            }
+        }
+        
+        // Toggle offline mode
+        function toggleOfflineMode(enabled) {
+            localStorage.setItem('offlineModeEnabled', enabled ? 'true' : 'false');
+            
+            if (enabled) {
+                // Force cache update when enabling offline mode
+                if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                    navigator.serviceWorker.controller.postMessage({
+                        action: 'updateCache'
+                    });
+                    
+                    showToast('Caching content for offline use...');
+                }
+            }
+        }
+        
+        // Change screen orientation
+        function changeScreenOrientation(orientation) {
+            localStorage.setItem('screenOrientation', orientation);
+            
+            // If screen orientation API is available
+            if ('screen' in window && 'orientation' in window.screen && 'lock' in window.screen.orientation) {
+                try {
+                    if (orientation === 'portrait') {
+                        window.screen.orientation.lock('portrait').catch(e => {
+                            console.log('Orientation lock not supported:', e);
+                        });
+                    } else if (orientation === 'landscape') {
+                        window.screen.orientation.lock('landscape').catch(e => {
+                            console.log('Orientation lock not supported:', e);
+                        });
+                    } else {
+                        // Auto - unlock
+                        window.screen.orientation.unlock();
+                    }
+                } catch (e) {
+                    console.log('Screen orientation API not supported:', e);
+                }
+            }
+        }
+        
+        // Toggle battery saver mode
+        function toggleBatterySaver(enabled) {
+            if (enabled) {
+                document.body.classList.add('battery-saver');
+            } else {
+                document.body.classList.remove('battery-saver');
+            }
+        }
+        
+        // Clear cache
+        function clearCache() {
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    return Promise.all(
+                        cacheNames.map(cacheName => {
+                            return caches.delete(cacheName);
+                        })
+                    );
+                }).then(() => {
+                    showToast('Cache cleared successfully');
+                });
+            } else {
+                showToast('Cache API not supported in this browser');
+            }
+        }
+        
+        // Check for updates
+        function checkForUpdates() {
+            // In a real app, this would check with a server
+            // For now, we'll just simulate it
+            showToast('Checking for updates...');
+            
+            setTimeout(() => {
+                showToast('You are using the latest version');
+            }, 2000);
+        }
+        
+        // Change text size
+        function changeTextSize(size) {
+            // Remove any existing text size classes
+            document.body.classList.remove('text-size-small', 'text-size-medium', 'text-size-large');
+            
+            // Add the selected text size class
+            document.body.classList.add(`text-size-${size}`);
+            
+            // Save the setting
+            localStorage.setItem('textSize', size);
+        }
+        
+        // Toggle reduce motion
+        function toggleReduceMotion(enabled) {
+            if (enabled) {
+                document.body.classList.add('reduce-motion');
+            } else {
+                document.body.classList.remove('reduce-motion');
+            }
+        }
+        
+        // Show toast notification
+        function showToast(message) {
+            // Remove any existing toast
+            const existingToast = document.querySelector('.toast-notification');
+            if (existingToast) {
+                existingToast.remove();
+            }
+            
+            // Create new toast
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // Show the toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 10);
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                
+                // Remove from DOM after animation
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        // Save settings to localStorage
+        function saveSettings() {
+            const settings = {
+                darkMode: document.getElementById('darkmode-toggle').checked,
+                animations: document.getElementById('animations-toggle').checked,
+                clickSound: document.getElementById('sound-toggle').checked,
+                notifications: document.getElementById('notifications-toggle').checked && 
+                               Notification.permission === 'granted',
+                textSize: document.getElementById('text-size-select').value,
+                reduceMotion: document.getElementById('reduce-motion-toggle').checked,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            // Add PWA-specific settings if available
+            if (document.getElementById('vibration-toggle')) {
+                settings.vibration = document.getElementById('vibration-toggle').checked;
+            }
+            
+            if (document.getElementById('offline-mode-toggle')) {
+                settings.offlineMode = document.getElementById('offline-mode-toggle').checked;
+            }
+            
+            if (document.getElementById('orientation-select')) {
+                settings.screenOrientation = document.getElementById('orientation-select').value;
+            }
+            
+            if (document.getElementById('battery-saver-toggle')) {
+                settings.batterySaver = document.getElementById('battery-saver-toggle').checked;
+            }
+            
+            localStorage.setItem('pixelHeavenSettings', JSON.stringify(settings));
+            localStorage.setItem('notificationsEnabled', settings.notifications ? 'true' : 'false');
+            localStorage.setItem('clickSoundEnabled', settings.clickSound ? 'true' : 'false');
+            console.log('Settings saved');
+        }
+        
+        // Load settings from localStorage
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('pixelHeavenSettings');
+            
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                
+                // Apply saved settings to toggles
+                document.getElementById('darkmode-toggle').checked = settings.darkMode;
+                
+                // Load click sound setting
+                const clickSoundEnabled = localStorage.getItem('clickSoundEnabled') === 'true';
+                document.getElementById('sound-toggle').checked = clickSoundEnabled;
+                
+                // Check notification permission before setting toggle
+                if (Notification.permission === 'granted' && 
+                    localStorage.getItem('notificationsEnabled') === 'true') {
+                    document.getElementById('notifications-toggle').checked = true;
+                } else {
+                    document.getElementById('notifications-toggle').checked = false;
+                }
+                
+                // Text size
+                if (settings.textSize) {
+                    document.getElementById('text-size-select').value = settings.textSize;
+                    changeTextSize(settings.textSize);
+                }
+                
+                // Reduce motion
+                if (settings.reduceMotion !== undefined) {
+                    document.getElementById('reduce-motion-toggle').checked = settings.reduceMotion;
+                    toggleReduceMotion(settings.reduceMotion);
+                }
+                
+                // Apply settings to the UI
+                toggleDarkMode(settings.darkMode);
+                
+                // Initialize audio if click sound is enabled
+                if (clickSoundEnabled) {
+                    initAudio();
+                }
+        
+                // Check if dev mode was previously verified
+                if (localStorage.getItem('devModeVerified') === 'true') {
+                    // Show animation toggle
+                    document.getElementById('animation-toggle-container').style.display = "flex";
+                    document.getElementById('animations-toggle').checked = settings.animations || false;
+                    toggleAnimations(settings.animations || false);
+                }
+                
+                // PWA-specific settings
+                if (document.body.classList.contains('pwa-mode')) {
+                    // Vibration
+                    if (settings.vibration !== undefined) {
+                        document.getElementById('vibration-toggle').checked = settings.vibration;
+                    } else {
+                        // Default to enabled if not set
+                        document.getElementById('vibration-toggle').checked = true;
+                    }
+                    
+                    // Offline mode
+                    if (settings.offlineMode !== undefined) {
+                        document.getElementById('offline-mode-toggle').checked = settings.offlineMode;
+                    }
+                    
+                    // Screen orientation
+                    if (settings.screenOrientation) {
+                        document.getElementById('orientation-select').value = settings.screenOrientation;
+                    }
+                    
+                    // Battery saver
+                    if (settings.batterySaver !== undefined) {
+                        document.getElementById('battery-saver-toggle').checked = settings.batterySaver;
+                        toggleBatterySaver(settings.batterySaver);
+                    }
+                }
+                
+                console.log('Settings loaded');
+            }
+            
+            // Always check notification permission on load
+            checkNotificationPermission();
+        }
+        
+        // Check and synchronize notification permission with toggle
+        function checkNotificationPermission() {
+            const notificationToggle = document.getElementById('notifications-toggle');
+            
+            if (Notification.permission === 'granted' && 
+                localStorage.getItem('notificationsEnabled') === 'true') {
+                notificationToggle.checked = true;
+            } else {
+                notificationToggle.checked = false;
+            }
+        }
+        
+        // Toggle dark mode
+        function toggleDarkMode(enabled) {
+            if (enabled) {
+                document.body.classList.add('dark-mode');
+                document.body.classList.remove('light-mode');
+            } else {
+                document.body.classList.add('light-mode');
+                document.body.classList.remove('dark-mode');
+            }
+        }
+        
+        // Toggle animations
+        function toggleAnimations(enabled) {
+            if (enabled) {
+                document.body.classList.remove('no-animations');
+            } else {
+                document.body.classList.add('no-animations');
+            }
+        }
+        
+        // Reboot application (PWA only)
+        function rebootApplication() {
+            if (document.body.classList.contains('pwa-mode')) {
+                // Show reboot animation/message
+                const rebootOverlay = document.createElement('div');
+                rebootOverlay.className = 'reboot-overlay';
+                rebootOverlay.innerHTML = `
+                    <div class="reboot-message">
+                        <i class="fas fa-sync fa-spin"></i>
+                        <p>Restarting...</p>
+                    </div>
+                `;
+                document.body.appendChild(rebootOverlay);
+                
+                // Wait a moment for animation, then reload the page
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            }
+        }
+        
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            // Get the base URL for GitHub Pages
+            const scope = location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1);
+            
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('./sw.js', {scope: scope})
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+        
+        const settingsStyle = document.createElement('style');
+        settingsStyle.textContent = `
+            .settings-section {
+                margin-bottom: 25px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding-bottom: 15px;
+            }
+            
+            .settings-section-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 15px;
+                color: rgba(255, 255, 255, 0.9);
+            }
+            
+            .pwa-only-section {
+                display: none;
+            }
+            
+            .pwa-mode .pwa-only-section {
+                display: block;
+            }
+            
+            .reboot-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.85);
+                z-index: 10000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                animation: fadeIn 0.3s ease;
+            }
+            
+            .reboot-message {
+                text-align: center;
+                color: white;
+            }
+            
+            .reboot-message i {
+                font-size: 3rem;
+                color: #ff6b6b;
+                margin-bottom: 15px;
+            }
+            
+            .reboot-message p {
+                font-size: 1.2rem;
+                margin-top: 10px;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            /* No animation class */
+            .no-animations * {
+                animation: none !important;
+                transition: none !important;
+                transform: none !important;
+            }
+            
+            /* Light mode adjustments */
+            .light-mode {
+                background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+                color: #333;
+            }
+            
+            .light-mode .header, 
+            .light-mode .featured-section,
+            .light-mode .game-card {
+                background: rgba(255, 255, 255, 0.3);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+            }
+            
+            .light-mode .logo,
+            .light-mode .section-title {
+                background: linear-gradient(45deg, #ff6b6b, #fe8c00);
+                -webkit-background-clip: text;
+                background-clip: text;
+            }
+            
+            .light-mode .nav-menu a {
+                color: #333;
+            }
+            
+                .light-mode .game-card h3,
     .light-mode .footer-section h4 {
         color: #333;
     }
