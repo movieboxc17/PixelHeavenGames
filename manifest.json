@@ -37,18 +37,6 @@
       "icons": [{ "src": "./Images/snake.jpg", "sizes": "192x192" }]
     }
   ],
-  "screenshots": [
-    {
-      "src": "./Images/screenshot1.jpg",
-      "sizes": "1280x720",
-      "type": "image/jpeg"
-    },
-    {
-      "src": "./Images/screenshot2.jpg",
-      "sizes": "1280x720",
-      "type": "image/jpeg"
-    }
-  ],
   "related_applications": [],
   "prefer_related_applications": false,
   "categories": ["games", "entertainment"],
