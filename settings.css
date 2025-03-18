@@ -94,6 +94,93 @@
     visibility: visible;
 }
 
+/* Improve scrolling for the settings panel */
+.settings-panel {
+    width: 90%;
+    max-width: 500px;
+    background: var(--panel-bg);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transform: translateY(30px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    /* Enhanced scrolling properties */
+    max-height: 80vh; /* Limit height to 80% of viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    overscroll-behavior: contain; /* Prevent scroll chaining */
+    
+    /* Scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 107, 107, 0.5) rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbar styling for WebKit browsers (Chrome, Safari) */
+.settings-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.settings-panel::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.settings-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 107, 107, 0.5);
+    border-radius: 10px;
+}
+
+/* Make the header sticky so it stays at the top while scrolling */
+.settings-header {
+    position: sticky;
+    top: 0;
+    background: var(--panel-bg);
+    z-index: 5;
+    padding-top: 10px;
+    margin-top: -10px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.settings-overlay.active .settings-panel {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.settings-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    background: var(--primary-gradient);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+}
+
+.close-settings {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 107, 107, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.close-settings:hover {
+    background: rgba(255, 107, 107, 0.4);
+    transform: rotate(90deg);
+}
+
 /* Developer Code Modal */
 .dev-code-container {
     display: none;
@@ -151,84 +238,6 @@
 .dev-code-message.active {
     display: block;
     animation: fadeIn 0.3s;
-}
-
-/* Mobile Adjustments */
-@media screen and (max-width: 768px) {
-    .settings-button {
-        bottom: 25px;
-        left: 25px;
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-    }
-}
-
-/* Make sure settings and back-to-top buttons don't overlap */
-@media screen and (max-width: 480px) {
-    .settings-button {
-        bottom: 85px; /* Position above the back-to-top button */
-    }
-}
-
-.settings-panel {
-    width: 90%;
-    max-width: 500px;
-    background: var(--panel-bg);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-    position: relative;
-    transform: translateY(30px);
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    max-height: 85vh;
-    overflow-y: auto;
-}
-
-.settings-overlay.active .settings-panel {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.settings-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 15px;
-}
-
-.settings-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    background: var(--primary-gradient);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite;
-}
-
-.close-settings {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: rgba(255, 107, 107, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.close-settings:hover {
-    background: rgba(255, 107, 107, 0.4);
-    transform: rotate(90deg);
 }
 
 /* Settings Options */
@@ -449,12 +458,12 @@ input:checked + .toggle-slider:before {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Mobile Adjustments */
+/* Adjust for smaller screens */
 @media screen and (max-width: 768px) {
     .settings-panel {
         padding: 20px;
         max-width: 90%;
-        max-height: 80vh;
+        max-height: 75vh; /* Slightly smaller on mobile */
     }
     
     .settings-title {
@@ -471,6 +480,33 @@ input:checked + .toggle-slider:before {
     
     .settings-section-title {
         font-size: 1rem;
+    }
+}
+
+/* Further adjustments for very small screens */
+@media screen and (max-width: 480px) {
+    .settings-panel {
+        max-height: 70vh; /* Even smaller on very small screens */
+        padding: 15px;
+    }
+    
+    .settings-option {
+        padding: 8px 0;
+    }
+}
+
+/* Fix for iOS devices to ensure proper scrolling */
+@supports (-webkit-touch-callout: none) {
+    .settings-panel {
+        /* Use a fixed height for iOS to avoid scrolling issues */
+        max-height: 70vh;
+    }
+    
+    /* Add padding at the bottom to ensure all content is accessible */
+    .settings-panel::after {
+        content: '';
+        display: block;
+        height: 30px;
     }
 }
 
