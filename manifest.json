@@ -1,6 +1,6 @@
 {
   "name": "PixelHeavenGames",
-  "short_name": "PixelHeaven",
+  "short_name": "PixelHeavenGames",
   "description": "The best place for online games",
   "start_url": "index.html",
   "display": "standalone",
