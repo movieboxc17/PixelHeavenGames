@@ -4,6 +4,7 @@
     --panel-bg: rgba(26, 26, 46, 0.85);
     --toggle-active: #ff6b6b;
     --toggle-inactive: #666;
+    --animation-speed-multiplier: 1;
 }
 
 /* Settings Button Position - Base styles */
@@ -94,6 +95,29 @@
     visibility: visible;
 }
 
+/* Settings Section Styles */
+.settings-section {
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-section-title {
+    font-size: 1.1rem;
+    color: #ff6b6b;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+/* PWA-only section */
+.pwa-only-section {
+    display: none; /* Hidden by default */
+}
+
+.pwa-mode .pwa-only-section {
+    display: block; /* Shown in PWA mode */
+}
+
 /* Developer Code Modal */
 .dev-code-container {
     display: none;
@@ -153,6 +177,42 @@
     animation: fadeIn 0.3s;
 }
 
+/* Action Button Styles */
+.settings-action-button {
+    background: rgba(255, 107, 107, 0.2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.85rem;
+}
+
+.settings-action-button:hover {
+    background: rgba(255, 107, 107, 0.4);
+}
+
+/* Toast Notification */
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.toast-notification.show {
+    transform: translateX(-50%) translateY(0);
+}
+
 /* Mobile Adjustments */
 @media screen and (max-width: 768px) {
     .settings-button {
@@ -170,6 +230,7 @@
         bottom: 85px; /* Position above the back-to-top button */
     }
 }
+
 .settings-panel {
     width: 90%;
     max-width: 500px;
@@ -184,6 +245,25 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    max-height: 85vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 107, 107, 0.5) rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbar styling for the settings panel */
+.settings-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.settings-panel::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.settings-panel::-webkit-scrollbar-thumb {
+    background: rgba(255, 107, 107, 0.5);
+    border-radius: 10px;
 }
 
 .settings-overlay.active .settings-panel {
@@ -198,6 +278,10 @@
     margin-bottom: 25px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 15px;
+    position: sticky;
+    top: 0;
+    background: var(--panel-bg);
+    z-index: 5;
 }
 
 .settings-title {
@@ -386,15 +470,67 @@ input:checked + .toggle-slider:before {
     text-align: center;
 }
 
+/* Text Size Classes */
+.text-size-small {
+    --text-scale: 0.9;
+}
+
+.text-size-medium {
+    --text-scale: 1;
+}
+
+.text-size-large {
+    --text-scale: 1.15;
+}
+
+.text-size-small .option-label,
+.text-size-small .settings-section-title,
+.text-size-small .game-card h3,
+.text-size-small .section-title {
+    font-size: calc(1rem * var(--text-scale));
+}
+
+.text-size-small .option-description,
+.text-size-small .footer-section li a,
+.text-size-small .category-tag {
+    font-size: calc(0.8rem * var(--text-scale));
+}
+
+.text-size-large .option-label,
+.text-size-large .settings-section-title,
+.text-size-large .game-card h3,
+.text-size-large .section-title {
+    font-size: calc(1rem * var(--text-scale));
+}
+
+.text-size-large .option-description,
+.text-size-large .footer-section li a,
+.text-size-large .category-tag {
+    font-size: calc(0.8rem * var(--text-scale));
+}
+
+/* Reduce Motion */
+.reduce-motion * {
+    transition-duration: 0.001s !important;
+    animation-duration: 0.001s !important;
+}
+
+.reduce-motion .game-card {
+    transform: none !important;
+}
+
+/* Battery Saver Mode */
+.battery-saver {
+    --animation-speed-multiplier: 0.7;
+}
+
+.battery-saver .game-card img,
+.battery-saver .featured-section {
+    filter: brightness(0.9);
+}
+
 /* Mobile Adjustments */
 @media screen and (max-width: 768px) {
-    .settings-button {
-        top: 20px;
-        right: 70px;
-        width: 35px;
-        height: 35px;
-    }
-    
     .settings-panel {
         padding: 20px;
         max-width: 90%;
@@ -439,4 +575,40 @@ input:checked + .toggle-slider:before {
         transform: translateX(0);
         opacity: 1;
     }
+}
+
+/* Reboot overlay */
+.reboot-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.reboot-message {
+    text-align: center;
+    color: white;
+}
+
+.reboot-message i {
+    font-size: 3rem;
+    color: #ff6b6b;
+    margin-bottom: 15px;
+}
+
+.reboot-message p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
