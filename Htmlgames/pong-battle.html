@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong Battle</title>
+    <link rel="stylesheet" href="pong-battle.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="score">
+            <div id="player1-score">0</div>
+            <div id="player2-score">0</div>
+        </div>
+        <canvas id="game-canvas"></canvas>
+        <div class="controls">
+            <div class="player-controls">
+                <h3>Player 1 (Left)</h3>
+                <p>W: Move Up</p>
+                <p>S: Move Down</p>
+            </div>
+            <button id="start-btn">Start Game</button>
+            <div class="player-controls">
+                <h3>Player 2 (Right)</h3>
+                <p>↑: Move Up</p>
+                <p>↓: Move Down</p>
+            </div>
+        </div>
+    </div>
+    <script src="pong-battle.js"></script>
+</body>
+</html>
