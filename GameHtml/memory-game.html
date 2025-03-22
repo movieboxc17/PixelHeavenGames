@@ -26,80 +26,219 @@
         
         <h1>Memory Card Game</h1>
         
-        <div class="game-mode-selector">
-            <button class="mode-btn active" data-mode="single">Single Player</button>
-            <button class="mode-btn" data-mode="ai">VS AI</button>
-            <button class="mode-btn" data-mode="multiplayer">Multiplayer</button>
-        </div>
-        
-        <div class="difficulty-selector">
-            <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
-            <button class="difficulty-btn" data-difficulty="medium">Medium</button>
-            <button class="difficulty-btn" data-difficulty="hard">Hard</button>
-        </div>
-        
-        <div class="player-setup" style="display: none;">
-            <h3>Player Setup</h3>
-            <div class="player-inputs">
-                <div class="player-input">
-                    <label for="player1">Player 1:</label>
-                    <input type="text" id="player1" value="Player 1">
-                    <div class="color-picker">
-                        <div class="color-option selected" style="background-color: #e94560;" data-color="#e94560"></div>
-                        <div class="color-option" style="background-color: #4e8cff;" data-color="#4e8cff"></div>
-                        <div class="color-option" style="background-color: #4ade80;" data-color="#4ade80"></div>
-                        <div class="color-option" style="background-color: #facc15;" data-color="#facc15"></div>
-                    </div>
+        <!-- Game Setup Section -->
+        <div id="game-setup" class="game-setup">
+            <div class="setup-section">
+                <h2>Game Mode</h2>
+                <div class="mode-selection">
+                    <button class="mode-btn active" data-mode="single">
+                        <i class="fas fa-user"></i>
+                        <span>Single Player</span>
+                    </button>
+                    <button class="mode-btn" data-mode="multiplayer">
+                        <i class="fas fa-users"></i>
+                        <span>Multiplayer</span>
+                    </button>
+                    <button class="mode-btn" data-mode="ai">
+                        <i class="fas fa-robot"></i>
+                        <span>vs AI</span>
+                    </button>
                 </div>
-                <div class="player-input" style="display: none;">
-                    <label for="player2">Player 2:</label>
-                    <input type="text" id="player2" value="Player 2">
-                    <div class="color-picker">
-                        <div class="color-option" style="background-color: #e94560;" data-color="#e94560"></div>
-                        <div class="color-option selected" style="background-color: #4e8cff;" data-color="#4e8cff"></div>
-                        <div class="color-option" style="background-color: #4ade80;" data-color="#4ade80"></div>
-                        <div class="color-option" style="background-color: #facc15;" data-color="#facc15"></div>
-                    </div>
+            </div>
+            
+            <div class="setup-section">
+                <h2>Difficulty</h2>
+                <div class="difficulty-selection">
+                    <button class="difficulty-btn active" data-difficulty="easy">
+                        <i class="fas fa-smile"></i>
+                        <span>Easy</span>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="medium">
+                        <i class="fas fa-meh"></i>
+                        <span>Medium</span>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="hard">
+                        <i class="fas fa-grimace"></i>
+                        <span>Hard</span>
+                    </button>
                 </div>
-                <div class="player-input" style="display: none;">
-                    <label for="player3">Player 3:</label>
-                    <input type="text" id="player3" value="Player 3">
-                    <div class="color-picker">
-                        <div class="color-option" style="background-color: #e94560;" data-color="#e94560"></div>
-                        <div class="color-option" style="background-color: #4e8cff;" data-color="#4e8cff"></div>
-                        <div class="color-option selected" style="background-color: #4ade80;" data-color="#4ade80"></div>
-                        <div class="color-option" style="background-color: #facc15;" data-color="#facc15"></div>
-                    </div>
+            </div>
+            
+            <div class="setup-section">
+                <h2>Card Theme</h2>
+                <div class="theme-selection">
+                    <button class="theme-btn active" data-theme="emoji">
+                        <i class="far fa-laugh-beam"></i>
+                        <span>Emoji</span>
+                    </button>
+                    <button class="theme-btn" data-theme="animals">
+                        <i class="fas fa-paw"></i>
+                        <span>Animals</span>
+                    </button>
+                    <button class="theme-btn" data-theme="food">
+                        <i class="fas fa-pizza-slice"></i>
+                        <span>Food</span>
+                    </button>
+                    <button class="theme-btn" data-theme="space">
+                        <i class="fas fa-rocket"></i>
+                        <span>Space</span>
+                    </button>
                 </div>
-                <div class="player-input" style="display: none;">
-                    <label for="player4">Player 4:</label>
-                    <input type="text" id="player4" value="Player 4">
-                    <div class="color-picker">
-                        <div class="color-option" style="background-color: #e94560;" data-color="#e94560"></div>
-                        <div class="color-option" style="background-color: #4e8cff;" data-color="#4e8cff"></div>
-                        <div class="color-option" style="background-color: #4ade80;" data-color="#4ade80"></div>
-                        <div class="color-option selected" style="background-color: #facc15;" data-color="#facc15"></div>
+            </div>
+            
+            <div class="setup-section">
+                <h2>Card Style</h2>
+                <div class="card-style-selection">
+                    <button class="card-style-btn active" data-style="classic">
+                        <i class="fas fa-square"></i>
+                        <span>Classic</span>
+                    </button>
+                    <button class="card-style-btn" data-style="rounded">
+                        <i class="fas fa-circle"></i>
+                        <span>Rounded</span>
+                    </button>
+                    <button class="card-style-btn" data-style="neon">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Neon</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="setup-section player-setup" style="display: none;">
+                <h2>Player Setup</h2>
+                <div class="player-inputs">
+                    <div class="player-input" data-player="0" data-color="player1-color">
+                        <div class="player-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="player-details">
+                            <input type="text" placeholder="Player 1" value="Player 1">
+                            <div class="color-picker">
+                                <div class="color-option selected" data-color="player1-color" style="background-color: var(--player1-color);"></div>
+                                <div class="color-option" data-color="player2-color" style="background-color: var(--player2-color);"></div>
+                                <div class="color-option" data-color="player3-color" style="background-color: var(--player3-color);"></div>
+                                <div class="color-option" data-color="player4-color" style="background-color: var(--player4-color);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="player-input" data-player="1" data-color="player2-color" style="display: none;">
+                        <div class="player-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="player-details">
+                            <input type="text" placeholder="Player 2" value="Player 2">
+                            <div class="color-picker">
+                                <div class="color-option" data-color="player1-color" style="background-color: var(--player1-color);"></div>
+                                <div class="color-option selected" data-color="player2-color" style="background-color: var(--player2-color);"></div>
+                                <div class="color-option" data-color="player3-color" style="background-color: var(--player3-color);"></div>
+                                <div class="color-option" data-color="player4-color" style="background-color: var(--player4-color);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="player-input" data-player="2" data-color="player3-color" style="display: none;">
+                        <div class="player-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="player-details">
+                            <input type="text" placeholder="Player 3" value="Player 3">
+                            <div class="color-picker">
+                                <div class="color-option" data-color="player1-color" style="background-color: var(--player1-color);"></div>
+                                <div class="color-option" data-color="player2-color" style="background-color: var(--player2-color);"></div>
+                                <div class="color-option selected" data-color="player3-color" style="background-color: var(--player3-color);"></div>
+                                <div class="color-option" data-color="player4-color" style="background-color: var(--player4-color);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="player-input" data-player="3" data-color="player4-color" style="display: none;">
+                        <div class="player-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="player-details">
+                            <input type="text" placeholder="Player 4" value="Player 4">
+                            <div class="color-picker">
+                                <div class="color-option" data-color="player1-color" style="background-color: var(--player1-color);"></div>
+                                <div class="color-option" data-color="player2-color" style="background-color: var(--player2-color);"></div>
+                                <div class="color-option" data-color="player3-color" style="background-color: var(--player3-color);"></div>
+                                <div class="color-option selected" data-color="player4-color" style="background-color: var(--player4-color);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="player-controls">
+                        <button id="add-player" class="player-btn">
+                            <i class="fas fa-plus"></i> Add Player
+                        </button>
+                        <button id="remove-player" class="player-btn" disabled>
+                            <i class="fas fa-minus"></i> Remove Player
+                        </button>
                     </div>
                 </div>
             </div>
-            <div class="player-count-controls">
-                <button id="add-player" class="control-btn"><i class="fas fa-plus"></i> Add Player</button>
-                <button id="remove-player" class="control-btn" disabled><i class="fas fa-minus"></i> Remove Player</button>
+            
+            <div class="setup-section ai-settings" style="display: none;">
+                <h2>AI Settings</h2>
+                <div class="ai-setting">
+                    <label for="ai-intelligence">AI Intelligence</label>
+                    <div class="slider-container">
+                        <span>Low</span>
+                        <input type="range" id="ai-intelligence" min="0" max="1" step="0.1" value="0.5">
+                        <span>High</span>
+                    </div>
+                </div>
+                <div class="ai-setting">
+                    <label for="ai-speed">AI Speed</label>
+                    <div class="slider-container">
+                        <span>Slow</span>
+                        <input type="range" id="ai-speed" min="0" max="1" step="0.1" value="0.5">
+                        <span>Fast</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="setup-section">
+                <button id="start-game" class="start-btn">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
             </div>
         </div>
         
-        <button id="start-game" class="start-btn">Start Game</button>
-        
-        <div class="game-board" style="display: none;">
-            <div class="game-info">
-                <div class="player-stats">
-                    <div class="current-player">Current Player: <span id="current-player-name">Player 1</span></div>
-                    <div class="score">Moves: <span id="moves">0</span></div>
-                    <div class="timer">Time: <span id="time">00:00</span></div>
+        <!-- Game Board Section -->
+        <div id="game-board" class="game-board">
+            <div class="game-header">
+                <div class="player-turn-indicator">
+                    Current Turn: <span id="current-player-name">Player 1</span>
                 </div>
+                
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-shoe-prints"></i>
+                        <span id="moves">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span id="time">00:00</span>
+                    </div>
+                </div>
+                
                 <div class="game-controls">
-                    <button id="restart-btn">Restart Game</button>
-                    <button id="new-game-btn">New Game</button>
+                    <button id="hint-btn" class="control-btn">
+                        <i class="fas fa-lightbulb"></i>
+                    </button>
+                    <button id="sound-btn" class="control-btn">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <button id="pause-btn" class="control-btn">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button id="restart-btn" class="control-btn">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button id="new-game-btn" class="control-btn">
+                        <i class="fas fa-home"></i>
+                    </button>
                 </div>
             </div>
             
@@ -107,33 +246,184 @@
                 <!-- Cards will be generated by JavaScript -->
             </div>
             
-            <div class="scoreboard">
-                <h3>Scoreboard</h3>
-                <div class="scoreboard-entries">
-                    <!-- Player scores will be added here -->
+            <div class="game-footer">
+                <div class="scoreboard">
+                    <h3>Scoreboard</h3>
+                    <div class="scoreboard-entries">
+                        <!-- Player scores will be added here -->
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="game-over-modal" style="display: none;">
-            <div class="modal-content">
-                <h2>Game Over!</h2>
-                <div class="winner-info">
-                    <p>Winner: <span id="winner-name"></span></p>
-                    <p>Time: <span id="winner-time"></span></p>
-                    <p>Moves: <span id="winner-moves"></span></p>
+        <!-- Pause Menu -->
+        <div class="pause-menu" style="display: none;">
+            <div class="pause-content">
+                <h2>Game Paused</h2>
+                
+                <div class="pause-buttons">
+                    <button id="resume-btn" class="pause-btn">
+                        <i class="fas fa-play"></i> Resume Game
+                    </button>
+                    <button id="restart-paused-btn" class="pause-btn">
+                        <i class="fas fa-redo"></i> Restart Game
+                    </button>
+                    <button id="exit-btn" class="pause-btn">
+                        <i class="fas fa-sign-out-alt"></i> Exit to Menu
+                    </button>
                 </div>
-                <div class="final-scoreboard">
-                    <!-- Final scores will be added here -->
-                </div>
-                <div class="modal-buttons">
-                    <button id="play-again-btn">Play Again</button>
-                    <button id="return-home-btn">Return to Home</button>
+                
+                <div class="game-settings">
+                    <div class="setting-item">
+                        <span>Sound Effects</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sound-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span>Background Music</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="music-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span>Vibration</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="vibration-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        <!-- Game Over Modal -->
+        <div class="game-over-modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Game Over!</h2>
+                
+                <div class="winner-info">
+                    <div class="winner-avatar">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="winner-details">
+                        <h3 id="winner-name">Player 1</h3>
+                        <div class="winner-stats">
+                            <div class="winner-stat">
+                                <i class="fas fa-clock"></i>
+                                <span id="winner-time">00:00</span>
+                            </div>
+                        </div>
+                        <div class="winner-stat">
+                            <i class="fas fa-layer-group"></i>
+                            <span id="winner-pairs">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="achievement-unlocked" style="display: none;">
+                <div class="achievement-icon">
+                    <i class="fas fa-medal"></i>
+                </div>
+                <div class="achievement-info">
+                    <h3 id="achievement-title">Achievement Unlocked!</h3>
+                    <p id="achievement-description">You've earned a new achievement.</p>
+                </div>
+            </div>
+            
+            <div class="final-scoreboard">
+                <h3>Final Scores</h3>
+                <!-- Final scores will be added here -->
+            </div>
+            
+            <div class="modal-buttons">
+                <button id="play-again-btn" class="modal-btn">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+                <button id="return-home-btn" class="modal-btn">
+                    <i class="fas fa-home"></i> Return to Menu
+                </button>
+                <button id="share-score-btn" class="modal-btn">
+                    <i class="fas fa-share-alt"></i> Share Score
+                </button>
+            </div>
+        </div>
     </div>
+    
+    <!-- Tutorial Overlay -->
+    <div id="tutorial-overlay" class="tutorial-overlay" style="display: none;">
+        <div class="tutorial-content">
+            <h2>How to Play</h2>
+            
+            <div class="tutorial-steps">
+                <div class="tutorial-step active">
+                    <div class="step-image">
+                        <img src="../Images/tutorial-1.png" alt="Flip cards">
+                    </div>
+                    <div class="step-description">
+                        <h3>Step 1: Flip Cards</h3>
+                        <p>Click on any card to flip it and reveal what's underneath.</p>
+                    </div>
+                </div>
+                
+                <div class="tutorial-step">
+                    <div class="step-image">
+                        <img src="../Images/tutorial-2.png" alt="Find matches">
+                    </div>
+                    <div class="step-description">
+                        <h3>Step 2: Find Matches</h3>
+                        <p>Try to remember the location of each card and find matching pairs.</p>
+                    </div>
+                </div>
+                
+                <div class="tutorial-step">
+                    <div class="step-image">
+                        <img src="../Images/tutorial-3.png" alt="Take turns">
+                    </div>
+                    <div class="step-description">
+                        <h3>Step 3: Take Turns</h3>
+                        <p>In multiplayer mode, players take turns. If you find a match, you get another turn!</p>
+                    </div>
+                </div>
+                
+                <div class="tutorial-step">
+                    <div class="step-image">
+                        <img src="../Images/tutorial-4.png" alt="Win the game">
+                    </div>
+                    <div class="step-description">
+                        <h3>Step 4: Win the Game</h3>
+                        <p>The player with the most pairs at the end wins! Try to complete the game in as few moves as possible.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tutorial-navigation">
+                <button id="prev-step" class="tutorial-nav-btn" disabled>
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+                
+                <div class="tutorial-dots">
+                    <div class="tutorial-dot active"></div>
+                    <div class="tutorial-dot"></div>
+                    <div class="tutorial-dot"></div>
+                    <div class="tutorial-dot"></div>
+                </div>
+                
+                <button id="next-step" class="tutorial-nav-btn">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <button id="skip-tutorial" class="skip-tutorial-btn">
+                Skip Tutorial
+            </button>
+        </div>
+    </div>
+</div>
 
-    <script src="../GameJs/memory-game.js"></script>
+<script src="../GameJs/memory-game.js"></script>
 </body>
 </html>
