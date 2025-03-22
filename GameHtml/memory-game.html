@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Memory Game - PixelHeavenGames</title>
+    
+    <!-- Home screen and theme meta tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PixelHeavenGames">
+    <meta name="application-name" content="PixelHeavenGames">
+    <meta name="msapplication-TileColor" content="#1a1a2e">
+    <meta name="theme-color" content="#1a1a2e">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../GameCss/memory-game.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="back-button">
+            <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
+        
+        <h1>Memory Card Game</h1>
+        
+        <div class="game-mode-selector">
+            <button class="mode-btn active" data-mode="single">Single Player</button>
+            <button class="mode-btn" data-mode="ai">VS AI</button>
+            <button class="mode-btn" data-mode="multiplayer">Multiplayer</button>
+        </div>
+        
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" data-difficulty="easy">Easy</button>
+            <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+            <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+        </div>
+        
+        <div class="player-setup" style="display: none;">
+            <h3>Player Setup</h3>
+            <div class="player-inputs">
+                <div class="player-input">
+                    <label for="player1">Player 1:</label>
+                    <input type="text" id="player1" value="Player 1">
+                    <div class="color-picker">
+                        <div class="color-option selected" style="background-color: #e94560;" data-color="#e94560"></div>
+                        <div class="color-option" style="background-color: #4e8cff;" data-color="#4e8cff"></div>
+                        <div class="color-option" style="background-color: #4ade80;" data-color="#4ade80"></div>
+                        <div class="color-option" style="background-color: #facc15;" data-color="#facc15"></div>
+                    </div>
+                </div>
+                <div class="player-input" style="display: none;">
+                    <label for="player2">Player 2:</label>
+                    <input type="text" id="player2" value="Player 2">
+                    <div class="color-picker">
+                        <div class="color-option" style="background-color: #e94560;" data-color="#e94560"></div>
+                        <div class="color-option selected" style="background-color: #4e8cff;" data-color="#4e8cff"></div>
+                        <div class="color-option" style="background-color: #4ade80;" data-color="#4ade80"></div>
+                        <div class="color-option" style="background-color: #facc15;" data-color="#facc15"></div>
+                    </div>
+                </div>
+                <div class="player-input" style="display: none;">
+                    <label for="player3">Player 3:</label>
+                    <input type="text" id="player3" value="Player 3">
+                    <div class="color-picker">
+                        <div class="color-option" style="background-color: #e94560;" data-color="#e94560"></div>
+                        <div class="color-option" style="background-color: #4e8cff;" data-color="#4e8cff"></div>
+                        <div class="color-option selected" style="background-color: #4ade80;" data-color="#4ade80"></div>
+                        <div class="color-option" style="background-color: #facc15;" data-color="#facc15"></div>
+                    </div>
+                </div>
+                <div class="player-input" style="display: none;">
+                    <label for="player4">Player 4:</label>
+                    <input type="text" id="player4" value="Player 4">
+                    <div class="color-picker">
+                        <div class="color-option" style="background-color: #e94560;" data-color="#e94560"></div>
+                        <div class="color-option" style="background-color: #4e8cff;" data-color="#4e8cff"></div>
+                        <div class="color-option" style="background-color: #4ade80;" data-color="#4ade80"></div>
+                        <div class="color-option selected" style="background-color: #facc15;" data-color="#facc15"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="player-count-controls">
+                <button id="add-player" class="control-btn"><i class="fas fa-plus"></i> Add Player</button>
+                <button id="remove-player" class="control-btn" disabled><i class="fas fa-minus"></i> Remove Player</button>
+            </div>
+        </div>
+        
+        <button id="start-game" class="start-btn">Start Game</button>
+        
+        <div class="game-board" style="display: none;">
+            <div class="game-info">
+                <div class="player-stats">
+                    <div class="current-player">Current Player: <span id="current-player-name">Player 1</span></div>
+                    <div class="score">Moves: <span id="moves">0</span></div>
+                    <div class="timer">Time: <span id="time">00:00</span></div>
+                </div>
+                <div class="game-controls">
+                    <button id="restart-btn">Restart Game</button>
+                    <button id="new-game-btn">New Game</button>
+                </div>
+            </div>
+            
+            <div class="memory-game">
+                <!-- Cards will be generated by JavaScript -->
+            </div>
+            
+            <div class="scoreboard">
+                <h3>Scoreboard</h3>
+                <div class="scoreboard-entries">
+                    <!-- Player scores will be added here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="game-over-modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Game Over!</h2>
+                <div class="winner-info">
+                    <p>Winner: <span id="winner-name"></span></p>
+                    <p>Time: <span id="winner-time"></span></p>
+                    <p>Moves: <span id="winner-moves"></span></p>
+                </div>
+                <div class="final-scoreboard">
+                    <!-- Final scores will be added here -->
+                </div>
+                <div class="modal-buttons">
+                    <button id="play-again-btn">Play Again</button>
+                    <button id="return-home-btn">Return to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../GameJs/memory-game.js"></script>
+</body>
+</html>
