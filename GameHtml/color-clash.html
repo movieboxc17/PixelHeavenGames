@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Color Clash - PixelHeavenGames</title>
+    
+    <!-- Home screen and theme meta tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="PixelHeavenGames">
+    <meta name="application-name" content="PixelHeavenGames">
+    <meta name="msapplication-TileColor" content="#1a1a2e">
+    <meta name="theme-color" content="#1a1a2e">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../GameCss/color-clash.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="back-button">
+            <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
+        
+        <h1>Color Clash</h1>
+        
+        <!-- Game Setup Section -->
+        <div id="game-setup" class="game-setup">
+            <div class="setup-section">
+                <h2>Game Mode</h2>
+                <div class="mode-selection">
+                    <button class="mode-btn active" data-mode="classic">
+                        <i class="fas fa-chess-board"></i>
+                        <span>Classic</span>
+                    </button>
+                    <button class="mode-btn" data-mode="timed">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span>Timed</span>
+                    </button>
+                    <button class="mode-btn" data-mode="challenge">
+                        <i class="fas fa-fire"></i>
+                        <span>Challenge</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="setup-section">
+                <h2>Grid Size</h2>
+                <div class="grid-selection">
+                    <button class="grid-btn" data-size="5">
+                        <i class="fas fa-th"></i>
+                        <span>5×5</span>
+                    </button>
+                    <button class="grid-btn active" data-size="7">
+                        <i class="fas fa-th"></i>
+                        <span>7×7</span>
+                    </button>
+                    <button class="grid-btn" data-size="9">
+                        <i class="fas fa-th"></i>
+                        <span>9×9</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="setup-section">
+                <h2>Player Setup</h2>
+                <div class="player-inputs">
+                    <div class="player-input" data-player="0">
+                        <div class="player-avatar" style="background-color: var(--player1-color);">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="player-details">
+                            <input type="text" id="player1-name" placeholder="Player 1" value="Player 1">
+                            <div class="color-picker">
+                                <div class="color-option selected" data-color="#e94560" style="background-color: #e94560;"></div>
+                                <div class="color-option" data-color="#ff9a3c" style="background-color: #ff9a3c;"></div>
+                                <div class="color-option" data-color="#f25287" style="background-color: #f25287;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="player-input" data-player="1">
+                        <div class="player-avatar" style="background-color: var(--player2-color);">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="player-details">
+                            <input type="text" id="player2-name" placeholder="Player 2" value="Player 2">
+                            <div class="color-picker">
+                                <div class="color-option" data-color="#e94560" style="background-color: #e94560;"></div>
+                                <div class="color-option selected" data-color="#4ecca3" style="background-color: #4ecca3;"></div>
+                                <div class="color-option" data-color="#6a67ce" style="background-color: #6a67ce;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="setup-section">
+                <button id="start-game" class="start-btn">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+            </div>
+        </div>
+        
+        <!-- Game Board Section -->
+        <div id="game-board" class="game-board" style="display: none;">
+            <div class="game-header">
+                <div class="player-turn-indicator">
+                    Current Turn: <span id="current-player-name">Player 1</span>
+                </div>
+                
+                <div class="game-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <span id="time">00:00</span>
+                    </div>
+                </div>
+                
+                <div class="game-controls">
+                    <button id="sound-btn" class="control-btn">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <button id="pause-btn" class="control-btn">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button id="restart-btn" class="control-btn">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button id="new-game-btn" class="control-btn">
+                        <i class="fas fa-home"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="color-palette">
+                <div class="palette-title">Choose a color:</div>
+                <div class="palette-colors">
+                    <!-- Colors will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="game-grid">
+                <!-- Grid cells will be generated by JavaScript -->
+            </div>
+            
+            <div class="game-footer">
+                <div class="scoreboard">
+                    <div class="player-score" id="player1-score">
+                        <div class="player-name">Player 1</div>
+                        <div class="score-value">0</div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: 50%; background-color: var(--player1-color);"></div>
+                        </div>
+                    </div>
+                    <div class="player-score" id="player2-score">
+                        <div class="player-name">Player 2</div>
+                        <div class="score-value">0</div>
+                        <div class="score-bar">
+                            <div class="score-fill" style="width: 50%; background-color: var(--player2-color);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pause Menu -->
+        <div class="pause-menu" style="display: none;">
+            <div class="pause-content">
+                <h2>Game Paused</h2>
+                
+                <div class="pause-buttons">
+                    <button id="resume-btn" class="pause-btn">
+                        <i class="fas fa-play"></i> Resume Game
+                    </button>
+                    <button id="restart-paused-btn" class="pause-btn">
+                        <i class="fas fa-redo"></i> Restart Game
+                    </button>
+                    <button id="exit-btn" class="pause-btn">
+                        <i class="fas fa-sign-out-alt"></i> Exit to Menu
+                    </button>
+                </div>
+                
+                <div class="game-settings">
+                    <div class="setting-item">
+                        <span>Sound Effects</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sound-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span>Background Music</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="music-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Game Over Modal -->
+        <div class="game-over-modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Game Over!</h2>
+                
+                <div class="winner-info">
+                    <div class="winner-avatar">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="winner-details">
+                        <h3 id="winner-name">Player 1</h3>
+                        <div class="winner-stats">
+                            <div class="winner-stat">
+                                <i class="fas fa-paint-brush"></i>
+                                <span id="winner-score">0</span> cells
+                            </div>
+                            <div class="winner-stat">
+                                <i class="fas fa-percentage"></i>
+                                <span id="winner-percentage">0%</span> of grid
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="final-scoreboard">
+                    <div class="final-score-comparison">
+                        <div class="player-final-score" id="player1-final">
+                            <div class="player-name">Player 1</div>
+                            <div class="score-value">0</div>
+                        </div>
+                        <div class="vs-indicator">VS</div>
+                        <div class="player-final-score" id="player2-final">
+                            <div class="player-name">Player 2</div>
+                            <div class="score-value">0</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button id="play-again-btn" class="modal-btn">
+                        <i class="fas fa-redo"></i> Play Again
+                    </button>
+                    <button id="return-home-btn" class="modal-btn">
+                        <i class="fas fa-home"></i> Return to Menu
+                    </button>
+                    <button id="share-score-btn" class="modal-btn">
+                        <i class="fas fa-share-alt"></i> Share Score
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tutorial Overlay -->
+        <div id="tutorial-overlay" class="tutorial-overlay" style="display: none;">
+            <div class="tutorial-content">
+                <h2>How to Play Color Clash</h2>
+                
+                <div class="tutorial-steps">
+                    <div class="tutorial-step active">
+                        <div class="step-image">
+                            <img src="../Images/color-clash-tutorial-1.png" alt="Select colors">
+                        </div>
+                        <div class="step-description">
+                            <h3>Step 1: Choose Your Color</h3>
+                            <p>On your turn, select a color from the palette at the bottom of the screen.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <div class="step-image">
+                            <img src="../Images/color-clash-tutorial-2.png" alt="Claim territory">
+                        </div>
+                        <div class="step-description">
+                            <h3>Step 2: Claim Territory</h3>
+                            <p>Your color will fill your territory. You can only expand from cells you already own.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <div class="step-image">
+                            <img src="../Images/color-clash-tutorial-3.png" alt="Strategy">
+                        </div>
+                        <div class="step-description">
+                            <h3>Step 3: Strategic Choices</h3>
+                            <p>Choose colors that appear frequently next to your territory to maximize expansion.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <div class="step-image">
+                            <img src="../Images/color-clash-tutorial-4.png" alt="Win the game">
+                        </div>
+                        <div class="step-description">
+                            <h3>Step 4: Win the Game</h3>
+                            <p>The player who controls the most cells when the grid is filled wins the game!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tutorial-navigation">
+                    <button id="prev-step" class="tutorial-nav-btn" disabled>
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    
+                    <div class="tutorial-dots">
+                        <div class="tutorial-dot active"></div>
+                        <div class="tutorial-dot"></div>
+                        <div class="tutorial-dot"></div>
+                        <div class="tutorial-dot"></div>
+                    </div>
+                    
+                    <button id="next-step" class="tutorial-nav-btn">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                
+                <button id="skip-tutorial" class="skip-tutorial-btn">
+                    Skip Tutorial
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../GameJs/color-clash.js"></script>
+</body>
+</html>
