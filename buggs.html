@@ -2,64 +2,113 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Site Bug Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Known Issues & Bug Report</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f7f7f7;
-      padding: 20px;
-      max-width: 800px;
-      margin: auto;
-    }
-    h1 {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9f9;
       color: #333;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px;
     }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .warning {
+      background-color: #ffe9e9;
+      border-left: 6px solid #e74c3c;
+      padding: 15px 20px;
+      margin-bottom: 25px;
+      font-weight: bold;
+    }
+
     .bug {
-      background-color: #fff;
-      border-left: 4px solid #e74c3c;
-      padding: 15px;
-      margin: 20px 0;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background-color: #ffffff;
+      border-left: 4px solid #3498db;
+      padding: 20px;
+      margin: 25px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+      border-radius: 8px;
     }
+
     .bug h2 {
       margin-top: 0;
+      color: #2980b9;
     }
+
     .bug img {
       max-width: 100%;
-      margin-top: 10px;
+      margin-top: 12px;
       border: 1px solid #ccc;
+      border-radius: 4px;
     }
+
     .fix-status {
+      margin-top: 10px;
       font-style: italic;
-      color: #888;
+      color: #777;
+    }
+
+    .contact {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.95em;
+      color: #555;
+    }
+
+    .contact a {
+      color: #c0392b;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .contact a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <h1>Current Site Bugs & Known Issues</h1>
-  <p>This page lists the current bugs on the website and when they are expected to be fixed. Images are included to help illustrate the problems.</p>
+  <h1>🛠️ Known Issues & Bug Report</h1>
+
+  <div class="warning">
+    ⚠️ Some settings may not function as expected. **Do not enable the "Animation" setting** — doing so can break the app or website.
+    <br><br>
+    - If it breaks the website: please contact us at <a href="mailto:servers.pixelhavengames@gmail.com">servers.pixelhavengames@gmail.com</a> so we can help you restore access.
+    <br>
+    - If the app crashes: you may need to reinstall it to restore functionality.
+    <br><br>
+    We're actively working on resolving this issue. Thank you for your patience!
+  </div>
 
   <div class="bug">
-    <h2>⚙️ Settings Not Working</h2>
-    <p>The settings section of the website is currently non-functional. Clicking on settings has no effect.</p>
+    <h2>⚙️ Settings Panel Not Working Properly</h2>
+    <p>Some settings are currently unresponsive or not saving correctly. You may notice certain toggles or options do nothing when clicked.</p>
     <img src="images/settings-bug.png" alt="Screenshot of broken settings (example)">
-    <p class="fix-status">Expected fix: Coming in the next update (ETA: within 1–2 weeks).</p>
+    <p class="fix-status">Expected fix: Within 1–2 weeks.</p>
   </div>
 
   <div class="bug">
-    <h2>🍔 Burger Menu Not Working on Mobile</h2>
-    <p>On mobile phones, the burger menu does not open. As a temporary workaround, users must rotate their phone to landscape mode. This brings up a wider view where a larger menu appears.</p>
+    <h2>🍔 Burger Menu Broken on Mobile</h2>
+    <p>The burger menu does not work on phones in portrait mode. As a workaround, rotate your phone to landscape mode — this will reveal the full menu.</p>
     <img src="images/burger-menu-bug.png" alt="Screenshot of burger menu bug">
-    <p class="fix-status">Expected fix: Under development, targeted for next mobile patch.</p>
+    <p class="fix-status">Expected fix: In progress, patch coming soon.</p>
   </div>
 
   <div class="bug">
-    <h2>🔍 Menu Selection Confusion</h2>
-    <p>In the expanded menu (visible when rotating the phone), it’s not clear which menu item is currently selected or active. This may confuse users about what section they are in.</p>
+    <h2>❌ Menu Selection Unclear</h2>
+    <p>When using the expanded menu in landscape mode, it's not clear which menu item is currently selected. This can be confusing for navigation.</p>
     <img src="images/menu-selection-bug.png" alt="Unclear menu selection bug">
-    <p class="fix-status">Expected fix: Being designed with clearer UI indicators, ETA: 1 week.</p>
+    <p class="fix-status">Expected fix: UI update in the next patch.</p>
+  </div>
+
+  <div class="contact">
+    Still having issues? Reach out to us at <a href="mailto:servers.pixelhavengames@gmail.com">servers.pixelhavengames@gmail.com</a> and we’ll help you out.
   </div>
 
 </body>
