@@ -1,33 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Known Issues & Bug Report | Pixel Haven Games</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* Theme Variables */
     :root {
+      /* Light Theme (default) */
       --primary: #3a86ff;
       --primary-dark: #2667cc;
       --secondary: #ff006e;
       --warning: #fb5607;
+      --maintenance: #9e2a2b;
       --success: #8ac926;
       --dark: #2b2d42;
       --light: #f8f9fa;
       --gray: #8d99ae;
       --gray-light: #edf2f4;
+      
+      /* Base colors that change with theme */
+      --bg-color: var(--gray-light);
+      --bg-card: #ffffff;
+      --text-color: var(--dark);
+      --header-bg: #ffffff;
+      --header-shadow: rgba(0,0,0,0.1);
+      --card-shadow: rgba(0,0,0,0.08);
+      --card-hover-shadow: rgba(0,0,0,0.1);
+      --footer-bg: var(--dark);
+      --footer-text: #ffffff;
+      --border-color: #eee;
+      --status-bg: var(--gray-light);
+    }
+    
+    /* Dark Theme */
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --bg-card: #1e1e1e;
+      --text-color: #e0e0e0;
+      --header-bg: #1a1a1a;
+      --header-shadow: rgba(0,0,0,0.3);
+      --card-shadow: rgba(0,0,0,0.3);
+      --card-hover-shadow: rgba(0,0,0,0.4);
+      --footer-bg: #0a0a0a;
+      --footer-text: #e0e0e0;
+      --border-color: #333;
+      --status-bg: #2a2a2a;
     }
     
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
     
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--gray-light);
-      color: var(--dark);
+      background-color: var(--bg-color);
+      color: var(--text-color);
       line-height: 1.6;
     }
     
@@ -39,8 +71,8 @@
     
     /* Header styles */
     header {
-      background-color: #fff;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background-color: var(--header-bg);
+      box-shadow: 0 2px 10px var(--header-shadow);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -53,6 +85,11 @@
       padding: 15px 20px;
     }
     
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+    
     .back-button {
       display: flex;
       align-items: center;
@@ -60,6 +97,7 @@
       color: var(--primary);
       font-weight: 600;
       transition: all 0.2s ease;
+      margin-right: 25px;
     }
     
     .back-button:hover {
@@ -73,7 +111,36 @@
     .logo {
       font-size: 1.3rem;
       font-weight: bold;
-      color: var(--dark);
+      color: var(--text-color);
+    }
+    
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1rem;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background-color: rgba(0,0,0,0.05);
+    }
+    
+    [data-theme="dark"] .theme-toggle {
+      background-color: rgba(255,255,255,0.1);
+    }
+    
+    .theme-toggle:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
+    
+    [data-theme="dark"] .theme-toggle:hover {
+      background-color: rgba(255,255,255,0.2);
+    }
+    
+    .theme-toggle i {
+      margin-right: 8px;
     }
     
     .contact-header {
@@ -98,7 +165,7 @@
     .page-title {
       text-align: center;
       margin-bottom: 40px;
-      color: var(--dark);
+      color: var(--text-color);
       font-size: 2.2rem;
     }
     
@@ -107,45 +174,98 @@
       color: var(--primary);
     }
     
-    /* Alert box */
-    .alert-box {
-      background-color: #fff;
+    /* Notification banners */
+    .notification {
       border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 15px var(--card-shadow);
       padding: 25px;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
+      position: relative;
+      background-color: var(--bg-card);
+    }
+    
+    .notification.maintenance {
+      border-left: 5px solid var(--maintenance);
+    }
+    
+    .notification.warning {
       border-left: 5px solid var(--warning);
     }
     
-    .alert-title {
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .notification-title {
       display: flex;
       align-items: center;
       font-size: 1.4rem;
       font-weight: bold;
-      margin-bottom: 15px;
+    }
+    
+    .notification.maintenance .notification-title {
+      color: var(--maintenance);
+    }
+    
+    .notification.warning .notification-title {
       color: var(--warning);
     }
     
-    .alert-title i {
+    .notification-title i {
       margin-right: 10px;
       font-size: 1.6rem;
     }
     
-    .alert-content {
-      color: var(--dark);
+    .notification-content {
+      color: var(--text-color);
     }
     
-    .alert-content p {
+    .notification-content p {
       margin-bottom: 15px;
     }
     
-    .alert-content ul {
+    .notification-content ul {
       margin-left: 20px;
       margin-bottom: 15px;
     }
     
-    .alert-content li {
+    .notification-content li {
       margin-bottom: 8px;
+    }
+    
+    .notification-content a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    .notification-content a:hover {
+      text-decoration: underline;
+    }
+    
+    .dismiss-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--gray);
+      transition: color 0.2s ease;
+    }
+    
+    .dismiss-btn:hover {
+      color: var(--text-color);
+    }
+    
+    .time-badge {
+      display: inline-block;
+      background-color: var(--status-bg);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      margin-top: 10px;
     }
     
     /* Bug cards */
@@ -157,16 +277,16 @@
     }
     
     .bug-card {
-      background-color: #fff;
+      background-color: var(--bg-card);
       border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 15px var(--card-shadow);
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
     .bug-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 25px var(--card-hover-shadow);
     }
     
     .bug-card-header {
@@ -195,7 +315,7 @@
       object-fit: cover;
       border-radius: 5px;
       margin: 15px 0;
-      border: 1px solid #eee;
+      border: 1px solid var(--border-color);
     }
     
     .bug-status {
@@ -203,10 +323,10 @@
       align-items: center;
       margin-top: 15px;
       padding: 10px 15px;
-      background-color: var(--gray-light);
+      background-color: var(--status-bg);
       border-radius: 5px;
       font-size: 0.9rem;
-      color: var(--dark);
+      color: var(--text-color);
     }
     
     .bug-status i {
@@ -216,8 +336,8 @@
     
     /* Footer */
     footer {
-      background-color: var(--dark);
-      color: white;
+      background-color: var(--footer-bg);
+      color: var(--footer-text);
       padding: 40px 0;
       margin-top: 60px;
     }
@@ -240,7 +360,7 @@
     }
     
     .footer-links a {
-      color: white;
+      color: var(--footer-text);
       margin: 0 10px;
       text-decoration: none;
       transition: color 0.2s ease;
@@ -266,20 +386,44 @@
         font-size: 1.8rem;
       }
       
-      .alert-title {
+      .notification-title {
         font-size: 1.2rem;
+      }
+      
+      .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .back-button {
+        margin-bottom: 10px;
+        margin-right: 0;
+      }
+      
+      .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .theme-toggle {
+        margin-top: 10px;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Header with back button -->
+  <!-- Header with back button and theme toggle -->
   <header>
     <div class="header-container container">
-      <a href="index.html" class="back-button">
-        <i class="fas fa-arrow-left"></i> Back to Home
-      </a>
-      <div class="logo">Pixel Haven Games</div>
+      <div class="header-left">
+        <a href="index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+        <div class="logo">Pixel Haven Games</div>
+      </div>
+      <button class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon"></i> Dark Mode
+      </button>
     </div>
     <div class="contact-header">
       Need immediate help? Contact us at <a href="mailto:servers.pixelhavengames@gmail.com">servers.pixelhavengames@gmail.com</a>
@@ -289,12 +433,50 @@
   <main class="container">
     <h1 class="page-title"><i class="fas fa-bug"></i> Known Issues & Bug Report</h1>
     
-    <!-- Critical Warning Alert -->
-    <div class="alert-box">
-      <div class="alert-title">
-        <i class="fas fa-exclamation-triangle"></i> Critical Warning
+    <!-- Maintenance Notification -->
+    <div class="notification maintenance" id="maintenance-alert">
+      <div class="notification-header">
+        <div class="notification-title">
+          <i class="fas fa-tools"></i> Scheduled Maintenance
+        </div>
+        <button class="dismiss-btn" id="dismiss-maintenance">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
-      <div class="alert-content">
+      <div class="notification-content">
+        <p><strong>Important Notice:</strong> We'll be performing scheduled maintenance on our servers and infrastructure.</p>
+        
+        <p>During this time, you may experience:</p>
+        <ul>
+          <li>Service interruptions on the website and app</li>
+          <li>Settings menu and navigation issues</li>
+          <li>Server shutdowns or reboots</li>
+          <li>Temporary app outages</li>
+          <li>Website access limitations</li>
+        </ul>
+        
+        <p>We'll work as quickly as possible to minimize disruption. Thank you for your patience as we improve our services.</p>
+        
+        <div class="time-badge">
+          <i class="far fa-clock"></i> Starts: Friday 16:00 Swedish Time
+        </div>
+        <div class="time-badge">
+          <i class="far fa-clock"></i> Ends: Monday 12:00 Swedish Time (Expected - may be shorter or longer)
+        </div>
+      </div>
+    </div>
+    
+        <!-- Critical Warning Alert -->
+    <div class="notification warning" id="warning-alert">
+      <div class="notification-header">
+        <div class="notification-title">
+          <i class="fas fa-exclamation-triangle"></i> Critical Warning
+        </div>
+        <button class="dismiss-btn" id="dismiss-warning">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="notification-content">
         <p><strong>Do not enable the "Animation" setting</strong> — doing so can break the app or website.</p>
         <p>If you encounter issues:</p>
         <ul>
@@ -357,12 +539,76 @@
       <p>Thanks for your patience as we work to improve your experience.</p>
       <div class="footer-links">
         <a href="index.html">Home</a>
-        <a href="contact.html">Support/contact</a>
+        <a href="#">Support</a>
+        <a href="#">Forums</a>
+        <a href="#">Contact</a>
       </div>
       <div class="copyright">
-        © 2025 Pixel Haven Games. All rights reserved.
+        © 2023 Pixel Haven Games. All rights reserved.
       </div>
     </div>
   </footer>
+
+  <!-- JavaScript for dark mode toggle and notification dismissal -->
+  <script>
+    // Dark mode functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+    
+    // Check for saved theme preference or use preferred color scheme
+    const savedTheme = localStorage.getItem('theme') || 
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    
+    // Apply the saved theme
+    htmlElement.setAttribute('data-theme', savedTheme);
+    updateThemeToggleText();
+    
+    // Theme toggle event listener
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      htmlElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      
+      updateThemeToggleText();
+    });
+    
+    // Update theme toggle button text based on current theme
+    function updateThemeToggleText() {
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      if (currentTheme === 'dark') {
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
+      } else {
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
+      }
+    }
+    
+    // Notification dismissal functionality
+    const dismissWarning = document.getElementById('dismiss-warning');
+    const warningAlert = document.getElementById('warning-alert');
+    const dismissMaintenance = document.getElementById('dismiss-maintenance');
+    const maintenanceAlert = document.getElementById('maintenance-alert');
+    
+    dismissWarning.addEventListener('click', () => {
+      warningAlert.style.display = 'none';
+      sessionStorage.setItem('warningDismissed', 'true');
+    });
+    
+    dismissMaintenance.addEventListener('click', () => {
+      maintenanceAlert.style.display = 'none';
+      sessionStorage.setItem('maintenanceDismissed', 'true');
+    });
+    
+    // Check if notifications were previously dismissed in this session
+    if(sessionStorage.getItem('warningDismissed') === 'true') {
+      warningAlert.style.display = 'none';
+    }
+    
+    if(sessionStorage.getItem('maintenanceDismissed') === 'true') {
+      maintenanceAlert.style.display = 'none';
+    }
+  </script>
 </body>
 </html>
+
