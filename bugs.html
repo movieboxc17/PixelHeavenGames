@@ -5,411 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Known Issues & Bug Report | Pixel Haven Games</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    /* Theme Variables */
-    :root {
-      /* Light Theme (default) */
-      --primary: #3a86ff;
-      --primary-dark: #2667cc;
-      --secondary: #ff006e;
-      --warning: #fb5607;
-      --maintenance: #9e2a2b;
-      --success: #8ac926;
-      --dark: #2b2d42;
-      --light: #f8f9fa;
-      --gray: #8d99ae;
-      --gray-light: #edf2f4;
-      
-      /* Base colors that change with theme */
-      --bg-color: var(--gray-light);
-      --bg-card: #ffffff;
-      --text-color: var(--dark);
-      --header-bg: #ffffff;
-      --header-shadow: rgba(0,0,0,0.1);
-      --card-shadow: rgba(0,0,0,0.08);
-      --card-hover-shadow: rgba(0,0,0,0.1);
-      --footer-bg: var(--dark);
-      --footer-text: #ffffff;
-      --border-color: #eee;
-      --status-bg: var(--gray-light);
-    }
-    
-    /* Dark Theme */
-    [data-theme="dark"] {
-      --bg-color: #121212;
-      --bg-card: #1e1e1e;
-      --text-color: #e0e0e0;
-      --header-bg: #1a1a1a;
-      --header-shadow: rgba(0,0,0,0.3);
-      --card-shadow: rgba(0,0,0,0.3);
-      --card-hover-shadow: rgba(0,0,0,0.4);
-      --footer-bg: #0a0a0a;
-      --footer-text: #e0e0e0;
-      --border-color: #333;
-      --status-bg: #2a2a2a;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      line-height: 1.6;
-    }
-    
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-    
-    /* Header styles */
-    header {
-      background-color: var(--header-bg);
-      box-shadow: 0 2px 10px var(--header-shadow);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    
-    .header-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 20px;
-    }
-    
-    .header-left {
-      display: flex;
-      align-items: center;
-    }
-    
-    .back-button {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: var(--primary);
-      font-weight: 600;
-      transition: all 0.2s ease;
-      margin-right: 25px;
-    }
-    
-    .back-button:hover {
-      color: var(--primary-dark);
-    }
-    
-    .back-button i {
-      margin-right: 8px;
-    }
-    
-    .logo {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: var(--text-color);
-    }
-    
-    .theme-toggle {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      background: none;
-      border: none;
-      color: var(--text-color);
-      font-size: 1rem;
-      padding: 5px 10px;
-      border-radius: 20px;
-      background-color: rgba(0,0,0,0.05);
-    }
-    
-    [data-theme="dark"] .theme-toggle {
-      background-color: rgba(255,255,255,0.1);
-    }
-    
-    .theme-toggle:hover {
-      background-color: rgba(0,0,0,0.1);
-    }
-    
-    [data-theme="dark"] .theme-toggle:hover {
-      background-color: rgba(255,255,255,0.2);
-    }
-    
-    .theme-toggle i {
-      margin-right: 8px;
-    }
-    
-    .contact-header {
-      background-color: var(--primary);
-      color: white;
-      text-align: center;
-      padding: 10px;
-      font-size: 0.9rem;
-    }
-    
-    .contact-header a {
-      color: white;
-      text-decoration: underline;
-      font-weight: bold;
-    }
-    
-    /* Main content */
-    main {
-      padding: 40px 0;
-    }
-    
-    .page-title {
-      text-align: center;
-      margin-bottom: 40px;
-      color: var(--text-color);
-      font-size: 2.2rem;
-    }
-    
-    .page-title i {
-      margin-right: 10px;
-      color: var(--primary);
-    }
-    
-    /* Notification banners */
-    .notification {
-      border-radius: 10px;
-      box-shadow: 0 4px 15px var(--card-shadow);
-      padding: 25px;
-      margin-bottom: 30px;
-      position: relative;
-      background-color: var(--bg-card);
-    }
-    
-    .notification.maintenance {
-      border-left: 5px solid var(--maintenance);
-    }
-    
-    .notification.warning {
-      border-left: 5px solid var(--warning);
-    }
-    
-    .notification-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-    
-    .notification-title {
-      display: flex;
-      align-items: center;
-      font-size: 1.4rem;
-      font-weight: bold;
-    }
-    
-    .notification.maintenance .notification-title {
-      color: var(--maintenance);
-    }
-    
-    .notification.warning .notification-title {
-      color: var(--warning);
-    }
-    
-    .notification-title i {
-      margin-right: 10px;
-      font-size: 1.6rem;
-    }
-    
-    .notification-content {
-      color: var(--text-color);
-    }
-    
-    .notification-content p {
-      margin-bottom: 15px;
-    }
-    
-    .notification-content ul {
-      margin-left: 20px;
-      margin-bottom: 15px;
-    }
-    
-    .notification-content li {
-      margin-bottom: 8px;
-    }
-    
-    .notification-content a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: bold;
-    }
-    
-    .notification-content a:hover {
-      text-decoration: underline;
-    }
-    
-    .dismiss-btn {
-      background: none;
-      border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-      color: var(--gray);
-      transition: color 0.2s ease;
-    }
-    
-    .dismiss-btn:hover {
-      color: var(--text-color);
-    }
-    
-    .time-badge {
-      display: inline-block;
-      background-color: var(--status-bg);
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 0.9rem;
-      margin-top: 10px;
-    }
-    
-    /* Bug cards */
-    .bug-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 25px;
-      margin-top: 40px;
-    }
-    
-    .bug-card {
-      background-color: var(--bg-card);
-      border-radius: 10px;
-      box-shadow: 0 4px 15px var(--card-shadow);
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .bug-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px var(--card-hover-shadow);
-    }
-    
-    .bug-card-header {
-      background-color: var(--primary);
-      color: white;
-      padding: 15px 20px;
-    }
-    
-    .bug-card-title {
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-    }
-    
-    .bug-card-title i {
-      margin-right: 10px;
-    }
-    
-    .bug-card-body {
-      padding: 20px;
-    }
-    
-    .bug-card-image {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-radius: 5px;
-      margin: 15px 0;
-      border: 1px solid var(--border-color);
-    }
-    
-    .bug-status {
-      display: flex;
-      align-items: center;
-      margin-top: 15px;
-      padding: 10px 15px;
-      background-color: var(--status-bg);
-      border-radius: 5px;
-      font-size: 0.9rem;
-      color: var(--text-color);
-    }
-    
-    .bug-status i {
-      margin-right: 8px;
-      color: var(--primary);
-    }
-    
-    /* Footer */
-    footer {
-      background-color: var(--footer-bg);
-      color: var(--footer-text);
-      padding: 40px 0;
-      margin-top: 60px;
-    }
-    
-    .footer-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    
-    .footer-logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-    
-    .footer-links {
-      margin: 20px 0;
-    }
-    
-    .footer-links a {
-      color: var(--footer-text);
-      margin: 0 10px;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    
-    .footer-links a:hover {
-      color: var(--primary);
-    }
-    
-    .copyright {
-      font-size: 0.9rem;
-      color: var(--gray);
-      margin-top: 20px;
-    }
-    
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .bug-cards {
-        grid-template-columns: 1fr;
-      }
-      
-      .page-title {
-        font-size: 1.8rem;
-      }
-      
-      .notification-title {
-        font-size: 1.2rem;
-      }
-      
-      .header-left {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .back-button {
-        margin-bottom: 10px;
-        margin-right: 0;
-      }
-      
-      .header-container {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .theme-toggle {
-        margin-top: 10px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="images/favicon.png" type="image/png">
 </head>
 <body>
   <!-- Header with back button and theme toggle -->
@@ -424,6 +21,15 @@
       <button class="theme-toggle" id="theme-toggle">
         <i class="fas fa-moon"></i> Dark Mode
       </button>
+      <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobile-menu">
+      <a href="index.html">Home</a>
+      <a href="known-issues.html" class="active">Known Issues</a>
+      <a href="contact.html">Contact Support</a>
+      <a href="about.html">About Us</a>
     </div>
     <div class="contact-header">
       Need immediate help? Contact us at <a href="mailto:servers.pixelhavengames@gmail.com">servers.pixelhavengames@gmail.com</a>
@@ -439,7 +45,7 @@
         <div class="notification-title">
           <i class="fas fa-tools"></i> Scheduled Maintenance
         </div>
-        <button class="dismiss-btn" id="dismiss-maintenance">
+        <button class="dismiss-btn" id="dismiss-maintenance" aria-label="Dismiss maintenance notification">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -466,13 +72,13 @@
       </div>
     </div>
     
-        <!-- Critical Warning Alert -->
+    <!-- Critical Warning Alert -->
     <div class="notification warning" id="warning-alert">
       <div class="notification-header">
         <div class="notification-title">
           <i class="fas fa-exclamation-triangle"></i> Critical Warning
         </div>
-        <button class="dismiss-btn" id="dismiss-warning">
+        <button class="dismiss-btn" id="dismiss-warning" aria-label="Dismiss warning notification">
           <i class="fas fa-times"></i>
         </button>
       </div>
@@ -486,8 +92,57 @@
         <p>We're actively working on resolving this issue. Thank you for your patience!</p>
       </div>
     </div>
-    
+
+    <!-- Bug Submission Form -->
+    <div class="bug-submission-section">
+      <h2><i class="fas fa-clipboard-list"></i> Report a New Bug</h2>
+      <form id="bug-report-form" class="bug-form">
+        <div class="form-group">
+          <label for="bug-title">Bug Title</label>
+          <input type="text" id="bug-title" name="bug-title" placeholder="Brief description of the issue" required>
+        </div>
+        <div class="form-group">
+          <label for="bug-description">Describe the Bug</label>
+          <textarea id="bug-description" name="bug-description" placeholder="What happened? What were you expecting? How can we reproduce it?" rows="4" required></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="device-type">Device Type</label>
+            <select id="device-type" name="device-type" required>
+              <option value="">Select your device</option>
+              <option value="desktop">Desktop Computer</option>
+              <option value="laptop">Laptop</option>
+              <option value="tablet">Tablet</option>
+              <option value="mobile">Mobile Phone</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="browser">Browser</label>
+            <select id="browser" name="browser" required>
+              <option value="">Select your browser</option>
+              <option value="chrome">Chrome</option>
+              <option value="firefox">Firefox</option>
+              <option value="safari">Safari</option>
+              <option value="edge">Edge</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="bug-image">Screenshot (Optional)</label>
+          <input type="file" id="bug-image" name="bug-image" accept="image/*">
+        </div>
+        <div class="form-group">
+          <label for="email">Your Email</label>
+          <input type="email" id="email" name="email" placeholder="So we can follow up if needed" required>
+        </div>
+        <button type="submit" class="submit-btn">Submit Bug Report</button>
+      </form>
+    </div>
+
     <!-- Bug Cards -->
+    <h2 class="section-title"><i class="fas fa-exclamation-circle"></i> Current Known Issues</h2>
     <div class="bug-cards">
       <!-- Bug Card 1 -->
       <div class="bug-card">
@@ -496,7 +151,7 @@
         </div>
         <div class="bug-card-body">
           <p>Some settings are currently unresponsive or not saving correctly. You may notice certain toggles or options do nothing when clicked.</p>
-          <img src="images/settings-bug.png" alt="Screenshot of broken settings" class="bug-card-image">
+          <img src="images/settings-bug.jpg" alt="Screenshot of broken settings" class="bug-card-image">
           <div class="bug-status">
             <i class="fas fa-clock"></i> Expected fix: Within 1–2 weeks.
           </div>
@@ -510,9 +165,9 @@
         </div>
         <div class="bug-card-body">
           <p>The burger menu does not work on phones in portrait mode. As a workaround, rotate your phone to landscape mode — this will reveal the full menu.</p>
-          <img src="images/burger-menu-bug.png" alt="Screenshot of burger menu bug" class="bug-card-image">
+          <img src="images/burger-menu-bug.jpg" alt="Screenshot of burger menu bug" class="bug-card-image">
           <div class="bug-status">
-            <i class="fas fa-tools"></i> Expected fix: In progress, patch coming soon.
+            <i class="fas fa-check-circle"></i> Fixed in latest update!
           </div>
         </div>
       </div>
@@ -524,9 +179,51 @@
         </div>
         <div class="bug-card-body">
           <p>When using the expanded menu in landscape mode, it's not clear which menu item is currently selected. This can be confusing for navigation.</p>
-          <img src="images/menu-selection-bug.png" alt="Unclear menu selection bug" class="bug-card-image">
+          <img src="images/menu-selection-bug.jpg" alt="Unclear menu selection bug" class="bug-card-image">
           <div class="bug-status">
             <i class="fas fa-paint-brush"></i> Expected fix: UI update in the next patch.
+          </div>
+        </div>
+      </div>
+
+      <!-- Bug Card 4 (New) -->
+      <div class="bug-card">
+        <div class="bug-card-header">
+          <h2 class="bug-card-title"><i class="fas fa-mobile-alt"></i> Screen Rotation Issues</h2>
+        </div>
+        <div class="bug-card-body">
+          <p>Some users experience UI elements misalignment when rotating their device from portrait to landscape and back.</p>
+          <img src="images/rotation-bug.jpg" alt="Screen rotation bug" class="bug-card-image">
+          <div class="bug-status">
+            <i class="fas fa-wrench"></i> Under investigation.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Issue Status Updates -->
+    <div class="issue-updates">
+      <h2 class="section-title"><i class="fas fa-history"></i> Recent Fixes</h2>
+      <div class="update-timeline">
+        <div class="update-item">
+          <div class="update-date">May 15, 2025</div>
+          <div class="update-content">
+            <h3><i class="fas fa-check-circle"></i> Mobile Navigation Menu Fixed</h3>
+            <p>The burger menu now works correctly on all mobile devices in both portrait and landscape orientations.</p>
+          </div>
+        </div>
+        <div class="update-item">
+          <div class="update-date">May 10, 2025</div>
+          <div class="update-content">
+            <h3><i class="fas fa-check-circle"></i> Game Loading Screen Bug Fixed</h3>
+            <p>Resolved the issue where the loading screen would occasionally freeze at 90%.</p>
+          </div>
+        </div>
+        <div class="update-item">
+          <div class="update-date">May 5, 2025</div>
+          <div class="update-content">
+            <h3><i class="fas fa-check-circle"></i> Account Creation Error Fixed</h3>
+            <p>Fixed the bug preventing some users from creating new accounts when using special characters in passwords.</p>
           </div>
         </div>
       </div>
@@ -539,7 +236,15 @@
       <p>Thanks for your patience as we work to improve your experience.</p>
       <div class="footer-links">
         <a href="index.html">Home</a>
+        <a href="known-issues.html">Known Issues</a>
         <a href="contact.html">Support/Contact</a>
+        <a href="about.html">About Us</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+      <div class="social-links">
+        <a href="https://twitter.com/pixelhaven" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="https://discord.gg/pixelhaven" aria-label="Discord"><i class="fab fa-discord"></i></a>
+        <a href="https://instagram.com/pixelhavengames" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
       </div>
       <div class="copyright">
         © 2025 Pixel Haven Games. All rights reserved.
@@ -547,66 +252,6 @@
     </div>
   </footer>
 
-  <!-- JavaScript for dark mode toggle and notification dismissal -->
-  <script>
-    // Dark mode functionality
-    const themeToggle = document.getElementById('theme-toggle');
-    const htmlElement = document.documentElement;
-    
-    // Check for saved theme preference or use preferred color scheme
-    const savedTheme = localStorage.getItem('theme') || 
-                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    
-    // Apply the saved theme
-    htmlElement.setAttribute('data-theme', savedTheme);
-    updateThemeToggleText();
-    
-    // Theme toggle event listener
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = htmlElement.getAttribute('data-theme');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-      
-      htmlElement.setAttribute('data-theme', newTheme);
-      localStorage.setItem('theme', newTheme);
-      
-      updateThemeToggleText();
-    });
-    
-    // Update theme toggle button text based on current theme
-    function updateThemeToggleText() {
-      const currentTheme = htmlElement.getAttribute('data-theme');
-      if (currentTheme === 'dark') {
-        themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light Mode';
-      } else {
-        themeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark Mode';
-      }
-    }
-    
-    // Notification dismissal functionality
-    const dismissWarning = document.getElementById('dismiss-warning');
-    const warningAlert = document.getElementById('warning-alert');
-    const dismissMaintenance = document.getElementById('dismiss-maintenance');
-    const maintenanceAlert = document.getElementById('maintenance-alert');
-    
-    dismissWarning.addEventListener('click', () => {
-      warningAlert.style.display = 'none';
-      sessionStorage.setItem('warningDismissed', 'true');
-    });
-    
-    dismissMaintenance.addEventListener('click', () => {
-      maintenanceAlert.style.display = 'none';
-      sessionStorage.setItem('maintenanceDismissed', 'true');
-    });
-    
-    // Check if notifications were previously dismissed in this session
-    if(sessionStorage.getItem('warningDismissed') === 'true') {
-      warningAlert.style.display = 'none';
-    }
-    
-    if(sessionStorage.getItem('maintenanceDismissed') === 'true') {
-      maintenanceAlert.style.display = 'none';
-    }
-  </script>
+  <script src="js/main.js"></script>
 </body>
 </html>
-
