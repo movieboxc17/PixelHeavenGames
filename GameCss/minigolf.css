@@ -1,0 +1,191 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    touch-action: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: fixed;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+#game-ui {
+    background-color: #ffffff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+#players {
+    display: flex;
+    gap: 20px;
+}
+
+.player {
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.player.active {
+    background-color: #e6f7ff;
+    border-left: 4px solid #1890ff;
+}
+
+.player-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.player-score {
+    font-size: 18px;
+    text-align: center;
+}
+
+#hole-info {
+    text-align: center;
+}
+
+#hole-number {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#power-meter {
+    width: 120px;
+    height: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#power-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #4CAF50, #FFEB3B, #FF5722);
+    transition: width 0.1s;
+}
+
+#game-canvas {
+    flex: 1;
+    width: 100%;
+    background-color: #86c174;
+    touch-action: none;
+}
+
+#scoreboard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    z-index: 100;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+#scoreboard h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#winner-display {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+}
+
+#score-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#score-table th, #score-table td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+#score-table th {
+    background-color: #f2f2f2;
+}
+
+#score-table tfoot tr {
+    font-weight: bold;
+    background-color: #f2f2f2;
+}
+
+#play-again {
+    display: block;
+    width: 150px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#play-again:hover {
+    background-color: #388e3c;
+}
+
+.hidden {
+    display: none;
+}
+
+@media (orientation: landscape) {
+    #game-ui {
+        height: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    #players {
+        gap: 10px;
+    }
+    
+    .player-name, .player-score {
+        font-size: 14px;
+    }
+    
+    #hole-number {
+        font-size: 16px;
+    }
+    
+    #power-meter {
+        width: 80px;
+    }
+}
