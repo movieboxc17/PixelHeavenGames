@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>2D Mini Golf</title>
+    <link rel="stylesheet" href="minigolf.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-ui">
+            <div id="players">
+                <div class="player active" id="player1">
+                    <div class="player-name">Player 1</div>
+                    <div class="player-score">0</div>
+                </div>
+                <div class="player" id="player2">
+                    <div class="player-name">Player 2</div>
+                    <div class="player-score">0</div>
+                </div>
+            </div>
+            <div id="hole-info">
+                <div id="hole-number">Hole 1</div>
+                <div id="par-info">Par: 3</div>
+            </div>
+            <div id="power-meter">
+                <div id="power-fill"></div>
+            </div>
+        </div>
+        
+        <canvas id="game-canvas"></canvas>
+        
+        <div id="scoreboard" class="hidden">
+            <h2>Game Complete!</h2>
+            <div id="winner-display"></div>
+            <table id="score-table">
+                <thead>
+                    <tr>
+                        <th>Hole</th>
+                        <th>Player 1</th>
+                        <th>Player 2</th>
+                    </tr>
+                </thead>
+                <tbody id="score-body"></tbody>
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <td id="player1-total">0</td>
+                        <td id="player2-total">0</td>
+                    </tr>
+                </tfoot>
+            </table>
+            <button id="play-again">Play Again</button>
+        </div>
+    </div>
+    
+    <script src="minigolf.js"></script>
+</body>
+</html>
