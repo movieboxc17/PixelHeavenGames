@@ -28,6 +28,25 @@ document.addEventListener('DOMContentLoaded', function() {
             playClickSound();
         }
     });
+    
+    // Add additional CSS rules for iOS
+    if (isIOS()) {
+        const style = document.createElement('style');
+        style.textContent = `
+            .ios-scrollfix {
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                -webkit-overflow-scrolling: touch !important;
+                overflow-y: scroll !important;
+            }
+            
+            /* Ensure content inside is fully scrollable */
+            .ios-scrollfix > * {
+                transform: translateZ(0);
+            }
+        `;
+        document.head.appendChild(style);
+    }
 });
 
 // Initialize HTML5 Audio
@@ -109,309 +128,366 @@ function createSettingsElements() {
     settingsOverlay.className = 'settings-overlay';
     
     const settingsHTML = `
-        <div class="settings-panel">
-            <div class="settings-header">
-                <div class="settings-title">Settings</div>
-                <div class="close-settings"><i class="fas fa-times"></i></div>
-            </div>
-            
-            <!-- Appearance Section -->
-            <div class="settings-section">
-                <div class="settings-section-title"><i class="fas fa-paint-brush"></i> Appearance</div>
-                
-                <div class="settings-option">
-                    <div class="option-info">
-                        <div class="option-label">Dark Mode</div>
-                        <div class="option-description">Use dark mode for lower eye strain</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="dark-mode-toggle" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div class="option-info">
-                        <div class="option-label">Text Size</div>
-                        <div class="option-description">Adjust the size of text</div>
-                    </div>
-                    <div class="select-wrapper">
-                        <select id="text-size-select" class="settings-select">
-                            <option value="small">Small</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="large">Large</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Performance Section -->
-            <div class="settings-section">
-                <div class="settings-section-title"><i class="fas fa-bolt"></i> Performance</div>
-                
-                <div class="settings-option">
-                                        <div class="option-info">
-                        <div class="option-label">Reduce Animations</div>
-                        <div class="option-description">Minimize animations for better performance</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="reduce-motion-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div class="option-info">
-                        <div class="option-label">Battery Saver</div>
-                        <div class="option-description">Optimize for battery life</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="battery-saver-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-            
-            <!-- Audio Section -->
-            <div class="settings-section">
-                <div class="settings-section-title"><i class="fas fa-volume-up"></i> Audio</div>
-                
-                <div class="settings-option">
-                    <div class="option-info">
-                        <div class="option-label">Sound Effects</div>
-                        <div class="option-description">Enable sound effects for interactions</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="sound-toggle" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-            
-            <!-- Advanced Section -->
-            <div class="settings-section">
-                <div class="settings-section-title"><i class="fas fa-sliders-h"></i> Advanced</div>
-                
-                <div class="settings-option">
-                    <div class="option-info">
-                        <div class="option-label">Developer Mode</div>
-                        <div class="option-description">Access developer features</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="developer-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div id="dev-code-container" class="dev-code-container">
-                    <div class="option-label">Enter Developer Code</div>
-                    <input type="text" class="dev-code-input" placeholder="XXXX-XXXX-XXXX">
-                    <button class="dev-code-submit"><i class="fas fa-check"></i> Submit</button>
-                    <div class="dev-code-message">Invalid code. Please try again.</div>
-                </div>
-            </div>
-            
-            <!-- PWA Section (shown only in PWA mode) -->
-            <div class="pwa-only-section settings-section">
-                <div class="settings-section-title"><i class="fas fa-mobile-alt"></i> App Options</div>
-                
-                <div class="dual-button-container">
-                    <button id="reboot-button" class="reboot-button">
-                        <i class="fas fa-redo-alt"></i> Restart App
-                    </button>
-                    
-                    <button id="clear-cache-button" class="clear-cache-button">
-                        <i class="fas fa-broom"></i> Clear Cache
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Data Management Section -->
-            <div class="settings-section">
-                <div class="settings-section-title"><i class="fas fa-database"></i> Data Management</div>
-                
-                <div class="settings-option">
-                    <div class="option-info">
-                        <div class="option-label">Save Game Progress</div>
-                        <div class="option-description">Save your progress across sessions</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="save-progress-toggle" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="action-buttons-container">
-                    <button id="reset-progress-button" class="settings-action-button">
-                        <i class="fas fa-trash-alt"></i> Reset All Progress
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Version Info -->
-            <div class="version-info">
-                <div>PixelHeavenGames</div>
-                <div class="version-number">Version 19.4</div>
-            </div>
-            
-            <!-- Developer Section -->
-            <div class="developer-section">
-                Created by Moviebox C17 & Askansz
+    <div class="settings-panel">
+        <div class="settings-header">
+            <div class="settings-title">Settings</div>
+            <div class="close-settings">
+                <i class="fas fa-times"></i>
             </div>
         </div>
-    `;
-    
-    settingsOverlay.innerHTML = settingsHTML;
-    document.body.appendChild(settingsOverlay);
+        
+        <!-- Appearance Section -->
+        <div class="settings-section">
+            <div class="settings-section-title"><i class="fas fa-paint-brush"></i> Appearance</div>
+            
+            <div class="settings-option">
+                <div class="option-info">
+                    <div class="option-label">Dark Mode</div>
+                    <div class="option-description">Toggle dark/light color theme</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dark-mode-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-option">
+                <div class="option-info">
+                    <div class="option-label">Text Size</div>
+                    <div class="option-description">Adjust text size for better readability</div>
+                </div>
+                <div class="select-wrapper">
+                    <select id="text-size-select" class="settings-select">
+                        <option value="small">Small</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="large">Large</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Performance Section -->
+        <div class="settings-section">
+            <div class="settings-section-title"><i class="fas fa-tachometer-alt"></i> Performance</div>
+            
+            <div class="settings-option">
+                <div class="option-info">
+                    <div class="option-label">Reduce Animations</div>
+                    <div class="option-description">Minimize animations for better performance</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="reduce-motion-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="settings-option">
+                <div class="option-info">
+                    <div class="option-label">Battery Saver</div>
+                    <div class="option-description">Optimize for battery life</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="battery-saver-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Audio Section -->
+        <div class="settings-section">
+            <div class="settings-section-title"><i class="fas fa-volume-up"></i> Audio</div>
+            
+            <div class="settings-option">
+                <div class="option-info">
+                    <div class="option-label">Sound Effects</div>
+                    <div class="option-description">Enable sound effects for interactions</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="sound-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Advanced Section -->
+        <div class="settings-section">
+            <div class="settings-section-title"><i class="fas fa-sliders-h"></i> Advanced</div>
+            
+            <div class="settings-option">
+                <div class="option-info">
+                    <div class="option-label">Developer Mode</div>
+                    <div class="option-description">Access developer features</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="developer-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div id="dev-code-container" class="dev-code-container">
+                <div class="option-label">Enter Developer Code</div>
+                <input type="text" class="dev-code-input" placeholder="XXXX-XXXX-XXXX">
+                <button class="dev-code-submit"><i class="fas fa-check"></i> Submit</button>
+                <div class="dev-code-message">Invalid code. Please try again.</div>
+            </div>
+        </div>
+        
+        <!-- PWA Section (shown only in PWA mode) -->
+        <div class="pwa-only-section settings-section">
+            <div class="settings-section-title"><i class="fas fa-mobile-alt"></i> App Options</div>
+            
+            <div class="dual-button-container">
+                <button id="reboot-button" class="reboot-button">
+                    <i class="fas fa-redo-alt"></i> Restart App
+                </button>
+                
+                <button id="clear-cache-button" class="clear-cache-button">
+                    <i class="fas fa-broom"></i> Clear Cache
+                </button>
+            </div>
+        </div>
+        
+        <!-- Data Management Section -->
+        <div class="settings-section">
+            <div class="settings-section-title"><i class="fas fa-database"></i> Data Management</div>
+            
+            <div class="settings-option">
+                <div class="option-info">
+                    <div class="option-label">Save Game Progress</div>
+                    <div class="option-description">Save your progress across sessions</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="save-progress-toggle" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+            
+            <div class="action-buttons-container">
+                <button id="reset-progress-button" class="settings-action-button">
+                    <i class="fas fa-trash-alt"></i> Reset All Progress
+                </button>
+            </div>
+        </div>
+        
+        <!-- Version Info -->
+        <div class="version-info">
+            <div>PixelHeavenGames</div>
+            <div class="version-number">Version 19.4</div>
+        </div>
+        
+        <!-- Developer Section -->
+        <div class="developer-section">
+            Created by Moviebox C17 & Askansz
+        </div>
+    </div>
+`;
+
+settingsOverlay.innerHTML = settingsHTML;
+document.body.appendChild(settingsOverlay);
+
+// Fix touch scrolling after creating elements
+fixTouchScrolling();
+}
+
+// Function to fix touch scrolling issues
+function fixTouchScrolling() {
+const settingsPanel = document.querySelector('.settings-panel');
+
+if (!settingsPanel) return;
+
+// Add iOS-specific class if needed
+if (isIOS()) {
+    settingsPanel.classList.add('ios-scrollfix');
+}
+
+// Prevent touch events on the panel from being blocked
+settingsPanel.addEventListener('touchstart', function(e) {
+    e.stopPropagation(); // Prevent parent elements from capturing touch
+}, { passive: true }); // Use passive listener for better performance
+
+// Force recalculation of the scrollable height when opened
+document.querySelector('.settings-button').addEventListener('click', function() {
+    setTimeout(() => {
+        // Force layout recalculation
+        settingsPanel.style.maxHeight = '';
+        settingsPanel.offsetHeight; // Trigger reflow
+        settingsPanel.style.maxHeight = isIOS() ? '65vh' : '75vh';
+    }, 10);
+});
+
+// Prevent settings overlay from blocking touch events
+const settingsOverlay = document.querySelector('.settings-overlay');
+if (settingsOverlay) {
+    settingsOverlay.addEventListener('touchmove', function(e) {
+        if (!settingsPanel.contains(e.target)) {
+            e.preventDefault(); // Prevent body scrolling
+        }
+    }, { passive: false });
+}
+
+// Allow scrolling within the panel
+settingsPanel.addEventListener('touchmove', function(e) {
+    e.stopPropagation(); // Prevent the overlay from capturing this
+}, { passive: true });
 }
 
 // Check if running as a PWA
 function checkPWAMode() {
-    // Check if app is running in standalone mode (PWA)
-    const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
-                 (window.navigator.standalone) || 
-                 document.referrer.includes('android-app://');
-    
-    if (isPWA) {
-        document.body.classList.add('pwa-mode');
-    }
+// Check if app is running in standalone mode (PWA)
+const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+             (window.navigator.standalone) || 
+             document.referrer.includes('android-app://');
+
+if (isPWA) {
+    document.body.classList.add('pwa-mode');
+}
 }
 
 // Load saved settings from localStorage
 function loadSettings() {
-    // Set default settings if not present
-    if (!localStorage.getItem('settingsInitialized')) {
-        // Set defaults
-        localStorage.setItem('darkMode', 'true');
-        localStorage.setItem('textSize', 'medium');
-        localStorage.setItem('reduceMotion', 'false');
-        localStorage.setItem('batterySaver', 'false');
-        localStorage.setItem('soundEnabled', 'true');
-        localStorage.setItem('saveProgress', 'true');
-        localStorage.setItem('developerMode', 'false');
-        localStorage.setItem('settingsInitialized', 'true');
-    }
-    
-    // Apply saved settings
-    applySettings();
+// Set default settings if not present
+if (!localStorage.getItem('settingsInitialized')) {
+    // Set defaults
+    localStorage.setItem('darkMode', 'true');
+    localStorage.setItem('textSize', 'medium');
+    localStorage.setItem('reduceMotion', 'false');
+    localStorage.setItem('batterySaver', 'false');
+    localStorage.setItem('soundEnabled', 'true');
+    localStorage.setItem('saveProgress', 'true');
+    localStorage.setItem('developerMode', 'false');
+    localStorage.setItem('settingsInitialized', 'true');
+}
+
+// Apply saved settings
+applySettings();
 }
 
 // Apply all settings from localStorage to the UI
 function applySettings() {
-    // Get values from localStorage
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-    const textSize = localStorage.getItem('textSize') || 'medium';
-    const reduceMotion = localStorage.getItem('reduceMotion') === 'true';
-    const batterySaver = localStorage.getItem('batterySaver') === 'true';
-    const soundEnabled = localStorage.getItem('soundEnabled') === 'true';
-    const saveProgress = localStorage.getItem('saveProgress') === 'true';
-    const developerMode = localStorage.getItem('developerMode') === 'true';
-    
-    // Set toggle states based on saved values
-    document.getElementById('dark-mode-toggle').checked = darkMode;
-    document.getElementById('text-size-select').value = textSize;
-    document.getElementById('reduce-motion-toggle').checked = reduceMotion;
-    document.getElementById('battery-saver-toggle').checked = batterySaver;
-    document.getElementById('sound-toggle').checked = soundEnabled;
-    document.getElementById('save-progress-toggle').checked = saveProgress;
-    document.getElementById('developer-toggle').checked = developerMode;
-    
-    // Apply classes to body
-    if (darkMode) document.body.classList.add('dark-mode');
-    document.body.classList.add(`text-size-${textSize}`);
-    if (reduceMotion) document.body.classList.add('reduce-motion');
-    if (batterySaver) document.body.classList.add('battery-saver');
-    
-    // Show/hide developer section based on developer mode
-    if (developerMode) {
-        document.getElementById('dev-code-container').classList.add('active');
-    }
+// Get values from localStorage
+const darkMode = localStorage.getItem('darkMode') === 'true';
+const textSize = localStorage.getItem('textSize') || 'medium';
+const reduceMotion = localStorage.getItem('reduceMotion') === 'true';
+const batterySaver = localStorage.getItem('batterySaver') === 'true';
+const soundEnabled = localStorage.getItem('soundEnabled') === 'true';
+const saveProgress = localStorage.getItem('saveProgress') === 'true';
+const developerMode = localStorage.getItem('developerMode') === 'true';
+
+// Set toggle states based on saved values
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const textSizeSelect = document.getElementById('text-size-select');
+const reduceMotionToggle = document.getElementById('reduce-motion-toggle');
+const batterySaverToggle = document.getElementById('battery-saver-toggle');
+const soundToggle = document.getElementById('sound-toggle');
+const saveProgressToggle = document.getElementById('save-progress-toggle');
+const developerToggle = document.getElementById('developer-toggle');
+
+// Only set if elements exist (they might not on initial load)
+if (darkModeToggle) darkModeToggle.checked = darkMode;
+if (textSizeSelect) textSizeSelect.value = textSize;
+if (reduceMotionToggle) reduceMotionToggle.checked = reduceMotion;
+if (batterySaverToggle) batterySaverToggle.checked = batterySaver;
+if (soundToggle) soundToggle.checked = soundEnabled;
+if (saveProgressToggle) saveProgressToggle.checked = saveProgress;
+if (developerToggle) developerToggle.checked = developerMode;
+
+// Apply classes to body
+if (darkMode) document.body.classList.add('dark-mode');
+document.body.classList.add(`text-size-${textSize}`);
+if (reduceMotion) document.body.classList.add('reduce-motion');
+if (batterySaver) document.body.classList.add('battery-saver');
+
+// Show/hide developer section based on developer mode
+const devCodeContainer = document.getElementById('dev-code-container');
+if (devCodeContainer && developerMode) {
+    devCodeContainer.classList.add('active');
+}
 }
 
 // Add all event listeners for settings functionality
 function addEventListeners() {
-    // Open settings panel
-    document.querySelector('.settings-button').addEventListener('click', function() {
-        document.querySelector('.settings-overlay').classList.add('active');
+// Open settings panel
+document.querySelector('.settings-button').addEventListener('click', function() {
+    document.querySelector('.settings-overlay').classList.add('active');
+    playClickSound();
+});
+
+// Close settings panel
+document.querySelector('.close-settings').addEventListener('click', function() {
+    document.querySelector('.settings-overlay').classList.remove('active');
+    playClickSound();
+});
+
+// Close settings when clicking outside
+document.querySelector('.settings-overlay').addEventListener('click', function(e) {
+    if (e.target === this) {
+        this.classList.remove('active');
+    }
+});
+
+// Dark Mode toggle
+document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+    if (this.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', 'true');
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', 'false');
+    }
+    playClickSound();
+});
+
+// Text Size select
+document.getElementById('text-size-select').addEventListener('change', function() {
+    // Remove all text size classes
+    document.body.classList.remove('text-size-small', 'text-size-medium', 'text-size-large');
+    // Add selected text size class
+    document.body.classList.add(`text-size-${this.value}`);
+    // Save setting
+    localStorage.setItem('textSize', this.value);
+    playClickSound();
+});
+
+// Reduce Motion toggle
+document.getElementById('reduce-motion-toggle').addEventListener('change', function() {
+    if (this.checked) {
+        document.body.classList.add('reduce-motion');
+        localStorage.setItem('reduceMotion', 'true');
+    } else {
+        document.body.classList.remove('reduce-motion');
+        localStorage.setItem('reduceMotion', 'false');
+    }
+    playClickSound();
+});
+
+// Battery Saver toggle
+document.getElementById('battery-saver-toggle').addEventListener('change', function() {
+    if (this.checked) {
+        document.body.classList.add('battery-saver');
+        localStorage.setItem('batterySaver', 'true');
+    } else {
+        document.body.classList.remove('battery-saver');
+        localStorage.setItem('batterySaver', 'false');
+    }
+    playClickSound();
+});
+
+// Sound toggle
+document.getElementById('sound-toggle').addEventListener('change', function() {
+    localStorage.setItem('soundEnabled', this.checked ? 'true' : 'false');
+    
+    // Test sound when enabled
+    if (this.checked) {
         playClickSound();
-    });
-    
-    // Close settings panel
-    document.querySelector('.close-settings').addEventListener('click', function() {
-        document.querySelector('.settings-overlay').classList.remove('active');
-        playClickSound();
-    });
-    
-    // Close settings when clicking outside
-    document.querySelector('.settings-overlay').addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.remove('active');
-        }
-    });
-    
-    // Dark Mode toggle
-    document.getElementById('dark-mode-toggle').addEventListener('change', function() {
-        if (this.checked) {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('darkMode', 'true');
-        } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('darkMode', 'false');
-        }
-        playClickSound();
-    });
-    
-    // Text Size select
-    document.getElementById('text-size-select').addEventListener('change', function() {
-        // Remove all text size classes
-        document.body.classList.remove('text-size-small', 'text-size-medium', 'text-size-large');
-        // Add selected text size class
-        document.body.classList.add(`text-size-${this.value}`);
-        // Save setting
-        localStorage.setItem('textSize', this.value);
-        playClickSound();
-    });
-    
-    // Reduce Motion toggle
-    document.getElementById('reduce-motion-toggle').addEventListener('change', function() {
-        if (this.checked) {
-            document.body.classList.add('reduce-motion');
-            localStorage.setItem('reduceMotion', 'true');
-        } else {
-            document.body.classList.remove('reduce-motion');
-            localStorage.setItem('reduceMotion', 'false');
-        }
-        playClickSound();
-    });
-    
-    // Battery Saver toggle
-    document.getElementById('battery-saver-toggle').addEventListener('change', function() {
-        if (this.checked) {
-            document.body.classList.add('battery-saver');
-            localStorage.setItem('batterySaver', 'true');
-        } else {
-            document.body.classList.remove('battery-saver');
-            localStorage.setItem('batterySaver', 'false');
-        }
-        playClickSound();
-    });
-    
-    // Sound toggle
-    document.getElementById('sound-toggle').addEventListener('change', function() {
-        localStorage.setItem('soundEnabled', this.checked ? 'true' : 'false');
-        
-        // Test sound when enabled
-        if (this.checked) {
-            playClickSound();
-        }
-    });
-    
-    // Save Progress toggle
-    document.getElementById('save-progress-toggle').addEventListener('change', function() {
-        localStorage.setItem('saveProgress', this.checked ? 'true' : 'false');
-        playClickSound();
-    });
-    
+    }
+});
+
+// Save Progress toggle
+document.getElementById('save-progress-toggle').addEventListener('change', function() {
+    localStorage.setItem('saveProgress', this.checked ? 'true' : 'false');
+    playClickSound();
+});
+
     // Developer Mode toggle
     document.getElementById('developer-toggle').addEventListener('change', function() {
         const devCodeContainer = document.getElementById('dev-code-container');
@@ -422,130 +498,120 @@ function addEventListeners() {
         } else {
             devCodeContainer.classList.remove('active');
             localStorage.setItem('developerMode', 'false');
+            // Clear developer access when disabled
+            localStorage.removeItem('fullDeveloperAccess');
         }
         playClickSound();
     });
     
-    // Dev Code Submit button
-    const devCodeSubmit = document.querySelector('.dev-code-submit');
-    if (devCodeSubmit) {
-        devCodeSubmit.addEventListener('click', function() {
-            const codeInput = document.querySelector('.dev-code-input');
-            const codeMessage = document.querySelector('.dev-code-message');
+    // Developer Code submission
+    document.querySelector('.dev-code-submit').addEventListener('click', function() {
+        const codeInput = document.querySelector('.dev-code-input');
+        const codeMessage = document.querySelector('.dev-code-message');
+        const developerCode = codeInput.value.trim();
+        
+        // Validate developer code
+        if (developerCode === 'PIXEL-HEAVEN-2025') {
+            localStorage.setItem('fullDeveloperAccess', 'true');
+            codeMessage.textContent = 'Developer mode activated! Refresh to apply changes.';
+            codeMessage.style.color = '#4caf50';
+            codeMessage.classList.add('active');
+            showToast('Developer mode activated', 'check-circle');
+        } else {
+            codeMessage.textContent = 'Invalid code. Please try again.';
+            codeMessage.style.color = '#ff6b6b';
+            codeMessage.classList.add('active');
             
-            // Validate developer code (example: PIXEL-HEAVEN-2025)
-            if (codeInput.value === 'PIXEL-HEAVEN-2025') {
-                codeMessage.textContent = 'Developer mode activated!';
-                codeMessage.style.color = '#4CAF50';
-                codeMessage.classList.add('active');
-                
-                // Enable secret developer features here
-                localStorage.setItem('fullDeveloperAccess', 'true');
-                
-                // Show toast notification
-                showToast('Developer mode activated!', 'check-circle');
-            } else {
-                codeMessage.textContent = 'Invalid code. Please try again.';
-                codeMessage.style.color = '#ff6b6b';
-                codeMessage.classList.add('active');
-                
-                // Shake animation for error
-                codeInput.classList.add('shake');
-                setTimeout(() => {
-                    codeInput.classList.remove('shake');
-                }, 500);
-            }
-            
-            playClickSound();
-        });
-    }
+            // Shake animation for error
+            codeInput.classList.add('shake');
+        }
+    });
     
     // Reset Progress button
     document.getElementById('reset-progress-button').addEventListener('click', function() {
-        // Confirm before resetting
         if (confirm('Are you sure you want to reset all game progress? This cannot be undone.')) {
-            // Clear game progress data
-            clearGameProgress();
+            // Clear all game-related localStorage items
+            const settingsKeys = [
+                'darkMode',
+                'textSize',
+                'reduceMotion',
+                'batterySaver',
+                'soundEnabled',
+                'saveProgress',
+                'developerMode',
+                'settingsInitialized',
+                'fullDeveloperAccess'
+            ];
             
-            // Show confirmation
-            showToast('All game progress has been reset', 'check-circle');
+            // Keep settings but remove game progress
+            for (let key in localStorage) {
+                if (!settingsKeys.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            }
+            
+            showToast('All progress has been reset', 'check-circle');
         }
-        
         playClickSound();
     });
     
-    // Reboot button (PWA only)
+    // PWA-specific: Reboot app button
     const rebootButton = document.getElementById('reboot-button');
     if (rebootButton) {
         rebootButton.addEventListener('click', function() {
-            showToast('Restarting application...', 'redo-alt');
-            
-            // Small delay to show the toast before reloading
+            showToast('Restarting application...', 'sync');
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
-            
             playClickSound();
         });
     }
     
-    // Clear Cache button (new functionality)
+    // PWA-specific: Clear cache button
     const clearCacheButton = document.getElementById('clear-cache-button');
     if (clearCacheButton) {
-        clearCacheButton.addEventListener('click', function() {
-            clearCaches().then(success => {
-                if (success) {
-                    showToast('Cache cleared successfully', 'check-circle');
-                } else {
-                    showToast('Failed to clear cache', 'exclamation-circle');
-                }
-            });
-            
+        clearCacheButton.addEventListener('click', async function() {
             playClickSound();
+            const success = await clearCaches();
+            
+            if (success) {
+                showToast('Cache cleared successfully', 'check-circle');
+            } else {
+                showToast('Failed to clear cache', 'exclamation-triangle');
+            }
         });
     }
+    
+    // Fix for settings panel scrolling on touch devices
+    const settingsPanel = document.querySelector('.settings-panel');
+    
+    // Prevent settings overlay from capturing touch events meant for the panel
+    document.querySelector('.settings-overlay').addEventListener('touchmove', function(e) {
+        if (!settingsPanel.contains(e.target)) {
+            e.preventDefault(); // Prevent body scrolling
+        }
+    }, { passive: false });
+    
+    // Allow scrolling within the panel
+    settingsPanel.addEventListener('touchmove', function(e) {
+        e.stopPropagation(); // Prevent the overlay from capturing this
+    }, { passive: true });
 }
 
-// Clear game progress from localStorage
-function clearGameProgress() {
-    // Game-specific progress keys to clear
-    const progressKeys = [
-        'snakeHighScore',
-        'ticTacToeStats',
-        'memoryGameStats',
-        'colorClashHighScore',
-        'minigolfScore'
-    ];
-    
-    // Clear each key
-    progressKeys.forEach(key => {
-        localStorage.removeItem(key);
-    });
-    
-    console.log('All game progress has been reset');
-}
-
-// Clear browser caches (for PWA)
+// Clear cache (for PWA)
 async function clearCaches() {
     try {
-        // Check if Cache API is available
+        // Check if Cache API is available (for PWAs)
         if ('caches' in window) {
-            // Get all cache names
-            const cacheNames = await caches.keys();
+            // Get all cache keys
+            const cacheKeys = await caches.keys();
             
-            // Delete each cache
-            const deletionPromises = cacheNames.map(cacheName => {
-                return caches.delete(cacheName);
-            });
+            // Delete all caches
+            await Promise.all(cacheKeys.map(key => caches.delete(key)));
             
-            // Wait for all caches to be deleted
-            await Promise.all(deletionPromises);
-            
-            console.log('All caches cleared successfully');
+            console.log('All caches cleared');
             return true;
         } else {
-            console.log('Cache API not available');
-            
             // Alternative: clear localStorage except settings
             const settingsKeys = [
                 'darkMode',
