@@ -272,7 +272,7 @@ function createSettingsElements() {
         <!-- Version Info -->
         <div class="version-info">
             <div>PixelHeavenGames</div>
-            <div class="version-number">Version 19.4</div>
+            <div class="version-number">Version 19.6</div>
         </div>
         
         <!-- Developer Section -->
