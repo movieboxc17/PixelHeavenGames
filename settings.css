@@ -1,67 +1,42 @@
-/* Settings Panel Styles */
+/* Settings Panel Styles - Redesigned for v19.4 */
 :root {
     --primary-gradient: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-    --panel-bg: rgba(26, 26, 46, 0.85);
+    --secondary-gradient: linear-gradient(45deg, #5a67d8, #7c3aed);
+    --panel-bg: rgba(26, 26, 46, 0.9);
     --toggle-active: #ff6b6b;
     --toggle-inactive: #666;
+    --card-bg: rgba(15, 15, 30, 0.6);
+    --border-color: rgba(255, 255, 255, 0.15);
+    --settings-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    --button-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
-/* Settings Button Position - Base styles */
+/* Settings Button */
 .settings-button {
     position: fixed;
     bottom: 30px;
     left: 30px;
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     background: var(--primary-gradient);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
-    z-index: 99; /* Increase z-index to ensure visibility */
+    box-shadow: var(--button-shadow);
+    z-index: 200;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     font-size: 1.2rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Improved Mobile Adjustments with higher z-index */
-@media screen and (max-width: 768px) {
-    .settings-button {
-        bottom: 25px;
-        left: 25px;
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
-        z-index: 150; /* Higher z-index for mobile */
-        box-shadow: 0 3px 10px rgba(255, 107, 107, 0.5); /* Enhanced shadow for visibility */
-    }
+.settings-button:hover {
+    transform: scale(1.08) rotate(15deg);
+    box-shadow: 0 6px 16px rgba(255, 107, 107, 0.5);
 }
 
-/* Enhanced positioning for smaller devices */
-@media screen and (max-width: 480px) {
-    .settings-button {
-        bottom: 85px; /* Position above the back-to-top button */
-        left: 20px;
-        z-index: 200; /* Even higher z-index for smallest screens */
-    }
-}
-
-/* iOS-specific fix for bottom positioning */
-@supports (-webkit-touch-callout: none) {
-    .settings-button {
-        bottom: max(30px, env(safe-area-inset-bottom) + 15px);
-    }
-    
-    @media screen and (max-width: 480px) {
-        .settings-button {
-            bottom: max(85px, env(safe-area-inset-bottom) + 70px);
-        }
-    }
-}
-
-/* Animation for the button */
 .settings-button i {
     transition: transform 0.4s ease;
 }
@@ -70,7 +45,7 @@
     transform: rotate(90deg);
 }
 
-/* Settings Modal */
+/* Settings Overlay */
 .settings-overlay {
     position: fixed;
     top: 0;
@@ -78,8 +53,8 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 1000;
     display: flex;
     justify-content: center;
@@ -94,34 +69,31 @@
     visibility: visible;
 }
 
-/* Improve scrolling for the settings panel */
+/* Settings Panel */
 .settings-panel {
     width: 90%;
     max-width: 500px;
     background: var(--panel-bg);
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 30px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--settings-shadow);
     position: relative;
-    transform: translateY(30px);
+    transform: translateY(30px) scale(0.95);
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     
-    /* Enhanced scrolling properties */
-    max-height: 80vh; /* Limit height to 80% of viewport height */
-    overflow-y: auto; /* Enable vertical scrolling */
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    overscroll-behavior: contain; /* Prevent scroll chaining */
-    
-    /* Scrollbar styling */
+    /* Enhanced scrolling */
+    max-height: 85vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 107, 107, 0.5) rgba(0, 0, 0, 0.2);
 }
 
-/* Scrollbar styling for WebKit browsers (Chrome, Safari) */
 .settings-panel::-webkit-scrollbar {
     width: 6px;
 }
@@ -136,37 +108,42 @@
     border-radius: 10px;
 }
 
-/* Make the header sticky so it stays at the top while scrolling */
+.settings-overlay.active .settings-panel {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* Settings Header */
 .settings-header {
     position: sticky;
     top: 0;
     background: var(--panel-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     z-index: 5;
-    padding-top: 10px;
-    margin-top: -10px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.settings-overlay.active .settings-panel {
-    transform: translateY(0);
-    opacity: 1;
+    padding: 0 0 20px 0;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .settings-title {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 1.8rem;
+    font-weight: 700;
     background: var(--primary-gradient);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shine 3s linear infinite;
+    letter-spacing: 0.5px;
 }
 
 .close-settings {
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: rgba(255, 107, 107, 0.2);
     display: flex;
@@ -174,6 +151,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .close-settings:hover {
@@ -181,94 +159,83 @@
     transform: rotate(90deg);
 }
 
-/* Developer Code Modal */
-.dev-code-container {
-    display: none;
-    margin-top: 15px;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    animation: fadeIn 0.3s ease;
+/* Settings Sections */
+.settings-section {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.5s ease-out;
 }
 
-.dev-code-container.active {
-    display: block;
-}
-
-.dev-code-input {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: white;
-    padding: 10px 15px;
-    margin-top: 10px;
-    font-family: monospace;
-    letter-spacing: 2px;
-}
-
-.dev-code-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.dev-code-submit {
-    background: var(--primary-gradient);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 15px;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-weight: 500;
-}
-
-.dev-code-submit:hover {
+.settings-section:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
 }
 
-.dev-code-message {
-    margin-top: 10px;
-    font-size: 0.85rem;
-    color: #ff6b6b;
-    display: none;
+.settings-section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.95);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.dev-code-message.active {
-    display: block;
-    animation: fadeIn 0.3s;
+.settings-section-title i {
+    color: #ff8e8e;
 }
 
 /* Settings Options */
 .settings-option {
-    margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.settings-option:last-child {
+    border-bottom: none;
+}
+
+.settings-option:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.option-info {
+    flex: 1;
 }
 
 .option-label {
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: #fff;
-    opacity: 0.9;
+    font-weight: 500;
+    margin-bottom: 4px;
 }
 
 .option-description {
-    font-size: 0.8rem;
-    color: #ccc;
-    margin-top: 5px;
-    opacity: 0.7;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
 }
 
 /* Toggle Switch */
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 50px;
-    height: 26px;
+    width: 52px;
+    height: 28px;
+    margin-left: 15px;
 }
 
 .toggle-switch input {
@@ -292,13 +259,14 @@
 .toggle-slider:before {
     position: absolute;
     content: "";
-    height: 18px;
-    width: 18px;
+    height: 20px;
+    width: 20px;
     left: 4px;
     bottom: 4px;
     background-color: white;
     transition: .4s;
     border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 input:checked + .toggle-slider {
@@ -312,7 +280,7 @@ input:checked + .toggle-slider:before {
 /* Select Options */
 .select-wrapper {
     position: relative;
-    width: 120px;
+    width: 130px;
 }
 
 .settings-select {
@@ -321,11 +289,12 @@ input:checked + .toggle-slider:before {
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 15px;
     color: white;
-    padding: 8px 30px 8px 15px;
+    padding: 10px 30px 10px 15px;
     width: 100%;
     cursor: pointer;
     outline: none;
     transition: all 0.3s;
+    font-size: 0.9rem;
 }
 
 .settings-select:hover, .settings-select:focus {
@@ -337,42 +306,208 @@ input:checked + .toggle-slider:before {
     content: '\25BC';
     position: absolute;
     top: 50%;
-    right: 10px;
+    right: 12px;
     transform: translateY(-50%);
     color: rgba(255, 255, 255, 0.5);
     pointer-events: none;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
+}
+
+/* Action Buttons Container */
+.action-buttons-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
 }
 
 /* Action Buttons */
 .settings-action-button {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--secondary-gradient);
     color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 8px 15px;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
     cursor: pointer;
     transition: all 0.3s;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(122, 122, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.settings-action-button i {
+    font-size: 1rem;
 }
 
 .settings-action-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(122, 122, 255, 0.4);
 }
 
-/* Settings Sections */
-.settings-section {
-    margin-bottom: 25px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 15px;
+.settings-action-button:active {
+    transform: translateY(0);
 }
 
-.settings-section-title {
-    font-size: 1.1rem;
+/* Reboot Button */
+.reboot-button {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.95rem;
     font-weight: 600;
-    margin-bottom: 15px;
-    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    box-shadow: var(--button-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.reboot-button i {
+    font-size: 1rem;
+}
+
+.reboot-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+}
+
+.clear-cache-button {
+    background: linear-gradient(45deg, #3f51b5, #5677fc);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(86, 119, 252, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.clear-cache-button i {
+    font-size: 1rem;
+}
+
+.clear-cache-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(86, 119, 252, 0.4);
+}
+
+/* Apply dual button layout */
+.dual-button-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+    animation: fadeInUp 0.6s ease;
+}
+
+/* Version Info */
+.version-info {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 15px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.version-number {
+    font-weight: 600;
+    color: rgba(255, 107, 107, 0.9);
+    letter-spacing: 0.5px;
+}
+
+/* Dev Code */
+.dev-code-container {
+    display: none;
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    animation: fadeIn 0.3s ease;
+}
+
+.dev-code-container.active {
+    display: block;
+}
+
+.dev-code-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    padding: 12px 15px;
+    margin-top: 10px;
+    font-family: monospace;
+    letter-spacing: 2px;
+    transition: all 0.3s;
+}
+
+.dev-code-input:focus {
+    border-color: rgba(255, 107, 107, 0.6);
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.2);
+    outline: none;
+}
+
+.dev-code-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.dev-code-submit {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 15px;
+    margin-top: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.dev-code-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+}
+
+.dev-code-message {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    color: #ff6b6b;
+    display: none;
+    padding: 10px;
+    background: rgba(255, 107, 107, 0.1);
+    border-radius: 8px;
+}
+
+.dev-code-message.active {
+    display: block;
+    animation: fadeIn 0.3s;
 }
 
 /* PWA-only section */
@@ -382,160 +517,63 @@ input:checked + .toggle-slider:before {
 
 .pwa-mode .pwa-only-section {
     display: block;
-}
-
-/* Version Info */
-.version-info {
-    margin-top: 30px;
-    text-align: center;
-    font-size: 0.9rem;
-    color: rgba(255, 255, 255, 0.6);
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.version-number {
-    font-weight: 600;
-    color: rgba(255, 107, 107, 0.8);
-}
-
-/* Reboot Button - Hidden by default, shown in PWA mode */
-.reboot-button {
-    display: none; /* Hidden by default */
-    background: var(--primary-gradient);
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 15px;
-    font-weight: 600;
-    margin-top: 15px;
-    width: 100%;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
-}
-
-.reboot-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
-}
-
-.reboot-button:active {
-    transform: translateY(1px);
-}
-
-/* Show reboot button when in PWA mode */
-.pwa-mode .reboot-button {
-    display: block;
-    animation: fadeInUp 0.6s ease;
+    animation: fadeInUp 0.5s ease;
 }
 
 /* Developer Section */
 .developer-section {
     margin-top: 20px;
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
     text-align: center;
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.developer-section a {
+    color: #ff8e8e;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.developer-section a:hover {
+    text-decoration: underline;
+    color: #ff6b6b;
 }
 
 /* Toast notification */
 .toast-notification {
     position: fixed;
-    bottom: 20px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%) translateY(100px);
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(15, 15, 30, 0.9);
     color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
+    padding: 14px 25px;
+    border-radius: 12px;
     z-index: 10000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease;
-    font-size: 0.9rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    max-width: 90%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.toast-notification i {
+    color: #ff8e8e;
 }
 
 .toast-notification.show {
     transform: translateX(-50%) translateY(0);
-}
-
-/* Adjust for smaller screens */
-@media screen and (max-width: 768px) {
-    .settings-panel {
-        padding: 20px;
-        max-width: 90%;
-        max-height: 75vh; /* Slightly smaller on mobile */
-    }
-    
-    .settings-title {
-        font-size: 1.3rem;
-    }
-    
-    .option-label {
-        font-size: 0.9rem;
-    }
-    
-    .option-description {
-        font-size: 0.75rem;
-    }
-    
-    .settings-section-title {
-        font-size: 1rem;
-    }
-}
-
-/* Further adjustments for very small screens */
-@media screen and (max-width: 480px) {
-    .settings-panel {
-        max-height: 70vh; /* Even smaller on very small screens */
-        padding: 15px;
-    }
-    
-    .settings-option {
-        padding: 8px 0;
-    }
-}
-
-/* Fix for iOS devices to ensure proper scrolling */
-@supports (-webkit-touch-callout: none) {
-    .settings-panel {
-        /* Use a fixed height for iOS to avoid scrolling issues */
-        max-height: 70vh;
-    }
-    
-    /* Add padding at the bottom to ensure all content is accessible */
-    .settings-panel::after {
-        content: '';
-        display: block;
-        height: 30px;
-    }
-}
-
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes shine {
-    to { background-position: 200% center; }
-}
-
-/* Settings Panel Slide In Animation */
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
 }
 
 /* Text size classes */
@@ -595,4 +633,149 @@ input:checked + .toggle-slider:before {
 .battery-saver .game-card img,
 .battery-saver .featured-section {
     filter: brightness(0.9);
+}
+
+/* Animation for error notification */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Mobile-specific adjustments */
+@media screen and (max-width: 768px) {
+    .settings-button {
+        bottom: 25px;
+        left: 25px;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+        z-index: 150;
+    }
+    
+    .settings-panel {
+        padding: 20px;
+        max-width: 90%;
+        max-height: 80vh;
+    }
+    
+    .settings-title {
+        font-size: 1.5rem;
+    }
+    
+    .settings-section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .settings-section-title {
+        font-size: 1.1rem;
+    }
+    
+    .option-label {
+        font-size: 1rem;
+    }
+    
+    .option-description {
+        font-size: 0.8rem;
+    }
+    
+    .reboot-button,
+    .clear-cache-button,
+    .settings-action-button {
+        padding: 12px 10px;
+        font-size: 0.9rem;
+    }
+    
+    .version-info {
+        font-size: 0.85rem;
+        padding: 12px;
+    }
+    
+    .settings-header {
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+}
+
+/* Small screens */
+@media screen and (max-width: 480px) {
+    .settings-button {
+        bottom: 85px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+    
+    .settings-panel {
+        padding: 15px;
+        border-radius: 20px;
+        max-height: 75vh;
+    }
+    
+    .settings-title {
+        font-size: 1.3rem;
+    }
+    
+    .action-buttons-container,
+    .dual-button-container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .close-settings {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* iOS safe area insets */
+@supports (padding: max(0px)) {
+    .settings-button {
+        bottom: max(30px, env(safe-area-inset-bottom) + 15px);
+        left: max(30px, env(safe-area-inset-left) + 15px);
+    }
+    
+    @media screen and (max-width: 480px) {
+        .settings-button {
+            bottom: max(85px, env(safe-area-inset-bottom) + 70px);
+            left: max(20px, env(safe-area-inset-left) + 5px);
+        }
+    }
+    
+    .toast-notification {
+        bottom: max(30px, env(safe-area-inset-bottom) + 15px);
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
