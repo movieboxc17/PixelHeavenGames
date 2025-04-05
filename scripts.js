@@ -1,4 +1,18 @@
-// Back to top button functionality
+// Hide loader after page load
+window.addEventListener('load', function() {
+    setTimeout(function() {
+        const loader = document.querySelector('.loader');
+        if (loader) {
+            loader.classList.add('hidden');
+            // After animation completes, remove from DOM for better performance
+            setTimeout(() => {
+                loader.style.display = 'none';
+            }, 800);
+        }
+    }, 1000);
+});
+
+// Back to top button functionality 
 document.querySelector('.back-to-top').addEventListener('click', function() {
     window.scrollTo({
         top: 0,
@@ -90,8 +104,8 @@ window.addEventListener('orientationchange', function() {
     }
 });
 
-// Add manifest.json file for PWA capabilities
-if ('serviceWorker' in navigator) {
+// Add manifest.json file for PWA capabilities - Fixed for local development
+if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
     window.addEventListener('load', function() {
         navigator.serviceWorker.register('/sw.js').then(function(registration) {
             console.log('ServiceWorker registration successful');
@@ -99,9 +113,21 @@ if ('serviceWorker' in navigator) {
             console.log('ServiceWorker registration failed: ', err);
         });
     });
+} else if (window.location.protocol === 'file:') {
+    console.log('Running in local mode. ServiceWorker registration skipped.');
 }
 
-// Mobile-specific enhancements - add these to your existing scripts.js file
+// Only load manifest.json when on a proper server
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.protocol === 'file:') {
+        // Remove manifest link when on file:// protocol
+        const manifestLink = document.querySelector('link[rel="manifest"]');
+        if (manifestLink) {
+            manifestLink.remove();
+        }
+        console.log('Running in local file mode - PWA features disabled');
+    }
+});
 
 // Close mobile menu when clicking a nav link
 document.querySelectorAll('.nav-menu a').forEach(link => {
