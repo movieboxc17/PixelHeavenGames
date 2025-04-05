@@ -10,8 +10,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="PixelHeavenGames">
     <meta name="application-name" content="PixelHeavenGames">
-    <meta name="msapplication-TileColor" content="#1a1a2e">
-    <meta name="theme-color" content="#1a1a2e">
+    <meta name="msapplication-TileColor" content="#171727">
+    <meta name="theme-color" content="#171727">
+    <meta name="description" content="PixelHeavenGames - Your ultimate collection of browser-based retro and casual games">
 
     <!-- Icons for iOS home screen -->
     <link rel="apple-touch-icon" href="icon.png">
@@ -27,6 +28,11 @@
     <!-- Web App Manifest for Android -->
     <link rel="manifest" href="manifest.json">
     
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="settings.css">
@@ -37,31 +43,54 @@
         <div class="logo-container">
             <div class="loader-logo">PixelHeavenGames</div>
         </div>
-        <div class="loading-text">Loading Games</div>
+        <div class="loader-progress">
+            <div class="loader-bar"></div>
+        </div>
+        <div class="loading-text">Preparing Your Games</div>
         <div class="loader-dots">
             <div class="dot"></div>
             <div class="dot"></div>
             <div class="dot"></div>
         </div>
-        <div class="version-text">V 19.4</div>
+        <div class="version-text">Version 19.6</div>
     </div>        
     <header class="header">
         <div class="header-content">
             <div class="logo">PixelHeavenGames</div>
-            <button class="mobile-nav-toggle">
+            <button class="mobile-nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
                 <i class="fas fa-bars"></i>
             </button>
             <nav class="nav-menu">
-                <a href="index.html">Home</a>
-                <a href="about.html">About Us</a>
-                <a href="contact.html">Contact Us</a>
-                <a href="bugs.html">Bugs</a>
-                
+                <a href="index.html" class="nav-link active">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="about.html" class="nav-link">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About Us</span>
+                </a>
+                <a href="contact.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact</span>
+                </a>
+                <a href="bugs.html" class="nav-link">
+                    <i class="fas fa-bug"></i>
+                    <span>Report Bug</span>
+                </a>
             </nav>
         </div>
     </header>
 
     <div class="container">
+        <div class="hero-section">
+            <h1 class="hero-title">Welcome to PixelHeavenGames</h1>
+            <p class="hero-subtitle">Your ultimate collection of free browser games</p>
+            <div class="cta-buttons">
+                <a href="#popular" class="cta-button primary">Popular Games</a>
+                <a href="#all-games" class="cta-button secondary">Browse All</a>
+            </div>
+        </div>
+
         <div class="categories">
             <div class="category-tag">Action</div>
             <div class="category-tag">Puzzle</div>
@@ -71,80 +100,237 @@
             <div class="category-tag">Sports</div>
         </div>
 
-        <div class="featured-section">
-            <h2 class="section-title">Most popular</h2>
+        <div id="popular" class="featured-section">
+            <h2 class="section-title">Most Popular</h2>
             <div class="game-row">
                 <div class="game-card">
-                    <img src="Images/tic-tac-toe.jpg" alt="Game 1" class="game-image">
-                    <h3>Tic Tac Toe</h3>
-                    <a href="tic-tac-toe.html"><button class="play-button">PLAY NOW</button></a>
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/tic-tac-toe.jpg" alt="Tic Tac Toe" class="game-image">
+                            <div class="game-overlay">
+                                <a href="tic-tac-toe.html" class="play-button">PLAY NOW</a>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Tic Tac Toe</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Puzzle</span>
+                                <span class="game-tag">Strategy</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="game-card">
-                    <img src="Images/snake.jpg" alt="Game 2" class="game-image">
-                    <h3>Retro Snake</h3>
-                    <a href="snake.html"><button class="play-button">PLAY NOW</button></a>
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/snake.jpg" alt="Retro Snake" class="game-image">
+                            <div class="game-overlay">
+                                <a href="snake.html" class="play-button">PLAY NOW</a>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Retro Snake</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Arcade</span>
+                                <span class="game-tag">Classic</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="game-card">
-                    <img src="Images/color-clash.jpg" alt="Game 3" class="game-image">
-                    <h3>Color Clash</h3>
-                    <a href="GameHtml/color-clash.html"><button class="play-button">PLAY NOW</button></a>
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/color-clash.jpg" alt="Color Clash" class="game-image">
+                            <div class="game-overlay">
+                                <a href="GameHtml/color-clash.html" class="play-button">PLAY NOW</a>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Color Clash</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Puzzle</span>
+                                <span class="game-tag">Reflex</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="game-card">
-                    <img src="Images/memory-game.jpg" alt="Memory Game" class="game-image">
-                    <h3>Memory Card Game</h3>
-                    <a href="GameHtml/memory-game.html"><button class="play-button">PLAY NOW</button></a>
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/memory-game.jpg" alt="Memory Card Game" class="game-image">
+                            <div class="game-overlay">
+                                <a href="GameHtml/memory-game.html" class="play-button">PLAY NOW</a>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Memory Card Game</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Memory</span>
+                                <span class="game-tag">Cards</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="all-games" class="featured-section">
+            <h2 class="section-title">Classic Games</h2>
+            <div class="game-row">
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/memory-game.jpg" alt="Memory Game" class="game-image">
+                            <div class="game-overlay">
+                                <a href="GameHtml/memory-game.html" class="play-button">PLAY NOW</a>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Memory Card Game</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Memory</span>
+                                <span class="game-tag">Cards</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/tic-tac-toe.jpg" alt="Tic Tac Toe" class="game-image">
+                            <div class="game-overlay">
+                                <a href="tic-tac-toe.html" class="play-button">PLAY NOW</a>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Tic Tac Toe</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Puzzle</span>
+                                <span class="game-tag">Strategy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/snake.jpg" alt="Snake" class="game-image">
+                            <div class="game-overlay">
+                                <a href="snake.html" class="play-button">PLAY NOW</a>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Snake</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Arcade</span>
+                                <span class="game-tag">Classic</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-card">
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/color-clash.jpg" alt="Color Clash" class="game-image">
+                            <div class="game-overlay">
+                                <a href="GameHtml/color-clash.html" class="play-button">PLAY NOW</a>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Color Clash</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Puzzle</span>
+                                <span class="game-tag">Reflex</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="featured-section">
-            <h2 class="section-title">All Games</h2>
+            <h2 class="section-title">New Releases</h2>
             <div class="game-row">
                 <div class="game-card">
-                    <img src="Images/memory-game.jpg" alt="Memory Game" class="game-image">
-                    <h3>Memory Card Game</h3>
-                    <a href="GameHtml/memory-game.html"><button class="play-button">PLAY NOW</button></a>
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/tic-tac-toe.jpg" alt="Mini Golf" class="game-image">
+                            <div class="game-overlay">
+                                <a href="GameHtml/minigolf.html" class="play-button">PLAY NOW</a>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Mini Golf</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Sports</span>
+                                <span class="game-tag">Physics</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="game-card">
-                    <img src="Images/tic-tac-toe.jpg" alt="Game 6" class="game-image">
-                    <h3>Tic Tac Toe</h3>
-                    <a href="tic-tac-toe.html"><button class="play-button">PLAY NOW</button></a>
+                <div class="game-card coming-soon">
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/snake.jpg" alt="Coming Soon" class="game-image">
+                            <div class="game-overlay">
+                                <span class="coming-soon-label">COMING SOON</span>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Space Adventure</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Adventure</span>
+                                <span class="game-tag">Action</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="game-card">
-                    <img src="Images/snake.jpg" alt="Game 7" class="game-image">
-                    <h3>Snake</h3>
-                    <a href="snake.html"><button class="play-button">PLAY NOW</button></a>
+                <div class="game-card coming-soon">
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/memory-game.jpg" alt="Coming Soon" class="game-image">
+                            <div class="game-overlay">
+                                <span class="coming-soon-label">COMING SOON</span>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Pixel Racer</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Racing</span>
+                                <span class="game-tag">Arcade</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="game-card">
-                    <img src="Images/color-clash.jpg" alt="Game 8" class="game-image">
-                    <h3>Color Clash</h3>
-                    <a href="GameHtml/color-clash.html"><button class="play-button">PLAY NOW</button></a>
+                <div class="game-card coming-soon">
+                    <div class="game-card-inner">
+                        <div class="game-image-container">
+                            <img src="Images/color-clash.jpg" alt="Coming Soon" class="game-image">
+                            <div class="game-overlay">
+                                <span class="coming-soon-label">COMING SOON</span>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Puzzle Master</h3>
+                            <div class="game-tags">
+                                <span class="game-tag">Puzzle</span>
+                                <span class="game-tag">Logic</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="featured-section">
-            <h2 class="section-title">All Games</h2>
-            <div class="game-row">
-                <div class="game-card">
-                    <img src="Images/" alt="Game9" class="game-image">
-                    <h3>Mini golf</h3>
-                    <a href="GameHtml/minigolf.html"><button class="play-button">PLAY NOW</button></a>
-                </div>
-                <div class="game-card">
-                    <img src="Images/game6.jpg" alt="Game 10" class="game-image">
-                    <h3>Game Title 10</h3>
-                    <a href="GameHtml/"><button class="play-button">PLAY NOW</button></a>
-                </div>
-                <div class="game-card">
-                    <img src="Images/game7.jpg" alt="Game 11" class="game-image">
-                    <h3>Game Title 11</h3>
-                    <a href="GameHtml/game7.html"><button class="play-button">PLAY NOW</button></a>
-                </div>
-                <div class="game-card">
-                    <img src="Images/game8.jpg" alt="Game 12" class="game-image">
-                    <h3>Game Title 12</h3>
-                    <a href="GameHtml/game8.html"><button class="play-button">PLAY NOW</button></a>
+        <div class="newsletter-section">
+            <div class="newsletter-container">
+                <div class="newsletter-content">
+                    <h2>Stay Updated!</h2>
+                    <p>Subscribe to our newsletter to receive updates about new games and features.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -161,9 +347,9 @@
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html">All Games</a></li>
-                        <li><a href="index.html">New Releases</a></li>
-                        <li><a href="index.html">Popular</a></li>
+                        <li><a href="index.html#all-games">All Games</a></li>
+                        <li><a href="index.html#popular">Popular Games</a></li>
+                        <li><a href="about.html">About Us</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -178,22 +364,91 @@
                 <div class="footer-section">
                     <h4>Support</h4>
                     <ul>
-                        <li><a href="...">FAQ</a></li>
+                        <li><a href="#">FAQ</a></li>
                         <li><a href="contact.html">Contact Us</a></li>
                         <li><a href="Privacy Policy 2025.pdf">Privacy Policy</a></li>
                         <li><a href="Terms of Service 2025.pdf">Terms of Service</a></li>
-                        <li><a href="bugs.html">Bugs</a></li>
+                        <li><a href="bugs.html">Report Bugs</a></li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 PixelHeavenGames. All rights reserved.</p>
+                <p>© 2025 PixelHeavenGames. All rights reserved.</p>
                 <p>Site created by Moviebox C17 & Askansz</p>
-                <p>V 19.4</p>
+                <p>Version 19.6</p>
             </div>
         </div>
     </footer>
+    
+    <!-- Privacy Consent Banner -->
+    <div class="privacy-consent">
+        <div class="privacy-content">
+            <p>We use cookies to improve your experience on our site. By continuing to use our site, you consent to our use of cookies in accordance with our <a href="Privacy Policy 2025.pdf">Privacy Policy</a>.</p>
+            <div class="privacy-buttons">
+                <button class="privacy-btn accept">Accept All</button>
+                <button class="privacy-btn customize">Customize</button>
+                <button class="privacy-btn decline">Decline Non-Essential</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cookie Settings Modal -->
+    <div class="cookie-settings-modal">
+        <div class="cookie-settings-content">
+            <div class="cookie-settings-header">
+                <h3>Cookie Preferences</h3>
+                <button class="close-settings-btn">×</button>
+            </div>
+            <div class="cookie-options">
+                <div class="cookie-option">
+                    <div>
+                        <h4>Essential Cookies</h4>
+                        <p>These cookies are necessary for the website to function and cannot be disabled.</p>
+                    </div>
+                    <label class="toggle-switch disabled">
+                        <input type="checkbox" checked disabled>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="cookie-option">
+                    <div>
+                        <h4>Performance Cookies</h4>
+                        <p>These cookies allow us to count visits and traffic sources to measure and improve site performance.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="performance-cookies">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="cookie-option">
+                    <div>
+                        <h4>Functional Cookies</h4>
+                        <p>These cookies enable enhanced functionality and personalization, such as video playback and live chat.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="functional-cookies">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="cookie-option">
+                    <div>
+                        <h4>Targeting Cookies</h4>
+                        <p>These cookies may be set to deliver advertisements more relevant to you and your interests.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="targeting-cookies">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="cookie-settings-footer">
+                <button class="privacy-btn accept save-preferences">Save Preferences</button>
+            </div>
+        </div>
+    </div>
+    
     <script src="scripts.js"></script>
     <script src="settings.js" defer></script>     
+    <script src="privacy.js" defer></script>
 </body>
 </html>
