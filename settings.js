@@ -1,10 +1,13 @@
-// Settings Panel Functionality
+// Settings Panel Functionality - Redesigned for v19.4
 document.addEventListener('DOMContentLoaded', function() {
     // Create settings button and panel
     createSettingsElements();
     
-    // Check if running as installed PWA (added to home screen)
+    // Check if running as installed PWA
     checkPWAMode();
+    
+    // Load saved settings
+    loadSettings();
     
     // Event listeners
     addEventListeners();
@@ -27,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Use HTML5 Audio API instead of Web Audio API
+// Initialize HTML5 Audio
 let clickSound;
 
 function initAudio() {
@@ -36,129 +39,101 @@ function initAudio() {
             // Create HTML5 audio element
             clickSound = new Audio();
             
-            // Try loading several different formats for maximum compatibility
-            if (canPlayType('audio/ogg')) {
-                clickSound.src = './sounds/click.mp3';
-            } else if (canPlayType('audio/mpeg')) {
-                fetch('./sounds/click.mp3')  // Use relative path
-                    .then(response => response.blob())
-                    .then(blob => {
-                        clickSound.src = URL.createObjectURL(blob);
-                    })
-                    .catch(error => {
-                        console.error('Error loading sound:', error);
-                    });
-            } else {
-                clickSound.src = './sounds/click.wav';
-            }
+            // Set source with error handling
+            clickSound.src = './sounds/click.mp3';
             
             // Preload the sound
             clickSound.load();
-            console.log('Click sound initialized');
-        } catch (e) {
-            console.error('Audio playback not supported:', e);
+            
+            // Add error handling
+            clickSound.onerror = function() {
+                console.log('Error loading click sound');
+                // Try alternative format
+                clickSound.src = './sounds/click.wav';
+            };
+        } catch (error) {
+            console.error('Audio initialization error:', error);
         }
     }
 }
 
-// Helper function to check if the browser supports a specific audio format
 function canPlayType(type) {
-    const audio = document.createElement('audio');
-    return audio.canPlayType(type) !== '';
+    try {
+        const audio = document.createElement('audio');
+        return audio.canPlayType(type);
+    } catch (e) {
+        return false;
+    }
 }
 
-// Play click sound using HTML5 Audio
 function playClickSound() {
-    if (!clickSound) return;
+    // Initialize audio if not already done
+    if (!clickSound) initAudio();
     
-    // Check if sound is enabled in settings
-    if (localStorage.getItem('clickSoundEnabled') === 'true') {
+    // Get sound toggle setting
+    const soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+    
+    if (soundEnabled && clickSound) {
         try {
-            // Clone the sound for overlapping playback
-            const sound = clickSound.cloneNode();
-            sound.volume = 0.5; // Lower volume
-            sound.play().catch(e => console.error('Error playing sound:', e));
-        } catch (e) {
-            console.error('Error playing click sound:', e);
+            // Clone the sound to allow multiple plays
+            const soundClone = clickSound.cloneNode();
+            soundClone.volume = 0.3;
+            
+            // Play with error handling
+            const playPromise = soundClone.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.error("Sound play error:", error);
+                });
+            }
+        } catch (error) {
+            console.error("Sound error:", error);
         }
     }
 }
 
-// Toggle click sound
-function toggleClickSound(enabled) {
-    localStorage.setItem('clickSoundEnabled', enabled ? 'true' : 'false');
-    
-    if (enabled) {
-        // Initialize audio if it hasn't been already
-        initAudio();
-        
-        // Play a test sound
-        setTimeout(() => {
-            playClickSound();
-        }, 300);
-    }
-}
-
-// Create settings elements
+// Create all settings UI elements
 function createSettingsElements() {
-    // Settings button
+    // Only create if not already present
+    if (document.querySelector('.settings-button')) return;
+    
+    // Create settings button
     const settingsButton = document.createElement('div');
     settingsButton.className = 'settings-button';
     settingsButton.innerHTML = '<i class="fas fa-cog"></i>';
     document.body.appendChild(settingsButton);
     
-    // Settings overlay
+    // Create settings overlay and panel
     const settingsOverlay = document.createElement('div');
     settingsOverlay.className = 'settings-overlay';
     
-    // Settings panel HTML
-    settingsOverlay.innerHTML = `
+    const settingsHTML = `
         <div class="settings-panel">
             <div class="settings-header">
                 <div class="settings-title">Settings</div>
                 <div class="close-settings"><i class="fas fa-times"></i></div>
             </div>
             
+            <!-- Appearance Section -->
             <div class="settings-section">
-                <div class="settings-section-title">General Settings</div>
+                <div class="settings-section-title"><i class="fas fa-paint-brush"></i> Appearance</div>
                 
                 <div class="settings-option">
-                    <div>
+                    <div class="option-info">
                         <div class="option-label">Dark Mode</div>
-                        <div class="option-description">Switch between light and dark theme</div>
+                        <div class="option-description">Use dark mode for lower eye strain</div>
                     </div>
                     <label class="toggle-switch">
-                        <input type="checkbox" id="darkmode-toggle" checked>
+                        <input type="checkbox" id="dark-mode-toggle" checked>
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
                 
                 <div class="settings-option">
-                    <div>
-                        <div class="option-label">Click Sound</div>
-                        <div class="option-description">Play sound when clicking elements</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="sound-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div>
-                        <div class="option-label">Notifications</div>
-                        <div class="option-description">Enable game event notifications</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="notifications-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div>
+                    <div class="option-info">
                         <div class="option-label">Text Size</div>
-                        <div class="option-description">Adjust text size throughout the app</div>
+                        <div class="option-description">Adjust the size of text</div>
                     </div>
                     <div class="select-wrapper">
                         <select id="text-size-select" class="settings-select">
@@ -168,965 +143,529 @@ function createSettingsElements() {
                         </select>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Performance Section -->
+            <div class="settings-section">
+                <div class="settings-section-title"><i class="fas fa-bolt"></i> Performance</div>
                 
                 <div class="settings-option">
-                    <div>
-                        <div class="option-label">Reduce Motion</div>
-                        <div class="option-description">Minimize animations for accessibility</div>
+                                        <div class="option-info">
+                        <div class="option-label">Reduce Animations</div>
+                        <div class="option-description">Minimize animations for better performance</div>
                     </div>
                     <label class="toggle-switch">
                         <input type="checkbox" id="reduce-motion-toggle">
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
-            </div>
-            
-            <div class="settings-section pwa-only-section">
-                <div class="settings-section-title">Mobile App Settings</div>
                 
                 <div class="settings-option">
-                    <div>
-                        <div class="option-label">Vibration Feedback</div>
-                        <div class="option-description">Enable haptic feedback on interactions</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="vibration-toggle" checked>
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div>
-                        <div class="option-label">Offline Mode</div>
-                        <div class="option-description">Manage offline content preferences</div>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="offline-mode-toggle">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-                
-                <div class="settings-option">
-                    <div>
-                        <div class="option-label">Screen Orientation</div>
-                        <div class="option-description">Lock screen orientation</div>
-                    </div>
-                    <div class="select-wrapper">
-                        <select id="orientation-select" class="settings-select">
-                            <option value="auto" selected>Auto</option>
-                            <option value="portrait">Portrait</option>
-                            <option value="landscape">Landscape</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="settings-option">
-                    <div>
+                    <div class="option-info">
                         <div class="option-label">Battery Saver</div>
-                        <div class="option-description">Reduce features to save battery</div>
+                        <div class="option-description">Optimize for battery life</div>
                     </div>
                     <label class="toggle-switch">
                         <input type="checkbox" id="battery-saver-toggle">
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
+            </div>
+            
+            <!-- Audio Section -->
+            <div class="settings-section">
+                <div class="settings-section-title"><i class="fas fa-volume-up"></i> Audio</div>
                 
                 <div class="settings-option">
-                    <div>
-                        <div class="option-label">Cache Management</div>
-                        <div class="option-description">Clear cached data to free up space</div>
+                    <div class="option-info">
+                        <div class="option-label">Sound Effects</div>
+                        <div class="option-description">Enable sound effects for interactions</div>
                     </div>
-                    <button id="clear-cache-button" class="settings-action-button">Clear Cache</button>
-                </div>
-                
-                <div class="settings-option">
-                    <div>
-                        <div class="option-label">App Version</div>
-                        <div class="option-description">Check for updates</div>
-                    </div>
-                    <button id="check-updates-button" class="settings-action-button">Check Updates</button>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="sound-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
                 </div>
             </div>
             
+            <!-- Advanced Section -->
             <div class="settings-section">
-                <div class="settings-section-title">Developer Options</div>
+                <div class="settings-section-title"><i class="fas fa-sliders-h"></i> Advanced</div>
                 
                 <div class="settings-option">
-                    <div>
-                        <div class="option-label">Animations Control</div>
-                        <div class="option-description">Developer-only animation settings</div>
+                    <div class="option-info">
+                        <div class="option-label">Developer Mode</div>
+                        <div class="option-description">Access developer features</div>
                     </div>
-                    <button id="dev-code-toggle" class="dev-code-submit">Developer Mode</button>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="developer-toggle">
+                        <span class="toggle-slider"></span>
+                    </label>
                 </div>
                 
                 <div id="dev-code-container" class="dev-code-container">
-                    <div class="option-description">Enter developer code to control animations</div>
-                    <input type="password" id="dev-code-input" class="dev-code-input" placeholder="Enter developer code">
-                    <button id="dev-code-submit" class="dev-code-submit">Verify Code</button>
-                    <div id="dev-code-message" class="dev-code-message">Invalid developer code</div>
-                    
-                    <div class="settings-option" style="display: none;" id="animation-toggle-container">
-                        <div>
-                            <div class="option-label">Disable Animations</div>
-                            <div class="option-description">Turn off all site animations</div>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="animations-toggle">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
+                    <div class="option-label">Enter Developer Code</div>
+                    <input type="text" class="dev-code-input" placeholder="XXXX-XXXX-XXXX">
+                    <button class="dev-code-submit"><i class="fas fa-check"></i> Submit</button>
+                    <div class="dev-code-message">Invalid code. Please try again.</div>
                 </div>
             </div>
             
-            <div class="version-info">
-                <div>PixelHeavenGames</div>
-                <div>Version: <span class="version-number">19.0</span></div>
+            <!-- PWA Section (shown only in PWA mode) -->
+            <div class="pwa-only-section settings-section">
+                <div class="settings-section-title"><i class="fas fa-mobile-alt"></i> App Options</div>
+                
+                <div class="dual-button-container">
+                    <button id="reboot-button" class="reboot-button">
+                        <i class="fas fa-redo-alt"></i> Restart App
+                    </button>
+                    
+                    <button id="clear-cache-button" class="clear-cache-button">
+                        <i class="fas fa-broom"></i> Clear Cache
+                    </button>
+                </div>
             </div>
             
-            <button class="reboot-button">
-                <i class="fas fa-redo-alt"></i> Restart Application
-            </button>
+            <!-- Data Management Section -->
+            <div class="settings-section">
+                <div class="settings-section-title"><i class="fas fa-database"></i> Data Management</div>
+                
+                <div class="settings-option">
+                    <div class="option-info">
+                        <div class="option-label">Save Game Progress</div>
+                        <div class="option-description">Save your progress across sessions</div>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="save-progress-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                
+                <div class="action-buttons-container">
+                    <button id="reset-progress-button" class="settings-action-button">
+                        <i class="fas fa-trash-alt"></i> Reset All Progress
+                    </button>
+                </div>
+            </div>
             
+            <!-- Version Info -->
+            <div class="version-info">
+                <div>PixelHeavenGames</div>
+                <div class="version-number">Version 19.4</div>
+            </div>
+            
+            <!-- Developer Section -->
             <div class="developer-section">
-                <div>Developed by: Moviebox C17 & Askansz</div>
+                Created by Moviebox C17 & Askansz
             </div>
         </div>
     `;
     
+    settingsOverlay.innerHTML = settingsHTML;
     document.body.appendChild(settingsOverlay);
+}
+
+// Check if running as a PWA
+function checkPWAMode() {
+    // Check if app is running in standalone mode (PWA)
+    const isPWA = window.matchMedia('(display-mode: standalone)').matches || 
+                 (window.navigator.standalone) || 
+                 document.referrer.includes('android-app://');
     
-    // Fix for iOS scrolling
-    const settingsPanel = document.querySelector('.settings-panel');
-    if (settingsPanel) {
-        // Prevent body scrolling when touching the settings panel
-        settingsPanel.addEventListener('touchstart', function(e) {
-            // Only if the panel is scrollable (content height > panel height)
-            if (this.scrollHeight > this.clientHeight) {
-                e.stopPropagation();
-            }
-        }, { passive: true });
-        
-        // Prevent settings panel from closing when scrolling
-        settingsPanel.addEventListener('touchmove', function(e) {
-            e.stopPropagation();
-        }, { passive: true });
+    if (isPWA) {
+        document.body.classList.add('pwa-mode');
     }
 }
 
-// Add event listeners
+// Load saved settings from localStorage
+function loadSettings() {
+    // Set default settings if not present
+    if (!localStorage.getItem('settingsInitialized')) {
+        // Set defaults
+        localStorage.setItem('darkMode', 'true');
+        localStorage.setItem('textSize', 'medium');
+        localStorage.setItem('reduceMotion', 'false');
+        localStorage.setItem('batterySaver', 'false');
+        localStorage.setItem('soundEnabled', 'true');
+        localStorage.setItem('saveProgress', 'true');
+        localStorage.setItem('developerMode', 'false');
+        localStorage.setItem('settingsInitialized', 'true');
+    }
+    
+    // Apply saved settings
+    applySettings();
+}
+
+// Apply all settings from localStorage to the UI
+function applySettings() {
+    // Get values from localStorage
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    const textSize = localStorage.getItem('textSize') || 'medium';
+    const reduceMotion = localStorage.getItem('reduceMotion') === 'true';
+    const batterySaver = localStorage.getItem('batterySaver') === 'true';
+    const soundEnabled = localStorage.getItem('soundEnabled') === 'true';
+    const saveProgress = localStorage.getItem('saveProgress') === 'true';
+    const developerMode = localStorage.getItem('developerMode') === 'true';
+    
+    // Set toggle states based on saved values
+    document.getElementById('dark-mode-toggle').checked = darkMode;
+    document.getElementById('text-size-select').value = textSize;
+    document.getElementById('reduce-motion-toggle').checked = reduceMotion;
+    document.getElementById('battery-saver-toggle').checked = batterySaver;
+    document.getElementById('sound-toggle').checked = soundEnabled;
+    document.getElementById('save-progress-toggle').checked = saveProgress;
+    document.getElementById('developer-toggle').checked = developerMode;
+    
+    // Apply classes to body
+    if (darkMode) document.body.classList.add('dark-mode');
+    document.body.classList.add(`text-size-${textSize}`);
+    if (reduceMotion) document.body.classList.add('reduce-motion');
+    if (batterySaver) document.body.classList.add('battery-saver');
+    
+    // Show/hide developer section based on developer mode
+    if (developerMode) {
+        document.getElementById('dev-code-container').classList.add('active');
+    }
+}
+
+// Add all event listeners for settings functionality
 function addEventListeners() {
     // Open settings panel
     document.querySelector('.settings-button').addEventListener('click', function() {
         document.querySelector('.settings-overlay').classList.add('active');
-        // Prevent body scrolling when settings panel is open
-        document.body.style.overflow = 'hidden';
-        // Load saved settings
-        loadSettings();
+        playClickSound();
     });
     
     // Close settings panel
     document.querySelector('.close-settings').addEventListener('click', function() {
         document.querySelector('.settings-overlay').classList.remove('active');
-        // Restore body scrolling
-        document.body.style.overflow = '';
-        // Save settings when closing
-        saveSettings();
+        playClickSound();
     });
     
-    // Close when clicking outside the panel
+    // Close settings when clicking outside
     document.querySelector('.settings-overlay').addEventListener('click', function(e) {
         if (e.target === this) {
             this.classList.remove('active');
-            // Restore body scrolling
-            document.body.style.overflow = '';
-            saveSettings();
         }
     });
     
-    // Darkmode toggle
-    document.getElementById('darkmode-toggle').addEventListener('change', function() {
-        toggleDarkMode(this.checked);
+    // Dark Mode toggle
+    document.getElementById('dark-mode-toggle').addEventListener('change', function() {
+        if (this.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', 'true');
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', 'false');
+        }
+        playClickSound();
     });
     
-    // Click sound toggle
-    document.getElementById('sound-toggle').addEventListener('change', function() {
-        toggleClickSound(this.checked);
-    });
-    
-    // Text size select
+    // Text Size select
     document.getElementById('text-size-select').addEventListener('change', function() {
-        changeTextSize(this.value);
+        // Remove all text size classes
+        document.body.classList.remove('text-size-small', 'text-size-medium', 'text-size-large');
+        // Add selected text size class
+        document.body.classList.add(`text-size-${this.value}`);
+        // Save setting
+        localStorage.setItem('textSize', this.value);
+        playClickSound();
     });
     
-    // Reduce motion toggle
+    // Reduce Motion toggle
     document.getElementById('reduce-motion-toggle').addEventListener('change', function() {
-        toggleReduceMotion(this.checked);
+        if (this.checked) {
+            document.body.classList.add('reduce-motion');
+            localStorage.setItem('reduceMotion', 'true');
+        } else {
+            document.body.classList.remove('reduce-motion');
+            localStorage.setItem('reduceMotion', 'false');
+        }
+        playClickSound();
     });
     
-    // PWA-specific event listeners
-    if (document.getElementById('vibration-toggle')) {
-        document.getElementById('vibration-toggle').addEventListener('change', function() {
-            toggleVibration(this.checked);
-        });
-    }
-    
-    if (document.getElementById('offline-mode-toggle')) {
-        document.getElementById('offline-mode-toggle').addEventListener('change', function() {
-            toggleOfflineMode(this.checked);
-        });
-    }
-    
-    if (document.getElementById('orientation-select')) {
-        document.getElementById('orientation-select').addEventListener('change', function() {
-            changeScreenOrientation(this.value);
-        });
-    }
-    
-    if (document.getElementById('battery-saver-toggle')) {
-        document.getElementById('battery-saver-toggle').addEventListener('change', function() {
-            toggleBatterySaver(this.checked);
-        });
-    }
-    
-    if (document.getElementById('clear-cache-button')) {
-        document.getElementById('clear-cache-button').addEventListener('click', function() {
-            clearCache();
-        });
-    }
-    
-    if (document.getElementById('check-updates-button')) {
-        document.getElementById('check-updates-button').addEventListener('click', function() {
-            checkForUpdates();
-        });
-    }
-    
-    // Developer Code toggle
-    document.getElementById('dev-code-toggle').addEventListener('click', function() {
-        const codeContainer = document.getElementById('dev-code-container');
-        codeContainer.classList.toggle('active');
+    // Battery Saver toggle
+    document.getElementById('battery-saver-toggle').addEventListener('change', function() {
+        if (this.checked) {
+            document.body.classList.add('battery-saver');
+            localStorage.setItem('batterySaver', 'true');
+        } else {
+            document.body.classList.remove('battery-saver');
+            localStorage.setItem('batterySaver', 'false');
+        }
+        playClickSound();
     });
     
-    // Developer Code submit
-    document.getElementById('dev-code-submit').addEventListener('click', function() {
-        verifyDeveloperCode();
-    });
-    
-    // Allow Enter key to submit dev code
-    document.getElementById('dev-code-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            verifyDeveloperCode();
+    // Sound toggle
+    document.getElementById('sound-toggle').addEventListener('change', function() {
+        localStorage.setItem('soundEnabled', this.checked ? 'true' : 'false');
+        
+        // Test sound when enabled
+        if (this.checked) {
+            playClickSound();
         }
     });
     
-    // Animations toggle (only works after code verification)
-    document.getElementById('animations-toggle').addEventListener('change', function() {
-        toggleAnimations(this.checked);
+    // Save Progress toggle
+    document.getElementById('save-progress-toggle').addEventListener('change', function() {
+        localStorage.setItem('saveProgress', this.checked ? 'true' : 'false');
+        playClickSound();
     });
     
-    // Notifications toggle
-    document.getElementById('notifications-toggle').addEventListener('change', function() {
-        toggleNotifications(this.checked);
+    // Developer Mode toggle
+    document.getElementById('developer-toggle').addEventListener('change', function() {
+        const devCodeContainer = document.getElementById('dev-code-container');
+        
+        if (this.checked) {
+            devCodeContainer.classList.add('active');
+            localStorage.setItem('developerMode', 'true');
+        } else {
+            devCodeContainer.classList.remove('active');
+            localStorage.setItem('developerMode', 'false');
+        }
+        playClickSound();
     });
     
-    // Reboot button (only visible in PWA mode)
-    document.querySelector('.reboot-button').addEventListener('click', function() {
-        rebootApplication();
-    });
-}
-
-// Check if running as installed PWA
-function checkPWAMode() {
-    // Check if the app is running in standalone mode (PWA installed)
-    if (window.matchMedia('(display-mode: standalone)').matches || 
-        window.navigator.standalone === true) {
-        // Add class to body to show PWA-specific elements
-        document.body.classList.add('pwa-mode');
-        
-        console.log('Running as installed PWA');
-    } else {
-        console.log('Running in browser mode');
-    }
-}
-
-// Verify developer code
-function verifyDeveloperCode() {
-    const codeInput = document.getElementById('dev-code-input');
-    const message = document.getElementById('dev-code-message');
-    const animationToggleContainer = document.getElementById('animation-toggle-container');
-    
-    // Check if code is correct - using "dev2025" as the code
-    // In production, use a more secure mechanism
-    if (codeInput.value === "dev2025") {
-        // Code is correct
-        message.textContent = "Developer access granted";
-        message.style.color = "#4caf50";
-        message.classList.add('active');
-        
-        // Show animation toggle
-        animationToggleContainer.style.display = "flex";
-        
-                // Load animation setting
-                const savedSettings = localStorage.getItem('pixelHeavenSettings');
-                if (savedSettings) {
-                    const settings = JSON.parse(savedSettings);
-                    document.getElementById('animations-toggle').checked = settings.animations || false;
-                }
+    // Dev Code Submit button
+    const devCodeSubmit = document.querySelector('.dev-code-submit');
+    if (devCodeSubmit) {
+        devCodeSubmit.addEventListener('click', function() {
+            const codeInput = document.querySelector('.dev-code-input');
+            const codeMessage = document.querySelector('.dev-code-message');
+            
+            // Validate developer code (example: PIXEL-HEAVEN-2025)
+            if (codeInput.value === 'PIXEL-HEAVEN-2025') {
+                codeMessage.textContent = 'Developer mode activated!';
+                codeMessage.style.color = '#4CAF50';
+                codeMessage.classList.add('active');
                 
-                // Hide message after 3 seconds
-                setTimeout(() => {
-                    message.classList.remove('active');
-                }, 3000);
+                // Enable secret developer features here
+                localStorage.setItem('fullDeveloperAccess', 'true');
                 
-                // Store dev mode state
-                localStorage.setItem('devModeVerified', 'true');
+                // Show toast notification
+                showToast('Developer mode activated!', 'check-circle');
             } else {
-                // Code is incorrect
-                message.textContent = "Invalid developer code";
-                message.style.color = "#ff6b6b";
-                message.classList.add('active');
+                codeMessage.textContent = 'Invalid code. Please try again.';
+                codeMessage.style.color = '#ff6b6b';
+                codeMessage.classList.add('active');
                 
-                // Hide animation toggle
-                animationToggleContainer.style.display = "none";
-                
-                // Clear dev mode state
-                localStorage.removeItem('devModeVerified');
-                
-                // Hide message after 3 seconds
+                // Shake animation for error
+                codeInput.classList.add('shake');
                 setTimeout(() => {
-                    message.classList.remove('active');
-                }, 3000);
+                    codeInput.classList.remove('shake');
+                }, 500);
             }
+            
+            playClickSound();
+        });
+    }
+    
+    // Reset Progress button
+    document.getElementById('reset-progress-button').addEventListener('click', function() {
+        // Confirm before resetting
+        if (confirm('Are you sure you want to reset all game progress? This cannot be undone.')) {
+            // Clear game progress data
+            clearGameProgress();
+            
+            // Show confirmation
+            showToast('All game progress has been reset', 'check-circle');
         }
         
-        // Enhanced notification toggle function
-        function toggleNotifications(enabled) {
-            if (enabled) {
-                // Check if browser supports notifications
-                if (!("Notification" in window)) {
-                    alert("This browser does not support notifications");
-                    document.getElementById('notifications-toggle').checked = false;
-                    return;
-                }
-                
-                // Request permission if not already granted
-                if (Notification.permission !== 'granted') {
-                    Notification.requestPermission().then(permission => {
-                        if (permission === 'granted') {
-                            // Permission was granted, save setting and send test notification
-                            localStorage.setItem('notificationsEnabled', 'true');
-                            sendTestNotification();
-                        } else {
-                            // User denied permission, update toggle to reflect this
-                            document.getElementById('notifications-toggle').checked = false;
-                            alert("Notification permission denied. Please enable notifications in your browser settings.");
-                        }
-                    });
+        playClickSound();
+    });
+    
+    // Reboot button (PWA only)
+    const rebootButton = document.getElementById('reboot-button');
+    if (rebootButton) {
+        rebootButton.addEventListener('click', function() {
+            showToast('Restarting application...', 'redo-alt');
+            
+            // Small delay to show the toast before reloading
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+            
+            playClickSound();
+        });
+    }
+    
+    // Clear Cache button (new functionality)
+    const clearCacheButton = document.getElementById('clear-cache-button');
+    if (clearCacheButton) {
+        clearCacheButton.addEventListener('click', function() {
+            clearCaches().then(success => {
+                if (success) {
+                    showToast('Cache cleared successfully', 'check-circle');
                 } else {
-                    // Permission already granted, just save setting and send test
-                    localStorage.setItem('notificationsEnabled', 'true');
-                    sendTestNotification();
+                    showToast('Failed to clear cache', 'exclamation-circle');
                 }
-            } else {
-                // User turned off notifications
-                localStorage.setItem('notificationsEnabled', 'false');
-                console.log("Notifications disabled");
-            }
-        }
-        
-        // Function to send a test notification
-        function sendTestNotification() {
-            if (Notification.permission === 'granted') {
-                const notification = new Notification('PixelHeavenGames', {
-                    body: 'Notifications are now enabled! You will receive game updates and events.',
-                    icon: './icon.png', // Use relative path
-                    badge: './icon.png',
-                    vibrate: [100, 50, 100],
-                    tag: 'test-notification'
-                });
-                
-                // Close notification after 5 seconds
-                setTimeout(() => {
-                    notification.close();
-                }, 5000);
-                
-                // Optional: Handle notification click
-                notification.onclick = function() {
-                    window.focus();
-                    this.close();
-                };
-            }
-        }
-        
-        // Toggle vibration feedback
-        function toggleVibration(enabled) {
-            localStorage.setItem('vibrationEnabled', enabled ? 'true' : 'false');
-            
-            // Test vibration if enabled
-            if (enabled && 'vibrate' in navigator) {
-                navigator.vibrate(50);
-            }
-        }
-        
-        // Toggle offline mode
-        function toggleOfflineMode(enabled) {
-            localStorage.setItem('offlineModeEnabled', enabled ? 'true' : 'false');
-            
-            if (enabled) {
-                // Force cache update when enabling offline mode
-                if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-                    navigator.serviceWorker.controller.postMessage({
-                        action: 'updateCache'
-                    });
-                    
-                    showToast('Caching content for offline use...');
-                }
-            }
-        }
-        
-        // Change screen orientation
-        function changeScreenOrientation(orientation) {
-            localStorage.setItem('screenOrientation', orientation);
-            
-            // If screen orientation API is available
-            if ('screen' in window && 'orientation' in window.screen && 'lock' in window.screen.orientation) {
-                try {
-                    if (orientation === 'portrait') {
-                        window.screen.orientation.lock('portrait').catch(e => {
-                            console.log('Orientation lock not supported:', e);
-                        });
-                    } else if (orientation === 'landscape') {
-                        window.screen.orientation.lock('landscape').catch(e => {
-                            console.log('Orientation lock not supported:', e);
-                        });
-                    } else {
-                        // Auto - unlock
-                        window.screen.orientation.unlock();
-                    }
-                } catch (e) {
-                    console.log('Screen orientation API not supported:', e);
-                }
-            }
-        }
-        
-        // Toggle battery saver mode
-        function toggleBatterySaver(enabled) {
-            if (enabled) {
-                document.body.classList.add('battery-saver');
-            } else {
-                document.body.classList.remove('battery-saver');
-            }
-        }
-        
-        // Clear cache
-        function clearCache() {
-            if ('caches' in window) {
-                caches.keys().then(cacheNames => {
-                    return Promise.all(
-                        cacheNames.map(cacheName => {
-                            return caches.delete(cacheName);
-                        })
-                    );
-                }).then(() => {
-                    showToast('Cache cleared successfully');
-                });
-            } else {
-                showToast('Cache API not supported in this browser');
-            }
-        }
-        
-        // Check for updates
-        function checkForUpdates() {
-            // In a real app, this would check with a server
-            // For now, we'll just simulate it
-            showToast('Checking for updates...');
-            
-            setTimeout(() => {
-                showToast('You are using the latest version');
-            }, 2000);
-        }
-        
-        // Change text size
-        function changeTextSize(size) {
-            // Remove any existing text size classes
-            document.body.classList.remove('text-size-small', 'text-size-medium', 'text-size-large');
-            
-            // Add the selected text size class
-            document.body.classList.add(`text-size-${size}`);
-            
-            // Save the setting
-            localStorage.setItem('textSize', size);
-        }
-        
-        // Toggle reduce motion
-        function toggleReduceMotion(enabled) {
-            if (enabled) {
-                document.body.classList.add('reduce-motion');
-            } else {
-                document.body.classList.remove('reduce-motion');
-            }
-        }
-        
-        // Show toast notification
-        function showToast(message) {
-            // Remove any existing toast
-            const existingToast = document.querySelector('.toast-notification');
-            if (existingToast) {
-                existingToast.remove();
-            }
-            
-            // Create new toast
-            const toast = document.createElement('div');
-            toast.className = 'toast-notification';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            // Show the toast
-            setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
-            
-            // Hide after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                
-                // Remove from DOM after animation
-                setTimeout(() => {
-                    toast.remove();
-                }, 300);
-            }, 3000);
-        }
-        
-        // Save settings to localStorage
-        function saveSettings() {
-            const settings = {
-                darkMode: document.getElementById('darkmode-toggle').checked,
-                animations: document.getElementById('animations-toggle').checked,
-                clickSound: document.getElementById('sound-toggle').checked,
-                notifications: document.getElementById('notifications-toggle').checked && 
-                               Notification.permission === 'granted',
-                textSize: document.getElementById('text-size-select').value,
-                reduceMotion: document.getElementById('reduce-motion-toggle').checked,
-                lastUpdated: new Date().toISOString()
-            };
-            
-            // Add PWA-specific settings if available
-            if (document.getElementById('vibration-toggle')) {
-                settings.vibration = document.getElementById('vibration-toggle').checked;
-            }
-            
-            if (document.getElementById('offline-mode-toggle')) {
-                settings.offlineMode = document.getElementById('offline-mode-toggle').checked;
-            }
-            
-            if (document.getElementById('orientation-select')) {
-                settings.screenOrientation = document.getElementById('orientation-select').value;
-            }
-            
-            if (document.getElementById('battery-saver-toggle')) {
-                settings.batterySaver = document.getElementById('battery-saver-toggle').checked;
-            }
-            
-            localStorage.setItem('pixelHeavenSettings', JSON.stringify(settings));
-            localStorage.setItem('notificationsEnabled', settings.notifications ? 'true' : 'false');
-            localStorage.setItem('clickSoundEnabled', settings.clickSound ? 'true' : 'false');
-            console.log('Settings saved');
-        }
-        
-        // Load settings from localStorage
-        function loadSettings() {
-            const savedSettings = localStorage.getItem('pixelHeavenSettings');
-            
-            if (savedSettings) {
-                const settings = JSON.parse(savedSettings);
-                
-                // Apply saved settings to toggles
-                document.getElementById('darkmode-toggle').checked = settings.darkMode;
-                
-                // Load click sound setting
-                const clickSoundEnabled = localStorage.getItem('clickSoundEnabled') === 'true';
-                document.getElementById('sound-toggle').checked = clickSoundEnabled;
-                
-                // Check notification permission before setting toggle
-                if (Notification.permission === 'granted' && 
-                    localStorage.getItem('notificationsEnabled') === 'true') {
-                    document.getElementById('notifications-toggle').checked = true;
-                } else {
-                    document.getElementById('notifications-toggle').checked = false;
-                }
-                
-                // Text size
-                if (settings.textSize) {
-                    document.getElementById('text-size-select').value = settings.textSize;
-                    changeTextSize(settings.textSize);
-                }
-                
-                // Reduce motion
-                if (settings.reduceMotion !== undefined) {
-                    document.getElementById('reduce-motion-toggle').checked = settings.reduceMotion;
-                    toggleReduceMotion(settings.reduceMotion);
-                }
-                
-                // Apply settings to the UI
-                toggleDarkMode(settings.darkMode);
-                
-                // Initialize audio if click sound is enabled
-                if (clickSoundEnabled) {
-                    initAudio();
-                }
-        
-                // Check if dev mode was previously verified
-                if (localStorage.getItem('devModeVerified') === 'true') {
-                    // Show animation toggle
-                    document.getElementById('animation-toggle-container').style.display = "flex";
-                    document.getElementById('animations-toggle').checked = settings.animations || false;
-                    toggleAnimations(settings.animations || false);
-                }
-                
-                // PWA-specific settings
-                if (document.body.classList.contains('pwa-mode')) {
-                    // Vibration
-                    if (settings.vibration !== undefined) {
-                        document.getElementById('vibration-toggle').checked = settings.vibration;
-                    } else {
-                        // Default to enabled if not set
-                        document.getElementById('vibration-toggle').checked = true;
-                    }
-                    
-                    // Offline mode
-                    if (settings.offlineMode !== undefined) {
-                        document.getElementById('offline-mode-toggle').checked = settings.offlineMode;
-                    }
-                    
-                    // Screen orientation
-                    if (settings.screenOrientation) {
-                        document.getElementById('orientation-select').value = settings.screenOrientation;
-                    }
-                    
-                    // Battery saver
-                    if (settings.batterySaver !== undefined) {
-                        document.getElementById('battery-saver-toggle').checked = settings.batterySaver;
-                        toggleBatterySaver(settings.batterySaver);
-                    }
-                }
-                
-                console.log('Settings loaded');
-            }
-            
-            // Always check notification permission on load
-            checkNotificationPermission();
-        }
-        
-        // Check and synchronize notification permission with toggle
-        function checkNotificationPermission() {
-            const notificationToggle = document.getElementById('notifications-toggle');
-            
-            if (Notification.permission === 'granted' && 
-                localStorage.getItem('notificationsEnabled') === 'true') {
-                notificationToggle.checked = true;
-            } else {
-                notificationToggle.checked = false;
-            }
-        }
-        
-        // Toggle dark mode
-        function toggleDarkMode(enabled) {
-            if (enabled) {
-                document.body.classList.add('dark-mode');
-                document.body.classList.remove('light-mode');
-            } else {
-                document.body.classList.add('light-mode');
-                document.body.classList.remove('dark-mode');
-            }
-        }
-        
-        // Toggle animations
-        function toggleAnimations(enabled) {
-            if (enabled) {
-                document.body.classList.remove('no-animations');
-            } else {
-                document.body.classList.add('no-animations');
-            }
-        }
-        
-        // Reboot application (PWA only)
-        function rebootApplication() {
-            if (document.body.classList.contains('pwa-mode')) {
-                // Show reboot animation/message
-                const rebootOverlay = document.createElement('div');
-                rebootOverlay.className = 'reboot-overlay';
-                rebootOverlay.innerHTML = `
-                    <div class="reboot-message">
-                        <i class="fas fa-sync fa-spin"></i>
-                        <p>Restarting...</p>
-                    </div>
-                `;
-                document.body.appendChild(rebootOverlay);
-                
-                // Wait a moment for animation, then reload the page
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            }
-        }
-        
-        // Register service worker for PWA functionality
-        if ('serviceWorker' in navigator) {
-            // Get the base URL for GitHub Pages
-            const scope = location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1);
-            
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('./sw.js', {scope: scope})
-                    .then(function(registration) {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(function(err) {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
             });
+            
+            playClickSound();
+        });
+    }
+}
+
+// Clear game progress from localStorage
+function clearGameProgress() {
+    // Game-specific progress keys to clear
+    const progressKeys = [
+        'snakeHighScore',
+        'ticTacToeStats',
+        'memoryGameStats',
+        'colorClashHighScore',
+        'minigolfScore'
+    ];
+    
+    // Clear each key
+    progressKeys.forEach(key => {
+        localStorage.removeItem(key);
+    });
+    
+    console.log('All game progress has been reset');
+}
+
+// Clear browser caches (for PWA)
+async function clearCaches() {
+    try {
+        // Check if Cache API is available
+        if ('caches' in window) {
+            // Get all cache names
+            const cacheNames = await caches.keys();
+            
+            // Delete each cache
+            const deletionPromises = cacheNames.map(cacheName => {
+                return caches.delete(cacheName);
+            });
+            
+            // Wait for all caches to be deleted
+            await Promise.all(deletionPromises);
+            
+            console.log('All caches cleared successfully');
+            return true;
+        } else {
+            console.log('Cache API not available');
+            
+            // Alternative: clear localStorage except settings
+            const settingsKeys = [
+                'darkMode',
+                'textSize',
+                'reduceMotion',
+                'batterySaver',
+                'soundEnabled',
+                'saveProgress',
+                'developerMode',
+                'settingsInitialized',
+                'fullDeveloperAccess'
+            ];
+            
+            // Get all localStorage keys
+            const allKeys = Object.keys(localStorage);
+            
+            // Filter out settings keys and remove everything else
+            allKeys.forEach(key => {
+                if (!settingsKeys.includes(key)) {
+                    localStorage.removeItem(key);
+                }
+            });
+            
+            console.log('localStorage cleared (except settings)');
+            return true;
         }
+    } catch (error) {
+        console.error('Error clearing cache:', error);
+        return false;
+    }
+}
+
+// Show toast notification
+function showToast(message, iconName) {
+    // Remove existing toast if present
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) {
+        existingToast.remove();
+    }
+    
+    // Create new toast
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `<i class="fas fa-${iconName}"></i> ${message}`;
+    
+    // Add to DOM
+    document.body.appendChild(toast);
+    
+    // Show toast (allow browser to process DOM)
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    // Hide toast after delay
+    setTimeout(() => {
+        toast.classList.remove('show');
         
-        const settingsStyle = document.createElement('style');
-        settingsStyle.textContent = `
-            .settings-section {
-                margin-bottom: 25px;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                padding-bottom: 15px;
-            }
-            
-            .settings-section-title {
-                font-size: 1.1rem;
-                font-weight: 600;
-                margin-bottom: 15px;
-                color: rgba(255, 255, 255, 0.9);
-            }
-            
-            .pwa-only-section {
-                display: none;
-            }
-            
-            .pwa-mode .pwa-only-section {
-                display: block;
-            }
-            
-            .reboot-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.85);
-                z-index: 10000;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                animation: fadeIn 0.3s ease;
-            }
-            
-            .reboot-message {
-                text-align: center;
-                color: white;
-            }
-            
-            .reboot-message i {
-                font-size: 3rem;
-                color: #ff6b6b;
-                margin-bottom: 15px;
-            }
-            
-            .reboot-message p {
-                font-size: 1.2rem;
-                margin-top: 10px;
-            }
-            
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            
-            /* No animation class */
-            .no-animations * {
-                animation: none !important;
-                transition: none !important;
-                transform: none !important;
-            }
-            
-            /* Light mode adjustments */
-            .light-mode {
-                background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-                color: #333;
-            }
-            
-            .light-mode .header, 
-            .light-mode .featured-section,
-            .light-mode .game-card {
-                background: rgba(255, 255, 255, 0.3);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.5);
-            }
-            
-            .light-mode .logo,
-            .light-mode .section-title {
-                background: linear-gradient(45deg, #ff6b6b, #fe8c00);
-                -webkit-background-clip: text;
-                background-clip: text;
-            }
-            
-            .light-mode .nav-menu a {
-                color: #333;
-            }
-            
-                .light-mode .game-card h3,
-    .light-mode .footer-section h4 {
-        color: #333;
-    }
-    
-    .light-mode .category-tag {
-        background: rgba(255, 107, 107, 0.2);
-        color: #333;
-    }
-    
-    /* Toast notification */
-    .toast-notification {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%) translateY(100px);
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        z-index: 10000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        transition: transform 0.3s ease;
-        font-size: 0.9rem;
-    }
-    
-    .toast-notification.show {
-        transform: translateX(-50%) translateY(0);
-    }
-    
-    /* Text size classes */
-    .text-size-small {
-        --text-scale: 0.9;
-    }
-    
-    .text-size-medium {
-        --text-scale: 1;
-    }
-    
-    .text-size-large {
-        --text-scale: 1.15;
-    }
-    
-    .text-size-small .option-label,
-    .text-size-small .settings-section-title,
-    .text-size-small .game-card h3,
-    .text-size-small .section-title {
-        font-size: calc(1rem * var(--text-scale));
-    }
-    
-    .text-size-small .option-description,
-    .text-size-small .footer-section li a,
-    .text-size-small .category-tag {
-        font-size: calc(0.8rem * var(--text-scale));
-    }
-    
-    .text-size-large .option-label,
-    .text-size-large .settings-section-title,
-    .text-size-large .game-card h3,
-    .text-size-large .section-title {
-        font-size: calc(1rem * var(--text-scale));
-    }
-    
-    .text-size-large .option-description,
-    .text-size-large .footer-section li a,
-    .text-size-large .category-tag {
-        font-size: calc(0.8rem * var(--text-scale));
-    }
-    
-    /* Reduce motion */
-    .reduce-motion * {
-        transition-duration: 0.001s !important;
-        animation-duration: 0.001s !important;
-    }
-    
-    .reduce-motion .game-card {
-        transform: none !important;
-    }
-    
-    /* Battery saver mode */
-    .battery-saver {
-        --animation-speed-multiplier: 0.7;
-    }
-    
-    .battery-saver .game-card img,
-    .battery-saver .featured-section {
-        filter: brightness(0.9);
-    }
-    
-    /* Settings button styling */
-    .settings-button {
-        position: fixed;
-        bottom: 30px;
-        left: 30px;
-        width: 45px;
-        height: 45px;
-        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        box-shadow: 0 4px 10px rgba(255, 107, 107, 0.3);
-        z-index: 150; /* High z-index to ensure visibility on all devices */
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 1.2rem;
-    }
+        // Remove from DOM after animation
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
 
-    .settings-button:hover i {
-        transform: rotate(90deg);
-    }
-
-    /* Only adjust size slightly for smaller screens, not position */
-    @media screen and (max-width: 768px) {
-        .settings-button {
-            width: 42px;
-            height: 42px;
-            font-size: 1.1rem;
-        }
-    }
-
-    /* iOS safe area handling without changing position */
-    @supports (-webkit-touch-callout: none) {
-        .settings-button {
-            /* Ensures the button doesn't get hidden by iOS UI elements */
-            bottom: 30px !important;
-            left: 30px !important;
-        }
-    }
-`;
-document.head.appendChild(settingsStyle);
-
-// Initialize the settings
-window.addEventListener('load', function() {
-    // Check for PWA mode when page fully loads
-    checkPWAMode();
-    
-    // Load initial settings
-    loadSettings();
-    
-    // Initialize click sound if enabled
-    if (localStorage.getItem('clickSoundEnabled') === 'true') {
-        initAudio();
-        document.getElementById('sound-toggle').checked = true;
-    }
-    
-    // Add version info from the footer if available
-    const footerVersion = document.querySelector('.footer-bottom p:nth-child(3)');
-    const versionElement = document.querySelector('.version-number');
-    
-    if (footerVersion && versionElement) {
-        versionElement.textContent = footerVersion.textContent.replace('V ', '');
+// Handle CSS animation end
+document.addEventListener('animationend', function(e) {
+    if (e.target.classList.contains('dev-code-input') && e.target.classList.contains('shake')) {
+        e.target.classList.remove('shake');
     }
 });
+
+// Listen for display mode changes (PWA status)
+window.matchMedia('(display-mode: standalone)').addEventListener('change', (evt) => {
+    checkPWAMode();
+});
+
+// Add keydown event listener for closing settings with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const settingsOverlay = document.querySelector('.settings-overlay');
+        if (settingsOverlay && settingsOverlay.classList.contains('active')) {
+            settingsOverlay.classList.remove('active');
+        }
+    }
+});
+
+// Helper function to detect iOS devices
+function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+}
+
+// Additional PWA install detection for iOS devices
+if (isIOS() && window.navigator.standalone) {
+    document.body.classList.add('pwa-mode', 'ios-pwa');
+}
+
+// Utility function to safely access localStorage with fallback
+function getLocalStorageItem(key, defaultValue) {
+    try {
+        const value = localStorage.getItem(key);
+        return value !== null ? value : defaultValue;
+    } catch (error) {
+        console.error('localStorage access error:', error);
+        return defaultValue;
+    }
+}
+
+// Utility function to safely set localStorage with error handling
+function setLocalStorageItem(key, value) {
+    try {
+        localStorage.setItem(key, value);
+        return true;
+    } catch (error) {
+        console.error('localStorage write error:', error);
+        
+        // Show error to user if storage is full
+        if (error.name === 'QuotaExceededError') {
+            showToast('Storage full. Try clearing cache.', 'exclamation-triangle');
+        }
+        return false;
+    }
+}
