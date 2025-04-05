@@ -69,7 +69,7 @@
     visibility: visible;
 }
 
-/* Settings Panel */
+/* Settings Panel - Updated with touch scrolling fixes */
 .settings-panel {
     width: 90%;
     max-width: 500px;
@@ -85,13 +85,29 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     
-    /* Enhanced scrolling */
-    max-height: 85vh;
+    /* Enhanced touch scrolling properties */
+    max-height: 75vh; /* Reduced max height to ensure it fits on most screens */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch; /* Additional property for some browsers */
+    touch-action: pan-y; /* Explicitly enable vertical touch scrolling */
     overscroll-behavior: contain;
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 107, 107, 0.5) rgba(0, 0, 0, 0.2);
+    -webkit-transform: translateZ(0); /* Prevent rendering issues on iOS */
+}
+
+/* iOS specific scrolling fix */
+.ios-scrollfix {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-overflow-scrolling: touch !important;
+    overflow-y: scroll !important;
+}
+
+/* Ensure content inside is fully scrollable */
+.ios-scrollfix > * {
+    transform: translateZ(0);
 }
 
 .settings-panel::-webkit-scrollbar {
@@ -435,15 +451,15 @@ input:checked + .toggle-slider:before {
     letter-spacing: 0.5px;
 }
 
-/* Dev Code */
+/* Developer Code Container */
 .dev-code-container {
     display: none;
     margin-top: 15px;
     padding: 15px;
     background: rgba(0, 0, 0, 0.2);
     border-radius: 12px;
-    border: 1px solid var(--border-color);
     animation: fadeIn 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .dev-code-container.active {
@@ -576,6 +592,132 @@ input:checked + .toggle-slider:before {
     transform: translateX(-50%) translateY(0);
 }
 
+/* Mobile-specific adjustments */
+@media screen and (max-width: 768px) {
+    .settings-button {
+        bottom: 25px;
+        left: 25px;
+        width: 45px;
+        height: 45px;
+        font-size: 1rem;
+        z-index: 150;
+    }
+    
+    .settings-panel {
+        padding: 20px;
+        max-width: 90%;
+        max-height: 70vh; /* Reduced for smaller screens */
+    }
+    
+    .settings-title {
+        font-size: 1.5rem;
+    }
+    
+    .settings-section {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .settings-section-title {
+        font-size: 1.1rem;
+    }
+    
+    .option-label {
+        font-size: 1rem;
+    }
+    
+    .option-description {
+        font-size: 0.8rem;
+    }
+    
+    .reboot-button,
+    .clear-cache-button,
+    .settings-action-button {
+        padding: 12px 10px;
+        font-size: 0.9rem;
+    }
+    
+    .version-info {
+        font-size: 0.85rem;
+        padding: 12px;
+    }
+    
+    .settings-header {
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+    }
+}
+
+/* Small screens */
+@media screen and (max-width: 480px) {
+    .settings-button {
+        bottom: 85px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+    
+    .settings-panel {
+        padding: 15px;
+        border-radius: 20px;
+        max-height: 65vh; /* Even further reduced for smallest screens */
+    }
+    
+    .settings-title {
+        font-size: 1.3rem;
+    }
+    
+    .dual-button-container,
+    .action-buttons-container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .close-settings {
+        width: 32px;
+        height: 32px;
+    }
+    
+    /* Extra padding at the bottom for easier scrolling */
+    .settings-panel {
+        padding-bottom: 30px;
+    }
+}
+
+/* iOS safe area insets */
+@supports (padding: max(0px)) {
+    .settings-button {
+        bottom: max(30px, env(safe-area-inset-bottom) + 15px);
+        left: max(30px, env(safe-area-inset-left) + 15px);
+    }
+    
+    @media screen and (max-width: 480px) {
+        .settings-button {
+            bottom: max(85px, env(safe-area-inset-bottom) + 70px);
+            left: max(20px, env(safe-area-inset-left) + 5px);
+        }
+    }
+    
+    .toast-notification {
+        bottom: max(30px, env(safe-area-inset-bottom) + 15px);
+    }
+}
+
+/* Fix for iOS devices to ensure proper scrolling */
+@supports (-webkit-touch-callout: none) {
+    .settings-panel {
+        padding-bottom: 40px; /* Extra padding at bottom for iOS */
+    }
+    
+    /* Ensure scrollable area extends to the bottom */
+    .settings-panel::after {
+        content: '';
+        display: block;
+        height: 30px;
+    }
+}
+
 /* Text size classes */
 .text-size-small {
     --text-scale: 0.9;
@@ -644,113 +786,6 @@ input:checked + .toggle-slider:before {
 
 .shake {
     animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-}
-
-/* Mobile-specific adjustments */
-@media screen and (max-width: 768px) {
-    .settings-button {
-        bottom: 25px;
-        left: 25px;
-        width: 45px;
-        height: 45px;
-        font-size: 1rem;
-        z-index: 150;
-    }
-    
-    .settings-panel {
-        padding: 20px;
-        max-width: 90%;
-        max-height: 80vh;
-    }
-    
-    .settings-title {
-        font-size: 1.5rem;
-    }
-    
-    .settings-section {
-        padding: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .settings-section-title {
-        font-size: 1.1rem;
-    }
-    
-    .option-label {
-        font-size: 1rem;
-    }
-    
-    .option-description {
-        font-size: 0.8rem;
-    }
-    
-    .reboot-button,
-    .clear-cache-button,
-    .settings-action-button {
-        padding: 12px 10px;
-        font-size: 0.9rem;
-    }
-    
-    .version-info {
-        font-size: 0.85rem;
-        padding: 12px;
-    }
-    
-    .settings-header {
-        padding-bottom: 15px;
-        margin-bottom: 15px;
-    }
-}
-
-/* Small screens */
-@media screen and (max-width: 480px) {
-    .settings-button {
-        bottom: 85px;
-        left: 20px;
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
-    }
-    
-    .settings-panel {
-        padding: 15px;
-        border-radius: 20px;
-        max-height: 75vh;
-    }
-    
-    .settings-title {
-        font-size: 1.3rem;
-    }
-    
-    .action-buttons-container,
-    .dual-button-container {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-    
-    .close-settings {
-        width: 32px;
-        height: 32px;
-    }
-}
-
-/* iOS safe area insets */
-@supports (padding: max(0px)) {
-    .settings-button {
-        bottom: max(30px, env(safe-area-inset-bottom) + 15px);
-        left: max(30px, env(safe-area-inset-left) + 15px);
-    }
-    
-    @media screen and (max-width: 480px) {
-        .settings-button {
-            bottom: max(85px, env(safe-area-inset-bottom) + 70px);
-            left: max(20px, env(safe-area-inset-left) + 5px);
-        }
-    }
-    
-    .toast-notification {
-        bottom: max(30px, env(safe-area-inset-bottom) + 15px);
-    }
 }
 
 /* Animations */
