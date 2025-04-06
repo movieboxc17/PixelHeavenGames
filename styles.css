@@ -2213,4 +2213,515 @@ img[src=""] {
     color: white;
 }
 
-/* Ensure clean closing of file */
+/* Fix for iOS button active states */
+@media (hover: none) {
+    button,
+    .cta-button,
+    .play-button,
+    .nav-link,
+    .privacy-btn {
+        transition: transform 0.1s ease, opacity 0.1s ease;
+    }
+    
+    button:active,
+    .cta-button:active,
+    .play-button:active,
+    .nav-link:active,
+    .privacy-btn:active {
+        transform: scale(0.96);
+        opacity: 0.9;
+    }
+    
+    /* Prevent menu button from scaling */
+    .mobile-nav-toggle:active {
+        transform: none;
+    }
+}
+
+/* Fix for mobile Safari flashing during transitions */
+.game-card,
+.category-tag,
+.play-button,
+.cta-button,
+.back-to-top,
+.mobile-nav-toggle {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+/* Improve menu display in landscape mode */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .nav-menu.active {
+        padding-top: 60px;
+        overflow-y: auto;
+        justify-content: flex-start;
+    }
+    
+    .nav-menu.active .nav-link {
+        margin-bottom: 10px;
+        padding: 8px 20px;
+    }
+}
+
+/* Fix for iPhone with notch in landscape */
+@media screen and (min-device-width: 375px) 
+  and (max-device-width: 812px) 
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: landscape) {
+    .nav-menu.active {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}
+
+/* Fix for Firefox backdrop-filter */
+@-moz-document url-prefix() {
+    .header, 
+    .featured-section, 
+    .nav-menu.active,
+    .privacy-consent,
+    .cookie-settings-modal {
+        background-color: rgba(26, 26, 46, 0.95);
+    }
+}
+
+/* Fix for iOS 15 Safari */
+@media not all and (min-resolution:.001dpcm) {
+    @supports (-webkit-appearance:none) and (stroke-color:transparent) {
+        .game-card, 
+        .play-button, 
+        .cta-button,
+        .nav-link,
+        .back-to-top {
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+        }
+        
+        .nav-menu.active {
+            -webkit-transform: none;
+            transform: none;
+        }
+    }
+}
+
+/* Fix for iOS/iPadOS 16+ */
+@supports (top: env(safe-area-inset-top)) {
+    .header {
+        padding-top: max(15px, env(safe-area-inset-top));
+    }
+    
+    .loader {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* Fix for animation performance across all devices */
+.game-card,
+.play-button,
+.cta-button,
+.category-tag {
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    will-change: transform;
+}
+
+/* Additional animation performance fixes for iOS */
+.ios-device .game-card:hover,
+.ios-device .play-button:hover,
+.ios-device .category-tag:hover,
+.ios-device .cta-button:hover {
+    transition: transform 0.2s ease;
+}
+
+/* Fix for webkit browser rendering issues */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    .loader-logo,
+    .section-title,
+    .hero-title {
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+    
+    .category-tag.active {
+        -webkit-transform: translateY(-2px);
+        transform: translateY(-2px);
+    }
+}
+
+/* Ensure proper touch targets on mobile */
+@media (max-width: 767px) {
+    .nav-link,
+    .category-tag,
+    .play-button,
+    .cta-button,
+    .mobile-nav-toggle {
+        min-height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .nav-link,
+    .cta-button {
+        padding: 12px 24px;
+    }
+    
+    /* Fix for iPhone SE and other small screens */
+    @media (max-width: 375px) {
+        .logo {
+            font-size: 1.3em;
+        }
+        
+        .hero-title {
+            font-size: 1.6em;
+        }
+    }
+}
+
+/* iOS Safari fixes for navigation menu */
+@supports (-webkit-touch-callout: none) {
+    .nav-menu.active {
+        transition: opacity 0.3s ease;
+    }
+}
+
+/* Final performance optimizations */
+@media (prefers-reduced-motion) {
+    .loader-logo,
+    .logo,
+    .section-title,
+    .hero-title,
+    .game-card,
+    .category-tag,
+    .play-button,
+    .back-to-top {
+        animation: none !important;
+        transition: opacity 0.3s ease !important;
+    }
+}
+
+/* Additional accessibility enhancements */
+.keyboard-user *:focus {
+    outline: 3px solid var(--accent-color) !important;
+    outline-offset: 3px !important;
+}
+
+/* Utility classes for spacing and alignment */
+.mt-0 { margin-top: 0 !important; }
+.mt-1 { margin-top: 0.5rem !important; }
+.mt-2 { margin-top: 1rem !important; }
+.mt-3 { margin-top: 1.5rem !important; }
+.mt-4 { margin-top: 2rem !important; }
+
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: 0.5rem !important; }
+.mb-2 { margin-bottom: 1rem !important; }
+.mb-3 { margin-bottom: 1.5rem !important; }
+.mb-4 { margin-bottom: 2rem !important; }
+
+.text-center { text-align: center !important; }
+.text-left { text-align: left !important; }
+.text-right { text-align: right !important; }
+
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+
+/* Fix for mobile navbar on old Android browsers */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (max-width: 767px) {
+    .nav-menu.active {
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+}
+
+/* Fix for IE11 (for organizations still using it) */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .game-row {
+        display: -ms-grid;
+        -ms-grid-columns: 1fr 1fr 1fr 1fr;
+    }
+    
+    .footer-links {
+        display: -ms-grid;
+        -ms-grid-columns: 1fr 1fr 1fr;
+    }
+    
+    .game-card, .footer-section {
+        margin: 0 10px 20px;
+    }
+    
+    .logo, .section-title, .hero-title {
+        color: var(--text-light);
+    }
+}
+
+/* Force hardware acceleration for smoother animations */
+.hardware-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Fix for Samsung Internet browser */
+@supports (-webkit-overflow-scrolling: touch) and (not (-webkit-hyphens: none)) {
+    body {
+        background-attachment: scroll;
+    }
+}
+
+/* Final fixes for various device orientations */
+@media screen and (orientation: portrait) and (max-width: 767px) {
+    .cookie-settings-content {
+        max-height: 75vh;
+    }
+}
+
+/* CSS reset for form elements in iOS */
+input,
+button,
+textarea,
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+}
+
+/* Apply proper z-index stacking */
+.loader { z-index: 9999; }
+.cookie-settings-modal { z-index: 10000; }
+.toast { z-index: 10001; }
+.privacy-consent { z-index: 9998; }
+.nav-menu.active { z-index: 1001; }
+.mobile-nav-toggle { z-index: 1002; }
+.back-to-top { z-index: 1000; }
+
+/* Print optimization for game cards */
+@media print {
+    .game-card {
+        page-break-inside: avoid;
+        box-shadow: none !important;
+    }
+    
+    .game-image {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+    
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+}
+
+/* Final optimization to reduce repaints and improve performance */
+html {
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+/* Remove tap highlight on WebKit browsers */
+* {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* Fix for iOS text size adjustment */
+body {
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+}
+
+/* Prevent text selection on UI elements */
+.nav-link, .logo, .category-tag, .play-button, .cta-button, .back-to-top, .mobile-nav-toggle {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* Improve touch response on game elements */
+.game-card, .category-tag, .play-button {
+    touch-action: manipulation;
+}
+
+/* Additional dark mode optimizations */
+@media (prefers-color-scheme: dark) {
+    img {
+        filter: brightness(0.95);
+    }
+    
+    .footer-section ul li a:hover {
+        color: var(--accent-light);
+    }
+}
+
+/* Specific fixes for Galaxy Fold and other foldable devices */
+@media screen and (max-width: 280px) {
+    .logo {
+        font-size: 1.2em;
+    }
+    
+    .privacy-btn {
+        padding: 7px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .game-card h3 {
+        font-size: 1.1em;
+    }
+    
+    .section-title {
+        font-size: 1.2em;
+    }
+}
+
+/* Utility classes for content visibility */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--accent-color);
+    color: white;
+    padding: 8px;
+    z-index: 10000;
+    transition: top 0.3s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Final accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    
+    .game-card, .play-button, .back-to-top, .nav-link {
+        transition: none !important;
+    }
+    
+    .loader {
+        display: none !important;
+    }
+}
+
+/* Last fixes for WebView browser compatibility */
+.webview .privacy-consent {
+    bottom: 0 !important;
+    position: fixed !important;
+}
+
+.webview .nav-menu.active {
+    height: 100% !important;
+}
+
+/* iOS 16.4+ fix for backdrop-filter */
+@supports (backdrop-filter: blur(10px)) {
+    .header,
+    .featured-section,
+    .nav-menu.active,
+    .privacy-consent,
+    .cookie-settings-modal,
+    .toast {
+        backdrop-filter: blur(10px);
+    }
+}
+
+/* Helper classes for content states */
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+.invisible {
+    visibility: hidden !important;
+}
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Prevent FOIT (Flash of Invisible Text) */
+body {
+    font-display: swap;
+}
+
+/* Fix for old browser compatibility */
+.ie-11-support {
+    display: none;
+    text-align: center;
+    background: #f44336;
+    color: white;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .ie-11-support {
+        display: block;
+    }
+}
+
+/* Final z-index organization */
+:root {
+    --z-index-base: 1;
+    --z-index-header: 100;
+    --z-index-back-to-top: 1000;
+    --z-index-nav-menu: 1001;
+    --z-index-nav-toggle: 1002;
+    --z-index-privacy: 9998;
+    --z-index-loader: 9999;
+    --z-index-cookie-modal: 10000;
+    --z-index-toast: 10001;
+    --z-index-highest: 10002;
+}
+
+/* Add support for folding displays */
+@media (spanning: single-fold-vertical) {
+    .container {
+        width: env(fold-left);
+    }
+}
+
+/* Detect and apply styles for notched displays */
+@supports (padding-top: env(safe-area-inset-top)) and (padding-bottom: env(safe-area-inset-bottom)) {
+    .game-card {
+        margin-left: env(safe-area-inset-left);
+        margin-right: env(safe-area-inset-right);
+    }
+}
+
+/* Version management via CSS variables */
+:root {
+    --app-version: "19.6";
+}
+
+/* End of file - PixelHeavenGames v19.6 */
+/* Last updated: 2025-01-15 */
