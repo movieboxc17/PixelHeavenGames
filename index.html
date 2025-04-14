@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Maintenance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0f0f1a;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a35 100%);
+            overflow-x: hidden;
+        }
+        
+        .maintenance-container {
+            width: 90%;
+            max-width: 800px;
+            background-color: rgba(25, 25, 45, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            position: relative;
+            padding: 50px 40px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            border: 1px solid rgba(123, 104, 238, 0.2);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .icon {
+            font-size: 90px;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #7b68ee, #a599ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 8px rgba(123, 104, 238, 0.5));
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        h1 {
+            background: linear-gradient(45deg, #7b68ee, #a599ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 25px;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 20px rgba(123, 104, 238, 0.5);
+        }
+        
+        p {
+            margin-bottom: 25px;
+            line-height: 1.8;
+            color: #c0c0d0;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .contact {
+            font-weight: bold;
+            background: linear-gradient(45deg, #7b68ee, #a599ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-bottom: 1px dotted #8a7aff;
+            padding-bottom: 2px;
+            position: relative;
+        }
+        
+        .contact:hover {
+            text-shadow: 0 0 8px rgba(123, 104, 238, 0.7);
+            border-bottom: 1px solid #a599ff;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Animated background elements */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(123, 104, 238, 0.2);
+            animation: float-particle var(--duration) infinite ease-in-out;
+            filter: blur(1px);
+        }
+        
+        @keyframes float-particle {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: var(--opacity); }
+            100% { transform: translateY(var(--distance)) translateX(var(--drift)); opacity: 0; }
+        }
+        
+        /* Glowing border effect */
+        .maintenance-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #7b68ee, #2a2a4a, #7b68ee);
+            z-index: -1;
+            border-radius: 22px;
+            animation: border-glow 10s linear infinite;
+            opacity: 0.5;
+        }
+        
+        @keyframes border-glow {
+            0%, 100% { filter: blur(10px); }
+            50% { filter: blur(15px); }
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .maintenance-container {
+                padding: 40px 25px;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            p {
+                font-size: 16px;
+                line-height: 1.6;
+            }
+            
+            .icon {
+                font-size: 70px;
+                margin-bottom: 20px;
+            }
+        }
+        
+        /* iPad specific styles */
+        @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+            .maintenance-container {
+                padding: 50px 40px;
+                max-width: 700px;
+            }
+            
+            .icon {
+                font-size: 80px;
+            }
+        }
+        
+        /* Dark mode enhancements */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #0a0a15 0%, #151530 100%);
+            }
+            
+            .maintenance-container {
+                background-color: rgba(20, 20, 40, 0.8);
+            }
+        }
+        
+        /* Button for email */
+        .email-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #7b68ee, #a599ff);
+            color: white;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(123, 104, 238, 0.4);
+        }
+        
+        .email-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(123, 104, 238, 0.6);
+        }
+        
+        .email-button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation" id="bg-animation"></div>
+    
+    <div class="maintenance-container">
+        <div class="content">
+            <div class="icon">🛠️</div>
+            <h1>We're Currently Offline</h1>
+            <p>Sorry, our servers are currently undergoing maintenance. We're working hard to resolve the issues and improve our services for you.</p>
+            <p>We appreciate your patience and understanding during this time. Our team is doing everything possible to get things back up and running as quickly as possible.</p>
+            
+            <a href="mailto:info.pixelheaven@gmail.com" class="email-button">Contact Support</a>
+            <p style="margin-top: 20px; font-size: 14px; opacity: 0.7;">or email us directly at: <a href="mailto:info.pixelheaven@gmail.com" class="contact">info.pixelheaven@gmail.com</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        const bgAnimation = document.getElementById('bg-animation');
+        
+        function createParticles() {
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random position
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                // Random size
+                const size = 3 + Math.random() * 15;
+                
+                // Random duration, distance and opacity
+                const duration = 15 + Math.random() * 30;
+                const distance = -100 - Math.random() * 300;
+                const drift = -50 + Math.random() * 100;
+                const opacity = 0.1 + Math.random() * 0.3;
+                
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.setProperty('--duration', `${duration}s`);
+                particle.style.setProperty('--distance', `${distance}px`);
+                particle.style.setProperty('--drift', `${drift}px`);
+                particle.style.setProperty('--opacity', opacity);
+                
+                // Random delay
+                particle.style.animationDelay = `${Math.random() * 20}s`;
+                
+                bgAnimation.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles
+        createParticles();
+    </script>
+</body>
+</html>
